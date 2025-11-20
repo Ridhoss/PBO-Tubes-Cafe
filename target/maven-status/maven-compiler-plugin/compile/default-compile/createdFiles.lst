@@ -1,0 +1,8 @@
+dao\GenericDao.class
+dao\UsersDao.class
+models\User.class
+dao\GenericDaoImpl.class
+main\Main.class
+ui\Login$1.class
+database\DBConnection.class
+ui\Login.class
