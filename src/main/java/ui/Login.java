@@ -6,7 +6,7 @@ package ui;
 
 import javax.swing.JOptionPane;
 import models.User;
-import dao.UsersDao;
+import app.services.UsersDao;
 
 /**
  *
@@ -135,41 +135,41 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSignInMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSignInMouseClicked
-        String email = txtEmail.getText();
-        String password = new String(txtPassword.getPassword());
-
-        if (email.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Email dan password wajib diisi!",
-                    "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        try {
-            UsersDao dao = new UsersDao();
-            // Cari user berdasarkan email
-            User user = dao.findByEmail(email);
-
-            if (user != null) {
-                // Misal kolom password ada di User
-                if (user.getPassword().equals(password)) {
-                    JOptionPane.showMessageDialog(this, "Login berhasil!",
-                            "Sukses", JOptionPane.INFORMATION_MESSAGE);
-                    // Bisa lanjut buka JFrame lain
-                    // new DashboardFrame().setVisible(true);
-                    // this.dispose();
-                } else {
-                    JOptionPane.showMessageDialog(this, "Password salah!",
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "User tidak ditemukan!",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Terjadi kesalahan: " + e.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
+//        String email = txtEmail.getText();
+//        String password = new String(txtPassword.getPassword());
+//
+//        if (email.isEmpty() || password.isEmpty()) {
+//            JOptionPane.showMessageDialog(this, "Email dan password wajib diisi!",
+//                    "Error", JOptionPane.ERROR_MESSAGE);
+//            return;
+//        }
+//
+//        try {
+//            UsersDao dao = new UsersDao();
+//            // Cari user berdasarkan email
+//            User user = dao.findByEmail(email);
+//
+//            if (user != null) {
+//                // Misal kolom password ada di User
+//                if (user.getPassword().equals(password)) {
+//                    JOptionPane.showMessageDialog(this, "Login berhasil!",
+//                            "Sukses", JOptionPane.INFORMATION_MESSAGE);
+//                    // Bisa lanjut buka JFrame lain
+//                    // new DashboardFrame().setVisible(true);
+//                    // this.dispose();
+//                } else {
+//                    JOptionPane.showMessageDialog(this, "Password salah!",
+//                            "Error", JOptionPane.ERROR_MESSAGE);
+//                }
+//            } else {
+//                JOptionPane.showMessageDialog(this, "User tidak ditemukan!",
+//                        "Error", JOptionPane.ERROR_MESSAGE);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            JOptionPane.showMessageDialog(this, "Terjadi kesalahan: " + e.getMessage(),
+//                    "Error", JOptionPane.ERROR_MESSAGE);
+//        }
     }//GEN-LAST:event_btnSignInMouseClicked
 
     /**
