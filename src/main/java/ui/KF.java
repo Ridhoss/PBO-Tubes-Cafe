@@ -1,0 +1,57 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package ui;
+
+import java.awt.Color;
+import java.awt.Dialog;
+import java.awt.Point;
+import java.beans.PropertyVetoException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.JPanel;
+import javax.swing.plaf.basic.BasicInternalFrameUI;
+
+/**
+ *
+ * @author RIDHO
+ */
+public class KF {
+    public static Login flogin = new Login();
+    
+    public static void UntukInternalFrame(JPanel panelapa, JInternalFrame frameapa){
+        try {
+            panelapa.removeAll();
+            panelapa.add(frameapa);
+            frameapa.setVisible(true);
+            frameapa.setMaximum(true);
+            frameapa.setBorder(null);
+            ((BasicInternalFrameUI)frameapa.getUI()).setNorthPane(null);
+            panelapa.repaint();
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(KF.class.getName()).log(Level.SEVERE, null, ex);
+        }   
+    }
+    
+    public static void UntukJdialog(JDialog dialogapa, JFrame frameapa){
+        dialogapa.setUndecorated(true);
+        dialogapa.getRootPane().setBackground(new Color(0,0,0,200));
+        dialogapa.setBackground(new Color(0,0,0,180));
+        dialogapa.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+        dialogapa.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        
+        int lokasix,lokasiy;
+        
+        lokasix = frameapa.getLocationOnScreen().x + 7;
+        lokasiy = frameapa.getLocationOnScreen().y;
+        dialogapa.setLocation(new Point(lokasix,lokasiy));
+        dialogapa.setSize(frameapa.getWidth()-14 , frameapa.getHeight() - 8);
+        dialogapa.setVisible(true);
+        
+    }
+}
