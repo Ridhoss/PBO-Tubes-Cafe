@@ -1,8 +1,15 @@
-dao\GenericDao.class
+ui\Register.class
+ui\Register$1.class
 dao\UsersDao.class
 models\User.class
+ui\Register$2.class
 dao\GenericDaoImpl.class
 main\Main.class
 ui\Login$1.class
-database\DBConnection.class
 ui\Login.class
+dao\GenericDao.class
+ui\layout\dashboard$1.class
+ui\Register$3.class
+ui\Register$4.class
+database\DBConnection.class
+ui\layout\dashboard.class
