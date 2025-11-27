@@ -74,7 +74,8 @@ public class ProductsDao extends GenericDaoImpl<Integer, Product> {
     }
 
     public void deleteAll() throws Exception {
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement("DELETE FROM products")) {
+        Connection conn = DBConnection.getInstance().getConnection();
+        try (PreparedStatement ps = conn.prepareStatement("DELETE FROM products")) {
             ps.executeUpdate();
         }
     }

@@ -65,7 +65,8 @@ public class CategoriesDao extends GenericDaoImpl<Integer, Category> {
     }
 
     public void deleteAll() throws Exception {
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement("DELETE FROM categories")) {
+        Connection conn = DBConnection.getInstance().getConnection();
+        try (PreparedStatement ps = conn.prepareStatement("DELETE FROM categories")) {
             ps.executeUpdate();
         }
     }

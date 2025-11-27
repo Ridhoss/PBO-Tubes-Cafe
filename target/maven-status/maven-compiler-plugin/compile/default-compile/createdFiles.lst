@@ -6,6 +6,7 @@ models\User.class
 dao\GenericDaoImpl.class
 models\Category.class
 app\services\ProductsDao.class
+ui\LayoutAdmin.class
 main\Main.class
 ui\Login$1.class
 util\PasswordUtil.class
@@ -16,3 +17,4 @@ dao\GenericDao.class
 models\Product.class
 models\seeders\DevelopmentSeeders.class
 database\DBConnection.class
+ui\TestFram.class

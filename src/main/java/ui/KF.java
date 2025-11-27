@@ -22,36 +22,47 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
  * @author RIDHO
  */
 public class KF {
+
+    public static LayoutAdmin flayout = new LayoutAdmin();
     public static Login flogin = new Login();
-    
-    public static void UntukInternalFrame(JPanel panelapa, JInternalFrame frameapa){
+    public static TestFram frame = new TestFram();
+
+    public static void UntukInternalFrame(JPanel panelapa, JInternalFrame frameapa) {
         try {
             panelapa.removeAll();
             panelapa.add(frameapa);
             frameapa.setVisible(true);
             frameapa.setMaximum(true);
             frameapa.setBorder(null);
-            ((BasicInternalFrameUI)frameapa.getUI()).setNorthPane(null);
+            ((BasicInternalFrameUI) frameapa.getUI()).setNorthPane(null);
             panelapa.repaint();
         } catch (PropertyVetoException ex) {
             Logger.getLogger(KF.class.getName()).log(Level.SEVERE, null, ex);
-        }   
+        }
     }
-    
-    public static void UntukJdialog(JDialog dialogapa, JFrame frameapa){
+
+    public static void UntukPanel(JPanel panelTarget, JPanel panelIsi) {
+        panelTarget.removeAll();
+        panelTarget.setLayout(new java.awt.BorderLayout());
+        panelTarget.add(panelIsi, java.awt.BorderLayout.CENTER);
+        panelTarget.revalidate();
+        panelTarget.repaint();
+    }
+
+    public static void UntukJdialog(JDialog dialogapa, JFrame frameapa) {
         dialogapa.setUndecorated(true);
-        dialogapa.getRootPane().setBackground(new Color(0,0,0,200));
-        dialogapa.setBackground(new Color(0,0,0,180));
+        dialogapa.getRootPane().setBackground(new Color(0, 0, 0, 200));
+        dialogapa.setBackground(new Color(0, 0, 0, 180));
         dialogapa.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
         dialogapa.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        
-        int lokasix,lokasiy;
-        
+
+        int lokasix, lokasiy;
+
         lokasix = frameapa.getLocationOnScreen().x + 7;
         lokasiy = frameapa.getLocationOnScreen().y;
-        dialogapa.setLocation(new Point(lokasix,lokasiy));
-        dialogapa.setSize(frameapa.getWidth()-14 , frameapa.getHeight() - 8);
+        dialogapa.setLocation(new Point(lokasix, lokasiy));
+        dialogapa.setSize(frameapa.getWidth() - 14, frameapa.getHeight() - 8);
         dialogapa.setVisible(true);
-        
+
     }
 }

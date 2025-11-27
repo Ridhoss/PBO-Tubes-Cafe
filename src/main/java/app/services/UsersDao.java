@@ -75,7 +75,8 @@ public class UsersDao extends GenericDaoImpl<Integer, User> {
     public User findByUsername(String username) throws Exception {
         String sql = "SELECT * FROM users WHERE username = ? LIMIT 1";
 
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        Connection conn = DBConnection.getInstance().getConnection();
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
@@ -88,7 +89,8 @@ public class UsersDao extends GenericDaoImpl<Integer, User> {
     }
 
     public void deleteAll() throws Exception {
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement("DELETE FROM users")) {
+        Connection conn = DBConnection.getInstance().getConnection();
+        try (PreparedStatement ps = conn.prepareStatement("DELETE FROM users")) {
             ps.executeUpdate();
         }
     }
