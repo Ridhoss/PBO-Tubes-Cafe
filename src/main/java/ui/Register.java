@@ -6,7 +6,6 @@ package ui;
 
 import javax.swing.JOptionPane;
 import models.User;
-import dao.UsersDao;
 
 /**
  *
@@ -51,7 +50,7 @@ public class Register extends javax.swing.JFrame {
         txtEmail = new javax.swing.JTextField();
         txtPhone = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         jCheckBoxMenuItem1.setSelected(true);
         jCheckBoxMenuItem1.setText("jCheckBoxMenuItem1");
@@ -231,20 +230,20 @@ public class Register extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(74, 112, 169));
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icon_profile.png"))); // NOI18N
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icon_profile.png"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(207, 123, 274, 101);
-        jPanel2.add(jLabel2, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(235, 100, 246, 103);
+        jPanel2.add(jLabel3, gridBagConstraints);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 617, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -258,41 +257,7 @@ public class Register extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSignUpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSignUpMouseClicked
-        String email = txtFullname.getText();
-        String password = new String(txtPassword.getPassword());
 
-        if (email.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Email dan password wajib diisi!",
-                "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        try {
-            UsersDao dao = new UsersDao();
-            // Cari user berdasarkan email
-            User user = dao.findByEmail(email);
-
-            if (user != null) {
-                // Misal kolom password ada di User
-                if (user.getPassword().equals(password)) {
-                    JOptionPane.showMessageDialog(this, "Login berhasil!",
-                        "Sukses", JOptionPane.INFORMATION_MESSAGE);
-                    // Bisa lanjut buka JFrame lain
-                    // new DashboardFrame().setVisible(true);
-                    // this.dispose();
-                } else {
-                    JOptionPane.showMessageDialog(this, "Password salah!",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            } else {
-                JOptionPane.showMessageDialog(this, "User tidak ditemukan!",
-                    "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Terjadi kesalahan: " + e.getMessage(),
-                "Error", JOptionPane.ERROR_MESSAGE);
-        }
     }//GEN-LAST:event_btnSignUpMouseClicked
 
     private void btnSignUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignUpActionPerformed
@@ -329,7 +294,7 @@ public class Register extends javax.swing.JFrame {
     private javax.swing.JButton btnSignUp;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabelEmail;

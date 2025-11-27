@@ -35,7 +35,7 @@ public class Login extends javax.swing.JFrame {
 
         jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
         jPanel1 = new javax.swing.JPanel();
-        Labelicon = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabelEmail = new javax.swing.JLabel();
         txtEmail = new javax.swing.JTextField();
@@ -54,14 +54,13 @@ public class Login extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(74, 112, 169));
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
-        Labelicon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icon_profile.png"))); // NOI18N
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/icon_profile.png"))); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.ipadx = 17;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(206, 79, 271, 65);
-        jPanel1.add(Labelicon, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(202, 61, 275, 87);
+        jPanel1.add(jLabel2, gridBagConstraints);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setLayout(new java.awt.GridBagLayout());
@@ -170,7 +169,7 @@ public class Login extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 668, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -245,11 +244,11 @@ public class Login extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel Labelicon;
     private javax.swing.JButton btnSignIn;
     private javax.swing.JLabel btnSignUp;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabelEmail;
     private javax.swing.JLabel jLabelPass;
