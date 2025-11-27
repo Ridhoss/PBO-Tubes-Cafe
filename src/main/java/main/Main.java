@@ -4,7 +4,7 @@ import app.controller.AuthController;
 import models.User;
 import app.services.UsersDao;
 import ui.KF;
-import ui.LayoutAdmin;
+import ui.layout.LayoutAdmin;
 import ui.Login;
 import util.PasswordUtil;
 
@@ -32,9 +32,8 @@ public class Main {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        
-        KF.UntukPanel(KF.flayout.pnlUtama, KF.frame);
-        KF.flayout.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
-        KF.flayout.setVisible(true);
+
+        KF.flogin.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+        KF.flogin.setVisible(true);
     }
 }

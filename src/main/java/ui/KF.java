@@ -5,6 +5,7 @@
  */
 package ui;
 
+import ui.layout.LayoutAdmin;
 import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.Point;
@@ -25,7 +26,7 @@ public class KF {
 
     public static LayoutAdmin flayout = new LayoutAdmin();
     public static Login flogin = new Login();
-    public static TestFram frame = new TestFram();
+    public static Register fregister = new Register();
 
     public static void UntukInternalFrame(JPanel panelapa, JInternalFrame frameapa) {
         try {
