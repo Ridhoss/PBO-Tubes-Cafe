@@ -15,7 +15,7 @@ public class CategoryController {
 
     private final CategoriesDao categoryDao;
 
-    private CategoryController() {
+    public CategoryController() {
         categoryDao = new CategoriesDao();
     }
 
