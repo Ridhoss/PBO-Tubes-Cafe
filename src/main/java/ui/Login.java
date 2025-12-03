@@ -202,6 +202,8 @@ public class Login extends javax.swing.JFrame {
                 String hashedInput = PasswordUtil.hash(password);
 
                 if (thisUser.getPassword().equals(hashedInput)) {
+                    KF.currentUser = thisUser;
+
                     switch (thisUser.getRole()) {
                         case "customer":
                             KF.UntukPanel(KF.flayoutCustomer.pnlUtamaCustomer, KF.fdashCustomer);

@@ -6,199 +6,46 @@ package ui.customer;
 
 import app.controller.CartController;
 import app.controller.CartItemsController;
-import app.services.ProductsDao;
+import app.controller.ProductController;
+import app.controller.UserController;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Image;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
 import java.util.List;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import models.Cart;
 import models.CartItem;
+import models.Category;
 import models.Product;
+import models.User;
+import ui.KF;
+import util.WrapLayout;
 
 /**
  *
- * @author Dell
+ * @author RIDHO
  */
 public class KeranjangCustomer extends javax.swing.JPanel {
 
     /**
      * Creates new form KeranjangCustomer
      */
-//    private int userId;
-//    private int cartId;
-//
-//    private CartController cartController = new CartController();
-//    private CartItemsController cartItemsController = new CartItemsController();
-//    private ProductsDao productDao = new ProductsDao();
-//
-//    private static final java.util.logging.Logger logger
-//            = java.util.logging.Logger.getLogger(KeranjangCustomer.class.getName());
-//
-//    public KeranjangCustomer(Integer userId1) {
-//        if (userId1 == null || userId1 <= 0) {
-//            throw new IllegalArgumentException("User ID harus valid (lebih dari 0)");
-//        }
-//
-//        this.userId = userId1;
-//        logger.log(java.util.logging.Level.INFO, "Initializing cart for user: {0}", userId);
-//
-//        initComponents();
-//        loadCartData();
-//    }
-//
-//    private void loadCartData() {
-//        try {
-//            Cart cart = cartController.getCartByUser(userId);
-//
-//            if (cart == null) {
-//                cartController.createCart(userId);
-//                cart = cartController.getCartByUser(userId);
-//            }
-//
-//            cartId = cart.getCart_id();
-//
-//            List<CartItem> items = cartItemsController.getItemsByCart(cartId);
-//
-//            showItems(items);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            JOptionPane.showMessageDialog(this, "Gagal memuat keranjang: " + e.getMessage());
-//        }
-//    }
-//
-//    private void showItems(List<CartItem> items) throws Exception {
-//
-//        pnlkeranjang1.removeAll();
-// 
-//
-//        JPanel[] panels = {pnlkeranjang1};
-//
-//        int index = 0;
-//        for (CartItem ci : items) {
-//
-//            if (index >= 3) {
-//                break; 
-//            }
-//            Product p = productDao.findById(ci.getProduct_id());
-//
-//            JPanel card = createCartCard(ci, p);
-//
-//            panels[index].add(card, BorderLayout.CENTER);
-//
-//            index++;
-//        }
-//
-//        revalidate();
-//        repaint();
-//    }
-//
-//    private JPanel createCartCard(CartItem item, Product p) {
-//        JPanel card = new JPanel();
-//        card.setLayout(new BorderLayout());
-//        card.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
-//        card.setPreferredSize(new Dimension(600, 150));
-//
-//        JLabel img = new JLabel();
-//        img.setPreferredSize(new Dimension(120, 120));
-//
-//        try {
-//            if (p.getImage_path() != null) {
-//                String path = p.getImage_path();
-//                if (!path.startsWith("/")) {
-//                    path = "/" + path;
-//                }
-//
-//                ImageIcon icon = new ImageIcon(getClass().getResource(path));
-//                Image scaled = icon.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH);
-//                img.setIcon(new ImageIcon(scaled));
-//            }
-//        } catch (Exception e) {
-//            img.setText("No Image");
-//            logger.log(java.util.logging.Level.WARNING, "Failed to load image: {0}", p.getImage_path());
-//        }
-//
-//        JLabel name = new JLabel(p.getProduct_name());
-//        name.setFont(new Font("Segoe UI", Font.BOLD, 16));
-//
-//        JLabel price = new JLabel("Rp " + String.format("%,d", p.getPrice()));
-//        price.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-//
-//        JPanel qtyPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-//
-//        JButton btnMinus = new JButton("-");
-//        JLabel lblQty = new JLabel(String.valueOf(item.getQuantity()));
-//        lblQty.setFont(new Font("Segoe UI", Font.BOLD, 14));
-//        JButton btnPlus = new JButton("+");
-//
-//        qtyPanel.add(btnMinus);
-//        qtyPanel.add(lblQty);
-//        qtyPanel.add(btnPlus);
-//
-//        int subtotal = p.getPrice() * item.getQuantity();
-//        JLabel lblSubtotal = new JLabel("Subtotal: Rp " + String.format("%,d", subtotal));
-//        lblSubtotal.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-//
-//        JButton btnDelete = new JButton("Hapus");
-//        btnDelete.setBackground(new Color(220, 53, 69));
-//        btnDelete.setForeground(Color.WHITE);
-//
-//        JPanel info = new JPanel();
-//        info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
-//        info.add(name);
-//        info.add(price);
-//        info.add(qtyPanel);
-//        info.add(lblSubtotal);
-//        info.add(btnDelete);
-//
-//        btnPlus.addActionListener(e -> {
-//            updateQty(item, lblQty, lblSubtotal, p.getPrice(), item.getQuantity() + 1);
-//        });
-//
-//        btnMinus.addActionListener(e -> {
-//            if (item.getQuantity() > 1) {
-//                updateQty(item, lblQty, lblSubtotal, p.getPrice(), item.getQuantity() - 1);
-//            }
-//        });
-//
-//        btnDelete.addActionListener(e -> deleteItem(item));
-//
-//        card.add(img, BorderLayout.WEST);
-//        card.add(info, BorderLayout.CENTER);
-//
-//        return card;
-//    }
-//
-//    private void updateQty(CartItem item, JLabel lblQty, JLabel lblSubtotal, Integer price, int newQty) {
-//        try {
-//            cartItemsController.updateQuantity(item.getCart_item_id(), newQty);
-//            item.setQuantity(newQty);
-//            lblQty.setText(String.valueOf(newQty));
-//
-//        } catch (Exception e) {
-//            JOptionPane.showMessageDialog(this, "Gagal update qty: " + e.getMessage());
-//        }
-//    }
-//
-//    private void deleteItem(CartItem item) {
-//        try {
-//            cartItemsController.removeItem(item.getCart_item_id());
-//            loadCartData(); // reload
-//
-//        } catch (Exception e) {
-//            JOptionPane.showMessageDialog(this, "Gagal menghapus: " + e.getMessage());
-//        }
-//    }
+    public KeranjangCustomer() {
+        initComponents();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -209,25 +56,70 @@ public class KeranjangCustomer extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        JlabelKeranjang = new javax.swing.JLabel();
+        pnlContainerCart = new javax.swing.JPanel();
         pnlkeranjang1 = new javax.swing.JPanel();
+        btnCheckout = new javax.swing.JButton();
+        lblTotal = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        JlabelKeranjang1 = new javax.swing.JLabel();
 
-        JlabelKeranjang.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        JlabelKeranjang.setForeground(new java.awt.Color(74, 112, 169));
-        JlabelKeranjang.setText("Keranjang Produk");
+        pnlContainerCart.setBackground(new java.awt.Color(255, 255, 0));
+
+        javax.swing.GroupLayout pnlContainerCartLayout = new javax.swing.GroupLayout(pnlContainerCart);
+        pnlContainerCart.setLayout(pnlContainerCartLayout);
+        pnlContainerCartLayout.setHorizontalGroup(
+            pnlContainerCartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 990, Short.MAX_VALUE)
+        );
+        pnlContainerCartLayout.setVerticalGroup(
+            pnlContainerCartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 634, Short.MAX_VALUE)
+        );
 
         pnlkeranjang1.setBackground(new java.awt.Color(255, 255, 255));
+
+        btnCheckout.setText("Checkout");
+
+        lblTotal.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblTotal.setText("0");
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel2.setText("Total: Rp.");
 
         javax.swing.GroupLayout pnlkeranjang1Layout = new javax.swing.GroupLayout(pnlkeranjang1);
         pnlkeranjang1.setLayout(pnlkeranjang1Layout);
         pnlkeranjang1Layout.setHorizontalGroup(
             pnlkeranjang1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 957, Short.MAX_VALUE)
+            .addGroup(pnlkeranjang1Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(btnCheckout)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 700, Short.MAX_VALUE)
+                .addComponent(lblTotal)
+                .addGap(176, 176, 176))
+            .addGroup(pnlkeranjang1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlkeranjang1Layout.createSequentialGroup()
+                    .addContainerGap(706, Short.MAX_VALUE)
+                    .addComponent(jLabel2)
+                    .addGap(202, 202, 202)))
         );
         pnlkeranjang1Layout.setVerticalGroup(
             pnlkeranjang1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 110, Short.MAX_VALUE)
+            .addGroup(pnlkeranjang1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlkeranjang1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCheckout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE))
+                .addContainerGap())
+            .addGroup(pnlkeranjang1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pnlkeranjang1Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
+
+        JlabelKeranjang1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        JlabelKeranjang1.setForeground(new java.awt.Color(74, 112, 169));
+        JlabelKeranjang1.setText("Keranjang Produk");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -236,24 +128,167 @@ public class KeranjangCustomer extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(70, 70, 70)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(JlabelKeranjang)
-                    .addComponent(pnlkeranjang1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(74, Short.MAX_VALUE))
+                    .addComponent(pnlContainerCart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlkeranjang1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(78, 78, 78))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(80, 80, 80)
+                    .addComponent(JlabelKeranjang1)
+                    .addContainerGap(851, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(50, 50, 50)
-                .addComponent(JlabelKeranjang)
+                .addGap(108, 108, 108)
+                .addComponent(pnlContainerCart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(pnlkeranjang1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(462, Short.MAX_VALUE))
+                .addGap(29, 29, 29))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(60, 60, 60)
+                    .addComponent(JlabelKeranjang1)
+                    .addContainerGap(748, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void setupContainers() {
+        // Panel utama menumpuk vertikal
+        JPanel prodContainer = new JPanel();
+        prodContainer.setLayout(new BoxLayout(prodContainer, BoxLayout.Y_AXIS));
+        prodContainer.setBackground(Color.WHITE);
+
+        // kasih jarak antar card
+        prodContainer.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // simpan sebagai client property agar loadProducts bisa akses
+        pnlContainerCart.putClientProperty("container", prodContainer);
+
+        // ScrollPane untuk scroll vertical
+        JScrollPane scroll = new JScrollPane(prodContainer,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scroll.getVerticalScrollBar().setUnitIncrement(16);
+
+        pnlContainerCart.removeAll();
+        pnlContainerCart.setLayout(new BorderLayout());
+        pnlContainerCart.add(scroll, BorderLayout.CENTER);
+        pnlContainerCart.revalidate();
+        pnlContainerCart.repaint();
+    }
+
+    private JPanel createProductCard(Product p, CartItem i) {
+        JPanel card = new JPanel();
+        card.setBackground(Color.WHITE);
+        card.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
+        card.setLayout(new BorderLayout());
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120)); // full width
+        card.setPreferredSize(new Dimension(pnlContainerCart.getWidth() - 20, 120));
+
+        // Image Panel
+        JPanel imagePanel = new JPanel();
+        imagePanel.setPreferredSize(new Dimension(120, 120));
+        imagePanel.setBackground(new Color(240, 240, 240));
+        imagePanel.setLayout(new GridBagLayout());
+
+        JLabel lblImage = new JLabel("No Image"); // nanti bisa diganti ImageIcon
+        lblImage.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblImage.setForeground(new Color(100, 100, 100));
+        imagePanel.add(lblImage);
+
+        card.add(imagePanel, BorderLayout.WEST);
+
+        // Info Panel
+        JPanel infoPanel = new JPanel();
+        infoPanel.setBackground(Color.WHITE);
+        infoPanel.setLayout(new GridLayout(3, 1, 5, 5)); // 3 baris: Qty, Nama, Harga
+        infoPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JLabel lblQty = new JLabel("Qty: " + i.getQuantity());
+        lblQty.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+
+        JLabel lblName = new JLabel(p.getProduct_name());
+        lblName.setFont(new Font("Segoe UI", Font.BOLD, 16));
+
+        JLabel lblPrice = new JLabel("Rp " + p.getPrice());
+        lblPrice.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+
+        infoPanel.add(lblQty);
+        infoPanel.add(lblName);
+        infoPanel.add(lblPrice);
+
+        card.add(infoPanel, BorderLayout.CENTER);
+
+        // Button Panel
+        JButton btnDelete = new JButton("Delete");
+        btnDelete.setFocusPainted(false);
+        btnDelete.setBackground(new Color(240, 80, 80));
+        btnDelete.setForeground(Color.WHITE);
+        btnDelete.setPreferredSize(new Dimension(80, 40));
+        btnDelete.addActionListener(e -> {
+            // TODO: Hapus item dari cart
+        });
+
+        JPanel btnPanel = new JPanel();
+        btnPanel.setBackground(Color.WHITE);
+        btnPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(0, 10, 0, 10);
+        btnPanel.add(btnDelete, gbc);
+        card.add(btnPanel, BorderLayout.EAST);
+
+        return card;
+    }
+
+    private void loadProducts() {
+        try {
+            JPanel container = (JPanel) pnlContainerCart.getClientProperty("container");
+            container.removeAll();
+
+            User thisUser = userController.findByUsername(KF.flayoutCustomer.lblUsername.getText());
+            Cart thisCart = cartcontroller.getCartByUser(thisUser.getUser_id());
+            if (thisCart == null) {
+                return;
+            }
+
+            List<CartItem> cartItems = cartItemsController.getItemsByCart(thisCart.getCart_id());
+
+            for (CartItem item : cartItems) {
+                Product p = productController.getProductById(item.getProduct_id());
+                if (Boolean.TRUE.equals(p.getIs_active())) {
+                    container.add(createProductCard(p, item));
+                    container.add(Box.createRigidArea(new Dimension(0, 10))); // jarak antar card
+                }
+            }
+
+            container.revalidate();
+            container.repaint();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    CartController cartcontroller = CartController.getInstance();
+    CartItemsController cartItemsController = CartItemsController.getInstance();
+    UserController userController = UserController.getInstance();
+    ProductController productController = ProductController.getInstance();
+
+    public void setUser() {
+        setupContainers();
+        loadProducts();
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel JlabelKeranjang;
+    private javax.swing.JLabel JlabelKeranjang1;
+    private javax.swing.JButton btnCheckout;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel lblTotal;
+    private javax.swing.JPanel pnlContainerCart;
     private javax.swing.JPanel pnlkeranjang1;
     // End of variables declaration//GEN-END:variables
 }

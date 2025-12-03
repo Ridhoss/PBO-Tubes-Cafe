@@ -14,64 +14,13 @@ import ui.customer.KeranjangCustomer;
  */
 public class CustomerLayout extends javax.swing.JFrame {
 
-    private Integer userId = 0;
-
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CustomerLayout.class.getName());
 
     /**
      * Creates new form CustomerLayout
      */
     public CustomerLayout() {
-        this.userId = 1;
         initComponents();
-        initEvents();
-    }
-
-    public CustomerLayout(Integer userId) {
-        if (userId == null || userId <= 0) {
-            throw new IllegalArgumentException("User ID harus valid dan lebih dari 0");
-        }
-        this.userId = userId;
-        initComponents();
-        initEvents();
-    }
-
-    private void initEvents() {
-//        btnCart.addMouseListener(new java.awt.event.MouseAdapter() {
-//            @Override
-//            public void mouseClicked(java.awt.event.MouseEvent evt) {
-//                try {
-//                    if (userId == null || userId <= 0) {
-//                        JOptionPane.showMessageDialog(
-//                                CustomerLayout.this,
-//                                "User ID tidak valid. Silakan login kembali.",
-//                                "Error",
-//                                JOptionPane.ERROR_MESSAGE
-//                        );
-//                        return;
-//                    }
-//
-//                    logger.log(java.util.logging.Level.INFO, "Opening cart for user: {0}", userId);
-//                    KeranjangCustomer kc = new KeranjangCustomer(userId);
-//                    KF.UntukPanel(pnlUtamaCustomer, kc);
-//                } catch (Exception e) {
-//                    logger.log(java.util.logging.Level.SEVERE, "Error opening cart", e);
-//                    JOptionPane.showMessageDialog(
-//                            CustomerLayout.this,
-//                            "Gagal membuka keranjang: " + e.getMessage(),
-//                            "Error",
-//                            JOptionPane.ERROR_MESSAGE
-//                    );
-//                }
-//            }
-//        });
-
-        btnHome.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                KF.UntukPanel(pnlUtamaCustomer, KF.fdashCustomer);
-            }
-        });
     }
 
     /**
@@ -100,7 +49,7 @@ public class CustomerLayout extends javax.swing.JFrame {
         lblUsername.setBackground(new java.awt.Color(255, 255, 255));
         lblUsername.setFont(new java.awt.Font("Segoe UI", 1, 17)); // NOI18N
         lblUsername.setForeground(new java.awt.Color(255, 255, 255));
-        lblUsername.setText("Salma Arifah Zahra");
+        lblUsername.setText("-");
 
         btnHome.setFont(new java.awt.Font("Segoe UI", 0, 17)); // NOI18N
         btnHome.setForeground(new java.awt.Color(255, 255, 255));
@@ -112,6 +61,11 @@ public class CustomerLayout extends javax.swing.JFrame {
         });
 
         btnCart.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icon_cart.png"))); // NOI18N
+        btnCart.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnCartMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -122,7 +76,7 @@ public class CustomerLayout extends javax.swing.JFrame {
                 .addComponent(lblUsername)
                 .addGap(56, 56, 56)
                 .addComponent(btnHome)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 778, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 925, Short.MAX_VALUE)
                 .addComponent(btnCart)
                 .addGap(27, 27, 27))
         );
@@ -184,11 +138,15 @@ public class CustomerLayout extends javax.swing.JFrame {
         KF.UntukPanel(pnlUtamaCustomer, KF.fdashCustomer);
     }//GEN-LAST:event_btnHomeMouseClicked
 
-    
+    private void btnCartMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCartMouseClicked
+        KF.UntukPanel(pnlUtamaCustomer, KF.fkeranjang);
+        KF.fkeranjang.setUser();
+    }//GEN-LAST:event_btnCartMouseClicked
+
     public void setDataLayout(String username) {
         lblUsername.setText(username);
     }
-    
+
     /**
      * @param args the command line arguments
      */
@@ -209,9 +167,6 @@ public class CustomerLayout extends javax.swing.JFrame {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new CustomerLayout(1).setVisible(true));
     }
 
 

@@ -81,7 +81,7 @@
                       <Component id="lblUsername" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="56" max="-2" attributes="0"/>
                       <Component id="btnHome" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="778" max="32767" attributes="0"/>
+                      <EmptySpace pref="925" max="32767" attributes="0"/>
                       <Component id="btnCart" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
                   </Group>
@@ -113,7 +113,7 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Salma Arifah Zahra"/>
+                <Property name="text" type="java.lang.String" value="-"/>
               </Properties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
@@ -139,6 +139,9 @@
                   <Image iconType="3" name="/images/icon_cart.png"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnCartMouseClicked"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
