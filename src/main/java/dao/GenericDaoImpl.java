@@ -40,7 +40,8 @@ public abstract class GenericDaoImpl<ID, T> implements GenericDao<ID, T> {
         sql.deleteCharAt(sql.length() - 1);
         sql.append(")");
 
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS)) {
+        Connection conn = DBConnection.getInstance().getConnection();
+        try (PreparedStatement ps = conn.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS)) {
 
             setParams(ps, entity); // mapping entity → params
             ps.executeUpdate();
@@ -59,7 +60,8 @@ public abstract class GenericDaoImpl<ID, T> implements GenericDao<ID, T> {
 
         sql.append(" WHERE ").append(idColumn).append("=?");
 
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+        Connection conn = DBConnection.getInstance().getConnection();
+        try (PreparedStatement ps = conn.prepareStatement(sql.toString())) {
 
             setParams(ps, entity);
             setIdParam(ps, entity, columns.length + 1);
@@ -72,7 +74,8 @@ public abstract class GenericDaoImpl<ID, T> implements GenericDao<ID, T> {
     public void delete(ID id) throws Exception {
         String sql = "DELETE FROM " + table + " WHERE " + idColumn + "=?";
 
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        Connection conn = DBConnection.getInstance().getConnection();
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setObject(1, id);
             ps.executeUpdate();
@@ -83,8 +86,9 @@ public abstract class GenericDaoImpl<ID, T> implements GenericDao<ID, T> {
     @Override
     public T findById(ID id) throws Exception {
         String sql = "SELECT * FROM " + table + " WHERE " + idColumn + "=?";
-
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+        
+        Connection conn = DBConnection.getInstance().getConnection();
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setObject(1, id);
 
@@ -99,7 +103,8 @@ public abstract class GenericDaoImpl<ID, T> implements GenericDao<ID, T> {
         List<T> list = new ArrayList<>();
         String sql = "SELECT * FROM " + table;
 
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+        Connection conn = DBConnection.getInstance().getConnection();
+        try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 list.add(mapResult(rs));

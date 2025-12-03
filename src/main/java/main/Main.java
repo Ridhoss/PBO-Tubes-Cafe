@@ -1,8 +1,12 @@
 package main;
 
-
+import app.controller.AuthController;
 import models.User;
-import dao.UsersDao;
+import app.services.UsersDao;
+import ui.KF;
+import ui.layout.LayoutAdmin;
+import ui.Login;
+import util.PasswordUtil;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -18,20 +22,18 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-//        try {
-//            UsersDao dao = new UsersDao();
-//
-//            User u = new User(null, "Salma Arifah", "budi@mail.com");
-//
-////            dao.insert(u);
-////            dao.update(u);
-////            dao.findAll();
-////            dao.findById(1);
-////            dao.delete(1);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Windows".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
 
-
+        KF.flogin.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+        KF.flogin.setVisible(true);
     }
 }

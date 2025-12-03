@@ -4,17 +4,32 @@
  */
 package database;
 
-/**
- *
- * @author RIDHO
- */
+import java.sql.Connection;
+import java.sql.DriverManager;
+
 public class DBConnection {
+
+    private static DBConnection instance; // 1 instance saja
+    private Connection connection;
 
     private static final String URL = "jdbc:postgresql://localhost:5432/dbtubespbo";
     private static final String USER = "postgres";
     private static final String PASS = "1234";
 
-    public static java.sql.Connection getConnection() throws Exception {
-        return java.sql.DriverManager.getConnection(URL, USER, PASS);
+    // Constructor private → tidak bisa diinstansiasi dari luar
+    private DBConnection() throws Exception {
+        connection = DriverManager.getConnection(URL, USER, PASS);
+    }
+
+    public static DBConnection getInstance() throws Exception {
+        if (instance == null) {
+            instance = new DBConnection();
+        }
+        return instance;
+    }
+
+    public Connection getConnection() {
+        return connection;
     }
 }
+
