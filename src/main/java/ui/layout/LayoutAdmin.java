@@ -40,7 +40,7 @@ public class LayoutAdmin extends javax.swing.JFrame {
         btnLogout = new javax.swing.JLabel();
         btnOrders = new javax.swing.JLabel();
         btnUser = new javax.swing.JLabel();
-        pnlUtama = new javax.swing.JPanel();
+        pnlUtamaAdmin = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -162,14 +162,14 @@ public class LayoutAdmin extends javax.swing.JFrame {
                 .addGap(27, 27, 27))
         );
 
-        javax.swing.GroupLayout pnlUtamaLayout = new javax.swing.GroupLayout(pnlUtama);
-        pnlUtama.setLayout(pnlUtamaLayout);
-        pnlUtamaLayout.setHorizontalGroup(
-            pnlUtamaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout pnlUtamaAdminLayout = new javax.swing.GroupLayout(pnlUtamaAdmin);
+        pnlUtamaAdmin.setLayout(pnlUtamaAdminLayout);
+        pnlUtamaAdminLayout.setHorizontalGroup(
+            pnlUtamaAdminLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
-        pnlUtamaLayout.setVerticalGroup(
-            pnlUtamaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        pnlUtamaAdminLayout.setVerticalGroup(
+            pnlUtamaAdminLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
@@ -181,14 +181,14 @@ public class LayoutAdmin extends javax.swing.JFrame {
                 .addComponent(pnlSidebar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pnlHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnlUtama, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(pnlUtamaAdmin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(pnlHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(pnlUtama, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(pnlUtamaAdmin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(pnlSidebar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -196,15 +196,15 @@ public class LayoutAdmin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDashboardMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDashboardMouseClicked
-        KF.UntukPanel(pnlUtama, KF.fdashAdmin);
+        KF.UntukPanel(pnlUtamaAdmin, KF.fdashAdmin);
     }//GEN-LAST:event_btnDashboardMouseClicked
 
     private void btnProductMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnProductMouseClicked
-        KF.UntukPanel(pnlUtama, KF.fproductAdmin);
+        KF.UntukPanel(pnlUtamaAdmin, KF.fproductAdmin);
     }//GEN-LAST:event_btnProductMouseClicked
 
     private void btnCategoriMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCategoriMouseClicked
-        KF.UntukPanel(pnlUtama, KF.fCategoriAdmin);
+        KF.UntukPanel(pnlUtamaAdmin, KF.fCategoriAdmin);
         KF.fCategoriAdmin.loadTable();
     }//GEN-LAST:event_btnCategoriMouseClicked
 
@@ -244,6 +244,6 @@ public class LayoutAdmin extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel pnlHeader;
     private javax.swing.JPanel pnlSidebar;
-    public javax.swing.JPanel pnlUtama;
+    public javax.swing.JPanel pnlUtamaAdmin;
     // End of variables declaration//GEN-END:variables
 }

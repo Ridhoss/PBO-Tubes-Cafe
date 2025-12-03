@@ -21,6 +21,8 @@ import ui.admin.CategoriAdmin;
 import ui.admin.DashboardAdmin;
 import ui.admin.ProductAdmin;
 import ui.admin.categori.TambahCategori;
+import ui.customer.DashboardCustomer;
+import ui.layout.CustomerLayout;
 
 /**
  *
@@ -36,8 +38,12 @@ public class KF {
     public static ProductAdmin fproductAdmin = new ProductAdmin();
     public static CategoriAdmin fCategoriAdmin = new CategoriAdmin();
     
-    //category
+    //category admin
     public static TambahCategori fAddCategory = new TambahCategori();
+    
+    //user 
+    public static CustomerLayout flayoutCustomer = new CustomerLayout();
+    public static DashboardCustomer fdashCustomer = new DashboardCustomer();
     
     public static void UntukInternalFrame(JPanel panelapa, JInternalFrame frameapa) {
         try {
