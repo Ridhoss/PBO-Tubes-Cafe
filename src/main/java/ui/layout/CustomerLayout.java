@@ -7,6 +7,7 @@ package ui.layout;
 import javax.swing.JOptionPane;
 import ui.KF;
 import ui.customer.KeranjangCustomer;
+import ui.customer.DetailProductCustomer;
 
 /**
  *
@@ -72,6 +73,21 @@ public class CustomerLayout extends javax.swing.JFrame {
                 KF.UntukPanel(pnlUtamaCustomer, KF.fdashCustomer);
             }
         });
+    }
+
+    public void showDetailProduct(models.Product product) {
+        try {
+            ui.customer.DetailProductCustomer detailPanel = new ui.customer.DetailProductCustomer(product);
+
+            KF.UntukPanel(pnlUtamaCustomer, detailPanel);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Gagal membuka detail produk: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
     }
 
     /**

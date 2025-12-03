@@ -4,6 +4,21 @@
  */
 package ui.customer;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Image;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
+import models.Product;
+
 /**
  *
  * @author Dell
@@ -13,8 +28,64 @@ public class DetailProductCustomer extends javax.swing.JPanel {
     /**
      * Creates new form DetailProductCustomer
      */
+    private Product product;
+
     public DetailProductCustomer() {
         initComponents();
+    }
+
+    public DetailProductCustomer(Product product) {
+        this.product = product;
+        initComponents();
+        iniDetail();
+    }
+
+    private void iniDetail() {
+        setLayout(new BorderLayout());
+        setBackground(Color.WHITE);
+
+        // GAMBAR
+        JLabel img = new JLabel("No Image", SwingConstants.CENTER);
+        img.setPreferredSize(new Dimension(300, 300));
+
+        try {
+            if (product.getImage_path() != null) {
+                ImageIcon icon = new ImageIcon(getClass().getResource("/" + product.getImage_path()));
+                Image scaled = icon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
+                img.setIcon(new ImageIcon(scaled));
+                img.setText("");
+            }
+        } catch (Exception e) {
+            System.out.println("Gagal ambil gambar");
+        }
+
+        JLabel lblName = new JLabel(product.getProduct_name());
+        lblName.setFont(new Font("Segoe UI", Font.BOLD, 24));
+
+        JTextArea txtDesc = new JTextArea(product.getDescription());
+        txtDesc.setLineWrap(true);
+        txtDesc.setWrapStyleWord(true);
+        txtDesc.setEditable(false);
+
+        JLabel lblPrice = new JLabel("Rp " + String.format("%,d", product.getPrice()));
+        lblPrice.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        lblPrice.setForeground(Color.decode("#2C7A7B"));
+
+        JButton btnAdd = new JButton("Add To Cart");
+
+        JPanel infoPanel = new JPanel();
+        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
+        infoPanel.setBackground(Color.WHITE);
+        infoPanel.add(lblName);
+        infoPanel.add(Box.createVerticalStrut(10));
+        infoPanel.add(lblPrice);
+        infoPanel.add(Box.createVerticalStrut(20));
+        infoPanel.add(txtDesc);
+        infoPanel.add(Box.createVerticalStrut(20));
+        infoPanel.add(btnAdd);
+
+        add(img, BorderLayout.WEST);
+        add(infoPanel, BorderLayout.CENTER);
     }
 
     /**
@@ -26,19 +97,50 @@ public class DetailProductCustomer extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+        pnlDetail = new javax.swing.JPanel();
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
+        jLabel1.setText("Detail Produk");
+
+        pnlDetail.setBackground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout pnlDetailLayout = new javax.swing.GroupLayout(pnlDetail);
+        pnlDetail.setLayout(pnlDetailLayout);
+        pnlDetailLayout.setHorizontalGroup(
+            pnlDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1012, Short.MAX_VALUE)
+        );
+        pnlDetailLayout.setVerticalGroup(
+            pnlDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 433, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1132, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(50, 50, 50)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(pnlDetail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(42, 42, 42))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 665, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(50, 50, 50)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addComponent(pnlDetail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(134, 134, 134))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel pnlDetail;
     // End of variables declaration//GEN-END:variables
 }

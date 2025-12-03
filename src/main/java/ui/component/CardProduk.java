@@ -8,6 +8,7 @@ import app.controller.CartController;
 import app.controller.CartItemsController;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
@@ -70,6 +71,13 @@ public class CardProduk extends JPanel {
 
         add(img, BorderLayout.NORTH);
         add(info, BorderLayout.CENTER);
+
+        this.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                openDetail(p);
+            }
+        });
     }
 
     private void addToCart(Product p) {
@@ -77,7 +85,7 @@ public class CardProduk extends JPanel {
             CartController cartController = new CartController();
             CartItemsController itemController = new CartItemsController();
 
-            Cart cart = cartController.getCartByUser(1); 
+            Cart cart = cartController.getCartByUser(1);
 
             if (cart == null) {
                 cartController.createCart(1);
@@ -89,6 +97,17 @@ public class CardProduk extends JPanel {
             JOptionPane.showMessageDialog(this, "Produk ditambahkan!");
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void openDetail(Product p) {
+        Container parent = getParent();
+        while (parent != null && !(parent instanceof ui.layout.CustomerLayout)) {
+            parent = parent.getParent();
+        }
+
+        if (parent instanceof ui.layout.CustomerLayout layout) {
+            layout.showDetailProduct(p);
         }
     }
 
