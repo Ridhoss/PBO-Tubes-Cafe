@@ -182,27 +182,27 @@ public class KeranjangCustomer extends javax.swing.JPanel {
         JPanel card = new JPanel();
         card.setBackground(Color.WHITE);
         card.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
-        card.setLayout(new BorderLayout());
+        card.setLayout(new BorderLayout(10, 0)); // 10 px horizontal gap
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120)); // full width
         card.setPreferredSize(new Dimension(pnlContainerCart.getWidth() - 20, 120));
 
-        // Image Panel
+        // ===== Image Panel =====
         JPanel imagePanel = new JPanel();
         imagePanel.setPreferredSize(new Dimension(120, 120));
         imagePanel.setBackground(new Color(240, 240, 240));
         imagePanel.setLayout(new GridBagLayout());
 
-        JLabel lblImage = new JLabel("No Image"); // nanti bisa diganti ImageIcon
+        JLabel lblImage = new JLabel("No Image"); // bisa diganti ImageIcon nanti
         lblImage.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         lblImage.setForeground(new Color(100, 100, 100));
         imagePanel.add(lblImage);
 
         card.add(imagePanel, BorderLayout.WEST);
 
-        // Info Panel
+        // ===== Info Panel =====
         JPanel infoPanel = new JPanel();
         infoPanel.setBackground(Color.WHITE);
-        infoPanel.setLayout(new GridLayout(3, 1, 5, 5)); // 3 baris: Qty, Nama, Harga
+        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
         infoPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JLabel lblQty = new JLabel("Qty: " + i.getQuantity());
@@ -215,29 +215,32 @@ public class KeranjangCustomer extends javax.swing.JPanel {
         lblPrice.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 
         infoPanel.add(lblQty);
+        infoPanel.add(Box.createVerticalStrut(5)); // jarak antar label
         infoPanel.add(lblName);
+        infoPanel.add(Box.createVerticalStrut(5));
         infoPanel.add(lblPrice);
 
         card.add(infoPanel, BorderLayout.CENTER);
 
-        // Button Panel
+        // ===== Button Panel =====
         JButton btnDelete = new JButton("Delete");
         btnDelete.setFocusPainted(false);
         btnDelete.setBackground(new Color(240, 80, 80));
         btnDelete.setForeground(Color.WHITE);
         btnDelete.setPreferredSize(new Dimension(80, 40));
         btnDelete.addActionListener(e -> {
-            // TODO: Hapus item dari cart
+            // TODO: hapus item dari cart
         });
 
         JPanel btnPanel = new JPanel();
         btnPanel.setBackground(Color.WHITE);
-        btnPanel.setLayout(new GridBagLayout());
+        btnPanel.setLayout(new GridBagLayout()); // supaya tombol tetap di tengah vertikal
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.insets = new Insets(0, 10, 0, 10);
         btnPanel.add(btnDelete, gbc);
+
         card.add(btnPanel, BorderLayout.EAST);
 
         return card;
