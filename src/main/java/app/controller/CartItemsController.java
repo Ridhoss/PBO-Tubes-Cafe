@@ -5,6 +5,7 @@
 package app.controller;
 
 import app.services.CartItemsDao;
+import app.services.UsersDao;
 import java.util.List;
 import models.CartItem;
 
@@ -14,47 +15,77 @@ import models.CartItem;
  */
 public class CartItemsController {
 
-    private CartItemsDao cartItemsDao = new CartItemsDao();
+    // === Singleton Instance ===
+    private static CartItemsController instance;
 
-    public void addItem(Integer cartId, Integer productId, Integer quantity) throws Exception {
-        CartItem item = cartItemsDao.findByCartAndProduct(cartId, productId);
+    // === DAO ===
+    private final CartItemsDao cartItemsDao;
 
-        if (item != null) {
-            item.setQuantity(item.getQuantity() + quantity);
-            cartItemsDao.update(item);
-            return;
-        }
-
-        CartItem newItem = new CartItem();
-        newItem.setCart_id(cartId);
-        newItem.setProduct_id(productId);
-        newItem.setQuantity(quantity);
-
-        cartItemsDao.insert(newItem);
+    // === Private constructor ===
+    private CartItemsController() {
+        cartItemsDao = new CartItemsDao();
     }
 
-    public void updateQuantity(Integer cartItemId, Integer newQty) throws Exception {
-        CartItem existing = cartItemsDao.findById(cartItemId);
-
-        if (existing == null) {
-            throw new Exception("Cart Item ID " + cartItemId + " tidak ditemukan");
+    public static synchronized CartItemsController getInstance() {
+        if (instance == null) {
+            instance = new CartItemsController();
         }
-
-        existing.setQuantity(newQty);
-        cartItemsDao.update(existing);
+        return instance;
     }
 
-    public void removeItem(Integer cartItemId) throws Exception {
-        CartItem item = cartItemsDao.findById(cartItemId);
-
-        if (item == null) {
-            throw new Exception("Cart Item ID " + cartItemId + " tidak ditemukan");
+    public void insertCartItem(Integer cartId, Integer productId, Integer quantity) throws Exception {
+        try {
+            CartItem existing = cartItemsDao.findByCartAndProduct(cartId, productId);
+            if (existing != null) {
+                // Kalau ada, tambahkan quantity
+                existing.setQuantity(existing.getQuantity() + quantity);
+                cartItemsDao.update(existing);
+            } else {
+                CartItem newItem = new CartItem();
+                newItem.setCart_id(cartId);
+                newItem.setProduct_id(productId);
+                newItem.setQuantity(quantity);
+                cartItemsDao.insert(newItem);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("Gagal menambahkan item ke cart: " + e.getMessage());
         }
+    }
 
-        cartItemsDao.delete(cartItemId);
+    public void updateCartItem(Integer cartItemId, Integer newQty) throws Exception {
+        try {
+            CartItem existing = cartItemsDao.findById(cartItemId);
+            if (existing == null) {
+                throw new Exception("Cart Item ID " + cartItemId + " tidak ditemukan");
+            }
+            existing.setQuantity(newQty);
+            cartItemsDao.update(existing);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("Gagal update cart item: " + e.getMessage());
+        }
+    }
+
+    public void deleteCartItem(Integer cartItemId) throws Exception {
+        try {
+            CartItem existing = cartItemsDao.findById(cartItemId);
+            if (existing == null) {
+                throw new Exception("Cart Item ID " + cartItemId + " tidak ditemukan");
+            }
+            cartItemsDao.delete(cartItemId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("Gagal menghapus cart item: " + e.getMessage());
+        }
     }
 
     public List<CartItem> getItemsByCart(Integer cartId) throws Exception {
-        return cartItemsDao.findByCartId(cartId);
+        try {
+            return cartItemsDao.findByCartId(cartId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("Gagal mengambil item cart: " + e.getMessage());
+        }
     }
 }

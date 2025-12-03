@@ -114,10 +114,6 @@ public class ProductController {
         return productDao.getAll();
     }
 
-    public List<Product> getAllProducts() throws Exception {
-        return productDao.findAll();
-    }
-
     public List<Product> getProductsByCategoryList(List<Integer> ids) throws Exception {
         return productDao.findByCategoryList(ids);
     }

@@ -16,7 +16,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 import javax.swing.*;
+import ui.KF;
 import ui.admin.DashboardAdmin;
+import util.WrapLayout;
 
 /**
  *
@@ -27,8 +29,8 @@ public class DashboardCustomer extends javax.swing.JPanel {
     /**
      * Creates new form Dashboard
      */
-    private CategoryController categoryController = new CategoryController();
-    private ProductController productController = new ProductController();
+    private CategoryController categoryController = CategoryController.getInstance();
+    private ProductController productController = ProductController.getInstance();
 
     public DashboardCustomer() {
         initComponents();
@@ -38,15 +40,51 @@ public class DashboardCustomer extends javax.swing.JPanel {
     }
 
     private void setupContainers() {
-        JPanel catContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
+        // Kategori
+        JPanel catContainer = new JPanel(new WrapLayout(FlowLayout.LEFT, 15, 10));
         jPanelcategory.putClientProperty("container", catContainer);
         jPanelcategory.setLayout(new BorderLayout());
         jPanelcategory.add(new JScrollPane(catContainer));
 
-        JPanel prodContainer = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 20));
+        // Produk
+        JPanel prodContainer = new JPanel(new WrapLayout(FlowLayout.LEFT, 20, 20));
         jPanelprod.putClientProperty("container", prodContainer);
         jPanelprod.setLayout(new BorderLayout());
         jPanelprod.add(new JScrollPane(prodContainer));
+    }
+
+    private JPanel createSimpleCategoryBox(String title, Runnable onClick) {
+        JPanel panel = new JPanel();
+        panel.setPreferredSize(new Dimension(110, 70));
+        panel.setBackground(Color.WHITE);
+        panel.setBorder(BorderFactory.createLineBorder(new Color(180, 180, 180)));
+        panel.setLayout(new GridBagLayout());
+
+        JLabel label = new JLabel(title);
+        label.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+
+        panel.add(label);
+
+        panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        panel.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                onClick.run();
+            }
+
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                panel.setBackground(new Color(240, 240, 240));
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                panel.setBackground(Color.WHITE);
+            }
+        });
+
+        return panel;
     }
 
     private void loadCategories() {
@@ -54,11 +92,14 @@ public class DashboardCustomer extends javax.swing.JPanel {
             JPanel container = (JPanel) jPanelcategory.getClientProperty("container");
             container.removeAll();
 
-            container.add(new ui.component.CardCategory(null, "All", () -> loadProducts(null)));
-            List<Category> categories = categoryController.getAllCategories();
+            container.add(createSimpleCategoryBox("All", () -> loadProducts(null)));
 
+            List<Category> categories = categoryController.getAllCategories();
             for (Category c : categories) {
-                container.add(new ui.component.CardCategory(c, c.getCategory_name(), () -> loadProducts(c)));
+                container.add(createSimpleCategoryBox(
+                        c.getCategory_name(),
+                        () -> loadProducts(c)
+                ));
             }
 
             container.revalidate();
@@ -67,6 +108,65 @@ public class DashboardCustomer extends javax.swing.JPanel {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private JPanel createProductCard(Product p) {
+        JPanel card = new JPanel();
+        card.setPreferredSize(new Dimension(180, 250));
+        card.setBackground(Color.WHITE);
+        card.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
+        card.setLayout(new BorderLayout());
+
+        JPanel imagePanel = new JPanel();
+        imagePanel.setPreferredSize(new Dimension(180, 120));
+        imagePanel.setBackground(new Color(240, 240, 240));
+        imagePanel.setLayout(new GridBagLayout());
+
+        JLabel noImg = new JLabel("No Image");
+        noImg.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        noImg.setForeground(new Color(100, 100, 100));
+
+        imagePanel.add(noImg);
+        card.add(imagePanel, BorderLayout.NORTH);
+
+        JPanel infoPanel = new JPanel();
+        infoPanel.setLayout(new GridBagLayout());
+        infoPanel.setBackground(Color.WHITE);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+
+        JLabel name = new JLabel(p.getProduct_name());
+        name.setFont(new Font("Segoe UI", Font.BOLD, 14));
+
+        JLabel price = new JLabel("Rp " + p.getPrice());
+        price.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+
+        gbc.gridy = 0;
+        infoPanel.add(name, gbc);
+        gbc.gridy = 1;
+        infoPanel.add(price, gbc);
+
+        card.add(infoPanel, BorderLayout.CENTER);
+
+        JButton btn = new JButton("View");
+        btn.setFocusPainted(false);
+        btn.setBackground(new Color(240, 240, 240));
+        btn.setPreferredSize(new Dimension(120, 40));
+
+        btn.addActionListener(e -> {
+            JPanel pnlUtama = (JPanel) SwingUtilities.getAncestorOfClass(JPanel.class, this);
+            KF.UntukPanel(pnlUtama, KF.fDetailProductCustomer);
+            KF.fDetailProductCustomer.loadData(p);
+        });
+
+        JPanel bottom = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        bottom.setBackground(Color.WHITE);
+        bottom.add(btn);
+
+        card.add(bottom, BorderLayout.SOUTH);
+
+        return card;
     }
 
     private void loadProducts(Category category) {
@@ -90,7 +190,7 @@ public class DashboardCustomer extends javax.swing.JPanel {
 
             for (Product p : products) {
                 if (Boolean.TRUE.equals(p.getIs_active())) {
-                    container.add(new ui.component.CardProduk(p));
+                    container.add(createProductCard(p));
                 }
             }
 
@@ -132,20 +232,20 @@ public class DashboardCustomer extends javax.swing.JPanel {
         jLabelProducts.setForeground(new java.awt.Color(74, 112, 169));
         jLabelProducts.setText("Products");
 
-        jPanelcategory.setBackground(new java.awt.Color(74, 112, 169));
+        jPanelcategory.setBackground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout jPanelcategoryLayout = new javax.swing.GroupLayout(jPanelcategory);
         jPanelcategory.setLayout(jPanelcategoryLayout);
         jPanelcategoryLayout.setHorizontalGroup(
             jPanelcategoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 877, Short.MAX_VALUE)
+            .addGap(0, 1016, Short.MAX_VALUE)
         );
         jPanelcategoryLayout.setVerticalGroup(
             jPanelcategoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 137, Short.MAX_VALUE)
         );
 
-        jPanelprod.setBackground(new java.awt.Color(74, 112, 169));
+        jPanelprod.setBackground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -173,7 +273,7 @@ public class DashboardCustomer extends javax.swing.JPanel {
                 .addGap(31, 31, 31)
                 .addComponent(jLabelProducts)
                 .addGap(18, 18, 18)
-                .addComponent(jPanelprod, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
+                .addComponent(jPanelprod, javax.swing.GroupLayout.DEFAULT_SIZE, 490, Short.MAX_VALUE)
                 .addGap(30, 30, 30))
         );
     }// </editor-fold>//GEN-END:initComponents

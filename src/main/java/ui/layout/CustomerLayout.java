@@ -37,34 +37,34 @@ public class CustomerLayout extends javax.swing.JFrame {
     }
 
     private void initEvents() {
-        btnCart.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                try {
-                    if (userId == null || userId <= 0) {
-                        JOptionPane.showMessageDialog(
-                                CustomerLayout.this,
-                                "User ID tidak valid. Silakan login kembali.",
-                                "Error",
-                                JOptionPane.ERROR_MESSAGE
-                        );
-                        return;
-                    }
-
-                    logger.log(java.util.logging.Level.INFO, "Opening cart for user: {0}", userId);
-                    KeranjangCustomer kc = new KeranjangCustomer(userId);
-                    KF.UntukPanel(pnlUtamaCustomer, kc);
-                } catch (Exception e) {
-                    logger.log(java.util.logging.Level.SEVERE, "Error opening cart", e);
-                    JOptionPane.showMessageDialog(
-                            CustomerLayout.this,
-                            "Gagal membuka keranjang: " + e.getMessage(),
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE
-                    );
-                }
-            }
-        });
+//        btnCart.addMouseListener(new java.awt.event.MouseAdapter() {
+//            @Override
+//            public void mouseClicked(java.awt.event.MouseEvent evt) {
+//                try {
+//                    if (userId == null || userId <= 0) {
+//                        JOptionPane.showMessageDialog(
+//                                CustomerLayout.this,
+//                                "User ID tidak valid. Silakan login kembali.",
+//                                "Error",
+//                                JOptionPane.ERROR_MESSAGE
+//                        );
+//                        return;
+//                    }
+//
+//                    logger.log(java.util.logging.Level.INFO, "Opening cart for user: {0}", userId);
+//                    KeranjangCustomer kc = new KeranjangCustomer(userId);
+//                    KF.UntukPanel(pnlUtamaCustomer, kc);
+//                } catch (Exception e) {
+//                    logger.log(java.util.logging.Level.SEVERE, "Error opening cart", e);
+//                    JOptionPane.showMessageDialog(
+//                            CustomerLayout.this,
+//                            "Gagal membuka keranjang: " + e.getMessage(),
+//                            "Error",
+//                            JOptionPane.ERROR_MESSAGE
+//                    );
+//                }
+//            }
+//        });
 
         btnHome.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -85,8 +85,7 @@ public class CustomerLayout extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        txtSearch = new javax.swing.JTextField();
-        jLabelUsername = new javax.swing.JLabel();
+        lblUsername = new javax.swing.JLabel();
         btnHome = new javax.swing.JLabel();
         btnCart = new javax.swing.JLabel();
         pnlUtamaCustomer = new javax.swing.JPanel();
@@ -98,16 +97,10 @@ public class CustomerLayout extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(74, 112, 169));
 
-        txtSearch.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtSearchActionPerformed(evt);
-            }
-        });
-
-        jLabelUsername.setBackground(new java.awt.Color(255, 255, 255));
-        jLabelUsername.setFont(new java.awt.Font("Segoe UI", 1, 17)); // NOI18N
-        jLabelUsername.setForeground(new java.awt.Color(255, 255, 255));
-        jLabelUsername.setText("Salma Arifah Zahra");
+        lblUsername.setBackground(new java.awt.Color(255, 255, 255));
+        lblUsername.setFont(new java.awt.Font("Segoe UI", 1, 17)); // NOI18N
+        lblUsername.setForeground(new java.awt.Color(255, 255, 255));
+        lblUsername.setText("Salma Arifah Zahra");
 
         btnHome.setFont(new java.awt.Font("Segoe UI", 0, 17)); // NOI18N
         btnHome.setForeground(new java.awt.Color(255, 255, 255));
@@ -125,28 +118,23 @@ public class CustomerLayout extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(28, 28, 28)
+                .addGap(20, 20, 20)
+                .addComponent(lblUsername)
+                .addGap(56, 56, 56)
                 .addComponent(btnHome)
-                .addGap(35, 35, 35)
-                .addComponent(jLabelUsername)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 483, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 778, Short.MAX_VALUE)
                 .addComponent(btnCart)
-                .addGap(18, 18, 18)
-                .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(48, 48, 48))
+                .addGap(27, 27, 27))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnHome)
-                            .addComponent(jLabelUsername))
-                        .addComponent(btnCart)))
-                .addContainerGap(20, Short.MAX_VALUE))
+            .addComponent(btnCart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 64, Short.MAX_VALUE)
+                    .addComponent(btnHome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout pnlUtamaCustomerLayout = new javax.swing.GroupLayout(pnlUtamaCustomer);
@@ -174,8 +162,8 @@ public class CustomerLayout extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(pnlUtamaCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0)
+                .addComponent(pnlUtamaCustomer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -192,14 +180,15 @@ public class CustomerLayout extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtSearchActionPerformed
-
     private void btnHomeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHomeMouseClicked
         KF.UntukPanel(pnlUtamaCustomer, KF.fdashCustomer);
     }//GEN-LAST:event_btnHomeMouseClicked
 
+    
+    public void setDataLayout(String username) {
+        lblUsername.setText(username);
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -229,10 +218,9 @@ public class CustomerLayout extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel btnCart;
     private javax.swing.JLabel btnHome;
-    private javax.swing.JLabel jLabelUsername;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    public javax.swing.JLabel lblUsername;
     public javax.swing.JPanel pnlUtamaCustomer;
-    private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
 }

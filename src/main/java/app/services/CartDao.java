@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import models.Cart;
+import models.User;
 
 /**
  *
@@ -23,28 +24,13 @@ public class CartDao extends GenericDaoImpl<Integer, Cart> {
         super(
                 "cart",
                 "cart_id",
-                "user_id",
-                "created_at",
-                "updated_at"
+                "user_id"
         );
     }
 
     @Override
     protected void setParams(PreparedStatement ps, Cart c) throws Exception {
-
         ps.setInt(1, c.getUser_id());
-
-        if (c.getCreated_at() != null) {
-            ps.setTimestamp(2, java.sql.Timestamp.valueOf(c.getCreated_at()));
-        } else {
-            ps.setNull(2, java.sql.Types.TIMESTAMP);
-        }
-
-        if (c.getUpdated_at() != null) {
-            ps.setTimestamp(3, java.sql.Timestamp.valueOf(c.getUpdated_at()));
-        } else {
-            ps.setNull(3, java.sql.Types.TIMESTAMP);
-        }
     }
 
     @Override

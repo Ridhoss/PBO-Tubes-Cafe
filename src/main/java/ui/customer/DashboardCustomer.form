@@ -48,7 +48,7 @@
               <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
               <Component id="jLabelProducts" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
-              <Component id="jPanelprod" pref="326" max="32767" attributes="0"/>
+              <Component id="jPanelprod" pref="490" max="32767" attributes="0"/>
               <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -83,14 +83,14 @@
     <Container class="javax.swing.JPanel" name="jPanelcategory">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="a9" green="70" red="4a" type="rgb"/>
+          <Color blue="ff" green="ff" red="ff" type="rgb"/>
         </Property>
       </Properties>
 
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="877" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="1016" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -103,7 +103,7 @@
     <Container class="javax.swing.JPanel" name="jPanelprod">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="a9" green="70" red="4a" type="rgb"/>
+          <Color blue="ff" green="ff" red="ff" type="rgb"/>
         </Property>
       </Properties>
 

@@ -34,171 +34,171 @@ public class KeranjangCustomer extends javax.swing.JPanel {
     /**
      * Creates new form KeranjangCustomer
      */
-    private int userId;
-    private int cartId;
-
-    private CartController cartController = new CartController();
-    private CartItemsController cartItemsController = new CartItemsController();
-    private ProductsDao productDao = new ProductsDao();
-
-    private static final java.util.logging.Logger logger
-            = java.util.logging.Logger.getLogger(KeranjangCustomer.class.getName());
-
-    public KeranjangCustomer(Integer userId1) {
-        if (userId1 == null || userId1 <= 0) {
-            throw new IllegalArgumentException("User ID harus valid (lebih dari 0)");
-        }
-
-        this.userId = userId1;
-        logger.log(java.util.logging.Level.INFO, "Initializing cart for user: {0}", userId);
-
-        initComponents();
-        loadCartData();
-    }
-
-    private void loadCartData() {
-        try {
-            Cart cart = cartController.getCartByUser(userId);
-
-            if (cart == null) {
-                cartController.createCart(userId);
-                cart = cartController.getCartByUser(userId);
-            }
-
-            cartId = cart.getCart_id();
-
-            List<CartItem> items = cartItemsController.getItemsByCart(cartId);
-
-            showItems(items);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Gagal memuat keranjang: " + e.getMessage());
-        }
-    }
-
-    private void showItems(List<CartItem> items) throws Exception {
-
-        pnlkeranjang1.removeAll();
- 
-
-        JPanel[] panels = {pnlkeranjang1};
-
-        int index = 0;
-        for (CartItem ci : items) {
-
-            if (index >= 3) {
-                break; 
-            }
-            Product p = productDao.findById(ci.getProduct_id());
-
-            JPanel card = createCartCard(ci, p);
-
-            panels[index].add(card, BorderLayout.CENTER);
-
-            index++;
-        }
-
-        revalidate();
-        repaint();
-    }
-
-    private JPanel createCartCard(CartItem item, Product p) {
-        JPanel card = new JPanel();
-        card.setLayout(new BorderLayout());
-        card.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
-        card.setPreferredSize(new Dimension(600, 150));
-
-        JLabel img = new JLabel();
-        img.setPreferredSize(new Dimension(120, 120));
-
-        try {
-            if (p.getImage_path() != null) {
-                String path = p.getImage_path();
-                if (!path.startsWith("/")) {
-                    path = "/" + path;
-                }
-
-                ImageIcon icon = new ImageIcon(getClass().getResource(path));
-                Image scaled = icon.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH);
-                img.setIcon(new ImageIcon(scaled));
-            }
-        } catch (Exception e) {
-            img.setText("No Image");
-            logger.log(java.util.logging.Level.WARNING, "Failed to load image: {0}", p.getImage_path());
-        }
-
-        JLabel name = new JLabel(p.getProduct_name());
-        name.setFont(new Font("Segoe UI", Font.BOLD, 16));
-
-        JLabel price = new JLabel("Rp " + String.format("%,d", p.getPrice()));
-        price.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-
-        JPanel qtyPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-
-        JButton btnMinus = new JButton("-");
-        JLabel lblQty = new JLabel(String.valueOf(item.getQuantity()));
-        lblQty.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        JButton btnPlus = new JButton("+");
-
-        qtyPanel.add(btnMinus);
-        qtyPanel.add(lblQty);
-        qtyPanel.add(btnPlus);
-
-        int subtotal = p.getPrice() * item.getQuantity();
-        JLabel lblSubtotal = new JLabel("Subtotal: Rp " + String.format("%,d", subtotal));
-        lblSubtotal.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-
-        JButton btnDelete = new JButton("Hapus");
-        btnDelete.setBackground(new Color(220, 53, 69));
-        btnDelete.setForeground(Color.WHITE);
-
-        JPanel info = new JPanel();
-        info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
-        info.add(name);
-        info.add(price);
-        info.add(qtyPanel);
-        info.add(lblSubtotal);
-        info.add(btnDelete);
-
-        btnPlus.addActionListener(e -> {
-            updateQty(item, lblQty, lblSubtotal, p.getPrice(), item.getQuantity() + 1);
-        });
-
-        btnMinus.addActionListener(e -> {
-            if (item.getQuantity() > 1) {
-                updateQty(item, lblQty, lblSubtotal, p.getPrice(), item.getQuantity() - 1);
-            }
-        });
-
-        btnDelete.addActionListener(e -> deleteItem(item));
-
-        card.add(img, BorderLayout.WEST);
-        card.add(info, BorderLayout.CENTER);
-
-        return card;
-    }
-
-    private void updateQty(CartItem item, JLabel lblQty, JLabel lblSubtotal, Integer price, int newQty) {
-        try {
-            cartItemsController.updateQuantity(item.getCart_item_id(), newQty);
-            item.setQuantity(newQty);
-            lblQty.setText(String.valueOf(newQty));
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Gagal update qty: " + e.getMessage());
-        }
-    }
-
-    private void deleteItem(CartItem item) {
-        try {
-            cartItemsController.removeItem(item.getCart_item_id());
-            loadCartData(); // reload
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Gagal menghapus: " + e.getMessage());
-        }
-    }
+//    private int userId;
+//    private int cartId;
+//
+//    private CartController cartController = new CartController();
+//    private CartItemsController cartItemsController = new CartItemsController();
+//    private ProductsDao productDao = new ProductsDao();
+//
+//    private static final java.util.logging.Logger logger
+//            = java.util.logging.Logger.getLogger(KeranjangCustomer.class.getName());
+//
+//    public KeranjangCustomer(Integer userId1) {
+//        if (userId1 == null || userId1 <= 0) {
+//            throw new IllegalArgumentException("User ID harus valid (lebih dari 0)");
+//        }
+//
+//        this.userId = userId1;
+//        logger.log(java.util.logging.Level.INFO, "Initializing cart for user: {0}", userId);
+//
+//        initComponents();
+//        loadCartData();
+//    }
+//
+//    private void loadCartData() {
+//        try {
+//            Cart cart = cartController.getCartByUser(userId);
+//
+//            if (cart == null) {
+//                cartController.createCart(userId);
+//                cart = cartController.getCartByUser(userId);
+//            }
+//
+//            cartId = cart.getCart_id();
+//
+//            List<CartItem> items = cartItemsController.getItemsByCart(cartId);
+//
+//            showItems(items);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            JOptionPane.showMessageDialog(this, "Gagal memuat keranjang: " + e.getMessage());
+//        }
+//    }
+//
+//    private void showItems(List<CartItem> items) throws Exception {
+//
+//        pnlkeranjang1.removeAll();
+// 
+//
+//        JPanel[] panels = {pnlkeranjang1};
+//
+//        int index = 0;
+//        for (CartItem ci : items) {
+//
+//            if (index >= 3) {
+//                break; 
+//            }
+//            Product p = productDao.findById(ci.getProduct_id());
+//
+//            JPanel card = createCartCard(ci, p);
+//
+//            panels[index].add(card, BorderLayout.CENTER);
+//
+//            index++;
+//        }
+//
+//        revalidate();
+//        repaint();
+//    }
+//
+//    private JPanel createCartCard(CartItem item, Product p) {
+//        JPanel card = new JPanel();
+//        card.setLayout(new BorderLayout());
+//        card.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+//        card.setPreferredSize(new Dimension(600, 150));
+//
+//        JLabel img = new JLabel();
+//        img.setPreferredSize(new Dimension(120, 120));
+//
+//        try {
+//            if (p.getImage_path() != null) {
+//                String path = p.getImage_path();
+//                if (!path.startsWith("/")) {
+//                    path = "/" + path;
+//                }
+//
+//                ImageIcon icon = new ImageIcon(getClass().getResource(path));
+//                Image scaled = icon.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH);
+//                img.setIcon(new ImageIcon(scaled));
+//            }
+//        } catch (Exception e) {
+//            img.setText("No Image");
+//            logger.log(java.util.logging.Level.WARNING, "Failed to load image: {0}", p.getImage_path());
+//        }
+//
+//        JLabel name = new JLabel(p.getProduct_name());
+//        name.setFont(new Font("Segoe UI", Font.BOLD, 16));
+//
+//        JLabel price = new JLabel("Rp " + String.format("%,d", p.getPrice()));
+//        price.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+//
+//        JPanel qtyPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+//
+//        JButton btnMinus = new JButton("-");
+//        JLabel lblQty = new JLabel(String.valueOf(item.getQuantity()));
+//        lblQty.setFont(new Font("Segoe UI", Font.BOLD, 14));
+//        JButton btnPlus = new JButton("+");
+//
+//        qtyPanel.add(btnMinus);
+//        qtyPanel.add(lblQty);
+//        qtyPanel.add(btnPlus);
+//
+//        int subtotal = p.getPrice() * item.getQuantity();
+//        JLabel lblSubtotal = new JLabel("Subtotal: Rp " + String.format("%,d", subtotal));
+//        lblSubtotal.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+//
+//        JButton btnDelete = new JButton("Hapus");
+//        btnDelete.setBackground(new Color(220, 53, 69));
+//        btnDelete.setForeground(Color.WHITE);
+//
+//        JPanel info = new JPanel();
+//        info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
+//        info.add(name);
+//        info.add(price);
+//        info.add(qtyPanel);
+//        info.add(lblSubtotal);
+//        info.add(btnDelete);
+//
+//        btnPlus.addActionListener(e -> {
+//            updateQty(item, lblQty, lblSubtotal, p.getPrice(), item.getQuantity() + 1);
+//        });
+//
+//        btnMinus.addActionListener(e -> {
+//            if (item.getQuantity() > 1) {
+//                updateQty(item, lblQty, lblSubtotal, p.getPrice(), item.getQuantity() - 1);
+//            }
+//        });
+//
+//        btnDelete.addActionListener(e -> deleteItem(item));
+//
+//        card.add(img, BorderLayout.WEST);
+//        card.add(info, BorderLayout.CENTER);
+//
+//        return card;
+//    }
+//
+//    private void updateQty(CartItem item, JLabel lblQty, JLabel lblSubtotal, Integer price, int newQty) {
+//        try {
+//            cartItemsController.updateQuantity(item.getCart_item_id(), newQty);
+//            item.setQuantity(newQty);
+//            lblQty.setText(String.valueOf(newQty));
+//
+//        } catch (Exception e) {
+//            JOptionPane.showMessageDialog(this, "Gagal update qty: " + e.getMessage());
+//        }
+//    }
+//
+//    private void deleteItem(CartItem item) {
+//        try {
+//            cartItemsController.removeItem(item.getCart_item_id());
+//            loadCartData(); // reload
+//
+//        } catch (Exception e) {
+//            JOptionPane.showMessageDialog(this, "Gagal menghapus: " + e.getMessage());
+//        }
+//    }
 
     /**
      * This method is called from within the constructor to initialize the form.

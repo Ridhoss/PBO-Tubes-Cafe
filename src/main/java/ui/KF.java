@@ -28,6 +28,7 @@ import ui.admin.product.TambahProduct;
 import ui.admin.user.EditUser;
 import ui.admin.user.TambahUser;
 import ui.customer.DashboardCustomer;
+import ui.customer.DetailProductCustomer;
 import ui.layout.CustomerLayout;
 
 /**
@@ -59,6 +60,7 @@ public class KF {
     //user 
     public static CustomerLayout flayoutCustomer = new CustomerLayout();
     public static DashboardCustomer fdashCustomer = new DashboardCustomer();
+    public static DetailProductCustomer fDetailProductCustomer = new DetailProductCustomer();
     
     
     public static void UntukInternalFrame(JPanel panelapa, JInternalFrame frameapa) {

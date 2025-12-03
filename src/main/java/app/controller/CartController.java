@@ -5,6 +5,7 @@
 package app.controller;
 
 import app.services.CartDao;
+import app.services.UsersDao;
 import java.util.List;
 import models.Cart;
 
@@ -14,7 +15,20 @@ import models.Cart;
  */
 public class CartController {
 
-    private CartDao cartDao = new CartDao();
+    private static CartController instance;
+
+    private final CartDao cartDao;
+
+    private CartController() {
+        cartDao = new CartDao();
+    }
+
+    public static synchronized CartController getInstance() {
+        if (instance == null) {
+            instance = new CartController();
+        }
+        return instance;
+    }
 
     public void createCart(Integer userId) throws Exception {
         Cart cart = new Cart();
@@ -34,9 +48,5 @@ public class CartController {
         }
 
         cartDao.delete(cartId);
-    }
-
-    public List<Cart> getAllCarts() throws Exception {
-        return cartDao.findAll();
     }
 }

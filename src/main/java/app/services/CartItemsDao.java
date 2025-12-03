@@ -25,8 +25,7 @@ public class CartItemsDao extends GenericDaoImpl<Integer, CartItem> {
                 "cart_item_id",
                 "cart_id",
                 "product_id",
-                "quantity",
-                "added_at"
+                "quantity"
         );
     }
 
@@ -36,12 +35,6 @@ public class CartItemsDao extends GenericDaoImpl<Integer, CartItem> {
         ps.setInt(1, c.getCart_id());
         ps.setInt(2, c.getProduct_id());
         ps.setInt(3, c.getQuantity());
-
-        if (c.getAdded_at() != null) {
-            ps.setTimestamp(4, java.sql.Timestamp.valueOf(c.getAdded_at()));
-        } else {
-            ps.setNull(4, java.sql.Types.TIMESTAMP);
-        }
     }
 
     @Override
@@ -65,27 +58,27 @@ public class CartItemsDao extends GenericDaoImpl<Integer, CartItem> {
         return item;
     }
 
-    public List<CartItem> findAll() throws Exception {
-        List<CartItem> list = new ArrayList<>();
+    public CartItem findByCartAndProduct(Integer cartId, Integer productId) throws Exception {
+        CartItem item = null;
+        String sql = "SELECT * FROM cart_items WHERE cart_id = ? AND product_id = ?";
         Connection conn = DBConnection.getInstance().getConnection();
-
-        String sql = "SELECT * FROM cart_items ORDER BY cart_item_id ASC";
-
-        try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
-
-            while (rs.next()) {
-                list.add(mapResult(rs));
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, cartId);
+            ps.setInt(2, productId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    item = mapResult(rs);
+                }
             }
         }
-        return list;
+        return item;
     }
 
     public List<CartItem> findByCartId(Integer cartId) throws Exception {
         List<CartItem> items = new ArrayList<>();
         String sql = "SELECT * FROM cart_items WHERE cart_id = ? ORDER BY cart_item_id ASC";
-
-        try (Connection conn = DBConnection.getInstance().getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-
+        Connection conn = DBConnection.getInstance().getConnection();
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, cartId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -94,24 +87,6 @@ public class CartItemsDao extends GenericDaoImpl<Integer, CartItem> {
             }
         }
         return items;
-    }
-
-    public CartItem findByCartAndProduct(Integer cartId, Integer productId) throws Exception {
-        CartItem item = null;
-        String sql = "SELECT * FROM cart_items WHERE cart_id = ? AND product_id = ?";
-
-        try (Connection conn = DBConnection.getInstance().getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, cartId);
-            ps.setInt(2, productId);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    item = mapResult(rs);
-                }
-            }
-        }
-        return item;
     }
 
 }
