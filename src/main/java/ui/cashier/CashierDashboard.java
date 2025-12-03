@@ -18,8 +18,8 @@ public class CashierDashboard extends JPanel {
     private CashierController controller;
 
     // Komponen Tabel
-    private JTable tblUnpaid;   // Tabel Kiri (Cash/Belum Lunas)
-    private JTable tblPaid;     // Tabel Kanan (Debit/Lunas)
+    private JTable tblUnpaid; // Tabel Kiri (Cash/Belum Lunas)
+    private JTable tblPaid; // Tabel Kanan (Debit/Lunas)
     private JTable tblProcessed;// Tabel Tab 2 (Monitoring)
 
     // Model Data Tabel
@@ -60,11 +60,17 @@ public class CashierDashboard extends JPanel {
             JOptionPane.showMessageDialog(this, "Data berhasil diperbarui!", "Info", JOptionPane.INFORMATION_MESSAGE);
         });
 
-        // Event Listener Tombol Scan (Akan diisi di Tahap 5)
+        // Event Listener Tombol Scan
         btnScan.addActionListener(e -> {
-             JOptionPane.showMessageDialog(this, "Fitur Scan akan dibuat di Tahap 5");
-             // new BarcodeScannerDialog((JFrame) SwingUtilities.getWindowAncestor(this), controller).setVisible(true);
-             refreshData();
+            // Panggil Dialog Scanner
+            JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            BarcodeScannerDialog scanner = new BarcodeScannerDialog(parentFrame, controller);
+            scanner.setVisible(true);
+
+            // Jika scan berhasil (dan detail dialog ditutup), refresh data dashboard
+            if (scanner.isScanSuccess()) {
+                refreshData();
+            }
         });
 
         pnlActions.add(btnScan);
@@ -78,7 +84,7 @@ public class CashierDashboard extends JPanel {
         // --- 2. MAIN CONTENT (TABS) ---
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        
+
         // Tab 1: Pesanan Masuk (Split View)
         JPanel pnlIncoming = new JPanel(new GridLayout(1, 2, 10, 0)); // Grid 1 baris 2 kolom
         pnlIncoming.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -126,9 +132,8 @@ public class CashierDashboard extends JPanel {
 
     private DefaultTableModel createTableModel() {
         return new DefaultTableModel(
-            new Object[][]{},
-            new String[]{"ID Order", "Nama", "Meja", "Total", "Waktu", "Status"}
-        ) {
+                new Object[][] {},
+                new String[] { "ID Order", "Nama", "Meja", "Total", "Waktu", "Status" }) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false; // Tabel tidak bisa diedit langsung
@@ -142,13 +147,13 @@ public class CashierDashboard extends JPanel {
         table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         table.setShowVerticalLines(false);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        
+
         // Style Header
         JTableHeader header = table.getTableHeader();
         header.setFont(new Font("Segoe UI", Font.BOLD, 14));
         header.setBackground(Color.WHITE);
         header.setForeground(CafeColors.TEXT_DARK);
-        
+
         // Center Alignment untuk beberapa kolom
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -175,7 +180,7 @@ public class CashierDashboard extends JPanel {
 
         panel.add(lblHeader, BorderLayout.NORTH);
         panel.add(new JScrollPane(table), BorderLayout.CENTER);
-        
+
         // Hint Text di bawah tabel
         JLabel lblHint = new JLabel(" *Klik baris untuk melihat detail & aksi");
         lblHint.setFont(new Font("Segoe UI", Font.ITALIC, 11));
@@ -198,39 +203,39 @@ public class CashierDashboard extends JPanel {
         // 2. Isi Tabel Unpaid (Cash)
         List<Order> unpaidOrders = controller.getUnpaidPendingOrders();
         for (Order o : unpaidOrders) {
-            modelUnpaid.addRow(new Object[]{
-                o.getOrderId(),
-                o.getCustomerName(),
-                o.getTableNumber(),
-                "Rp " + (int)o.getTotalAmount(),
-                o.getOrderTime().format(formatter),
-                "BELUM LUNAS"
+            modelUnpaid.addRow(new Object[] {
+                    o.getOrderId(),
+                    o.getCustomerName(),
+                    o.getTableNumber(),
+                    "Rp " + (int) o.getTotalAmount(),
+                    o.getOrderTime().format(formatter),
+                    "BELUM LUNAS"
             });
         }
 
         // 3. Isi Tabel Paid (Debit)
         List<Order> paidOrders = controller.getPaidPendingOrders();
         for (Order o : paidOrders) {
-            modelPaid.addRow(new Object[]{
-                o.getOrderId(),
-                o.getCustomerName(),
-                o.getTableNumber(),
-                "Rp " + (int)o.getTotalAmount(),
-                o.getOrderTime().format(formatter),
-                "LUNAS (Verifikasi)"
+            modelPaid.addRow(new Object[] {
+                    o.getOrderId(),
+                    o.getCustomerName(),
+                    o.getTableNumber(),
+                    "Rp " + (int) o.getTotalAmount(),
+                    o.getOrderTime().format(formatter),
+                    "LUNAS (Verifikasi)"
             });
         }
 
         // 4. Isi Tabel Processed
         List<Order> processedOrders = controller.getProcessedOrders();
         for (Order o : processedOrders) {
-            modelProcessed.addRow(new Object[]{
-                o.getOrderId(),
-                o.getCustomerName(),
-                o.getTableNumber(),
-                "Rp " + (int)o.getTotalAmount(),
-                o.getOrderTime().format(formatter),
-                o.getOrderStatus()
+            modelProcessed.addRow(new Object[] {
+                    o.getOrderId(),
+                    o.getCustomerName(),
+                    o.getTableNumber(),
+                    "Rp " + (int) o.getTotalAmount(),
+                    o.getOrderTime().format(formatter),
+                    o.getOrderStatus()
             });
         }
     }
@@ -241,14 +246,15 @@ public class CashierDashboard extends JPanel {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 int row = table.getSelectedRow();
-                if (row == -1) return;
+                if (row == -1)
+                    return;
 
                 // Ambil Order ID dari kolom ke-0
                 String orderId = (String) table.getValueAt(row, 0);
-                
+
                 // Ambil detail order dari controller
                 Order order = controller.getOrderDetail(orderId);
-                
+
                 if (order != null) {
                     // Buka Dialog Detail
                     // Menggunakan SwingUtilities untuk mendapatkan Frame parent
