@@ -3,64 +3,126 @@ package models;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class Order {
-    private String orderId;
+    private int orderId; // Ubah String ke int (sesuai SERIAL DB)
     private String customerName;
     private String tableNumber;
     private LocalDateTime orderTime;
     private List<OrderItem> items;
     private double totalAmount;
-    
-    // Status Pembayaran & Order
-    private String paymentType; // "CASH" atau "DEBIT"
-    private boolean isPaid;     // true = Lunas, false = Belum
-    private String orderStatus; // "PENDING", "APPROVED", "COMPLETED"
 
-    public Order(String customerName, String tableNumber, String paymentType) {
-        // Generate ID unik pendek untuk Barcode (Misal: ORD-AB12)
-        this.orderId = "ORD-" + UUID.randomUUID().toString().substring(0, 4).toUpperCase();
+    // Status dari Database
+    private String paymentStatus; // 'pending', 'paid', 'refunded'
+    private String orderStatus; // 'pending', 'processing', 'completed'
+    private String paymentMethod; // Akan diisi jika status 'paid'
+
+    public Order() {
+        this.items = new ArrayList<>();
+    }
+
+    // Constructor lengkap untuk mapping dari DB
+    public Order(int orderId, String customerName, String tableNumber, double totalAmount,
+            String paymentStatus, String orderStatus, LocalDateTime orderTime) {
+        this.orderId = orderId;
         this.customerName = customerName;
         this.tableNumber = tableNumber;
-        this.paymentType = paymentType;
-        this.orderTime = LocalDateTime.now();
+        this.totalAmount = totalAmount;
+        this.paymentStatus = paymentStatus;
+        this.orderStatus = orderStatus;
+        this.orderTime = orderTime;
         this.items = new ArrayList<>();
-        this.orderStatus = "PENDING";
-        
-        // Logika Status Pembayaran sesuai request
-        // Jika Debit -> Anggap sudah lunas di sisi customer (tinggal approve kasir)
-        // Jika Cash -> Belum lunas (harus ke kasir)
-        if (paymentType.equalsIgnoreCase("DEBIT")) {
-            this.isPaid = true;
-        } else {
-            this.isPaid = false;
-        }
     }
 
     public void addItem(OrderItem item) {
         items.add(item);
-        recalculateTotal();
     }
 
-    private void recalculateTotal() {
-        totalAmount = 0;
-        for (OrderItem item : items) {
-            totalAmount += item.getSubtotal();
+    // --- Logic Helper untuk UI ---
+
+    // UI butuh tahu metode bayar untuk memisahkan tabel
+    public String getPaymentTypeForUI() {
+        if ("paid".equalsIgnoreCase(paymentStatus)) {
+            // Jika sudah bayar, return method aslinya (misal DEBIT) atau default
+            return paymentMethod != null ? paymentMethod : "CASHLESS";
         }
+        return "CASH"; // Default kalau pending dianggap Cash (Bayar di kasir)
     }
 
-    // --- Getters & Setters ---
-    public String getOrderId() { return orderId; }
-    public String getCustomerName() { return customerName; }
-    public String getTableNumber() { return tableNumber; }
-    public LocalDateTime getOrderTime() { return orderTime; }
-    public List<OrderItem> getItems() { return items; }
-    public double getTotalAmount() { return totalAmount; }
-    public String getPaymentType() { return paymentType; }
-    public boolean isPaid() { return isPaid; }
-    public String getOrderStatus() { return orderStatus; }
+    public boolean isPaid() {
+        return "paid".equalsIgnoreCase(paymentStatus);
+    }
 
-    public void setPaid(boolean paid) { isPaid = paid; }
-    public void setOrderStatus(String orderStatus) { this.orderStatus = orderStatus; }
+    // --- Getters & Setters Standard ---
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getTableNumber() {
+        return tableNumber;
+    }
+
+    public void setTableNumber(String tableNumber) {
+        this.tableNumber = tableNumber;
+    }
+
+    public LocalDateTime getOrderTime() {
+        return orderTime;
+    }
+
+    public void setOrderTime(LocalDateTime orderTime) {
+        this.orderTime = orderTime;
+    }
+
+    public List<OrderItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<OrderItem> items) {
+        this.items = items;
+    }
+
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
 }

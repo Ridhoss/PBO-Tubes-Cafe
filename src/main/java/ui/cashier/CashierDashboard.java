@@ -5,11 +5,15 @@ import models.Order;
 import ui.util.CafeColors;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.basic.BasicButtonUI; // Wajib untuk warna tombol
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -17,57 +21,54 @@ public class CashierDashboard extends JPanel {
 
     private CashierController controller;
 
-    // Komponen Tabel
-    private JTable tblUnpaid; // Tabel Kiri (Cash/Belum Lunas)
-    private JTable tblPaid; // Tabel Kanan (Debit/Lunas)
-    private JTable tblProcessed;// Tabel Tab 2 (Monitoring)
+    // --- KOMPONEN TABEL ---
+    private JTable tblUnpaid; // Atas (Cash/Belum)
+    private JTable tblPaid; // Bawah (Debit/Lunas)
+    private JTable tblProcessing; // Tab 2 (Dapur)
+    private JTable tblCompleted; // Tab 3 (Selesai)
 
-    // Model Data Tabel
-    private DefaultTableModel modelUnpaid;
-    private DefaultTableModel modelPaid;
-    private DefaultTableModel modelProcessed;
+    private DefaultTableModel modelUnpaid, modelPaid, modelProcessing, modelCompleted;
 
     public CashierDashboard() {
         this.controller = new CashierController();
         initComponents();
-        refreshData(); // Load data awal saat panel dibuka
+        refreshData();
     }
 
     private void initComponents() {
         setLayout(new BorderLayout());
         setBackground(CafeColors.BACKGROUND);
 
-        // --- 1. HEADER SECTION ---
+        // =========================================
+        // 1. HEADER (Top Bar)
+        // =========================================
         JPanel pnlHeader = new JPanel(new BorderLayout());
-        pnlHeader.setBackground(CafeColors.PRIMARY);
-        pnlHeader.setPreferredSize(new Dimension(800, 60));
-        pnlHeader.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        pnlHeader.setBackground(Color.WHITE);
+        pnlHeader.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY),
+                new EmptyBorder(15, 25, 15, 25)));
 
         JLabel lblTitle = new JLabel("Cashier Dashboard");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        lblTitle.setForeground(CafeColors.WHITE);
+        lblTitle.setForeground(CafeColors.PRIMARY);
 
-        // Panel Tombol di Header
         JPanel pnlActions = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         pnlActions.setOpaque(false);
 
-        JButton btnScan = createButton("Scan Barcode", "/images/icon_card.png"); // Ganti icon jika ada
-        JButton btnRefresh = createButton("Refresh Data", null);
+        JButton btnScan = createStyledButton("Scan Barcode", CafeColors.PRIMARY);
+        JButton btnRefresh = createStyledButton("Refresh Data", CafeColors.SECONDARY);
 
-        // Event Listener Tombol Refresh
+        // --- REVISI 1: Tambahkan Notifikasi Refresh ---
         btnRefresh.addActionListener((ActionEvent e) -> {
             refreshData();
             JOptionPane.showMessageDialog(this, "Data berhasil diperbarui!", "Info", JOptionPane.INFORMATION_MESSAGE);
         });
 
-        // Event Listener Tombol Scan
         btnScan.addActionListener(e -> {
-            // Panggil Dialog Scanner
             JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             BarcodeScannerDialog scanner = new BarcodeScannerDialog(parentFrame, controller);
             scanner.setVisible(true);
 
-            // Jika scan berhasil (dan detail dialog ditutup), refresh data dashboard
             if (scanner.isScanSuccess()) {
                 refreshData();
             }
@@ -81,166 +82,160 @@ public class CashierDashboard extends JPanel {
 
         add(pnlHeader, BorderLayout.NORTH);
 
-        // --- 2. MAIN CONTENT (TABS) ---
+        // =========================================
+        // 2. MAIN TABS
+        // =========================================
         JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        tabbedPane.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        tabbedPane.setBackground(CafeColors.BACKGROUND);
 
-        // Tab 1: Pesanan Masuk (Split View)
-        JPanel pnlIncoming = new JPanel(new GridLayout(1, 2, 10, 0)); // Grid 1 baris 2 kolom
-        pnlIncoming.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        // --- TAB 1: PESANAN MASUK (Split Atas-Bawah) ---
+        JPanel pnlIncoming = new JPanel(new GridLayout(2, 1, 0, 20));
+        pnlIncoming.setBorder(new EmptyBorder(20, 20, 20, 20));
         pnlIncoming.setBackground(CafeColors.BACKGROUND);
 
-        // Panel Kiri: Belum Lunas (Cash)
+        // Tabel Atas: Belum Lunas
         modelUnpaid = createTableModel();
-        tblUnpaid = createTable(modelUnpaid);
+        tblUnpaid = createStyledTable(modelUnpaid);
         addTableListener(tblUnpaid);
-        JPanel pnlLeft = createTablePanel("Belum Lunas (Cash)", tblUnpaid, CafeColors.STATUS_UNPAID);
+        JPanel pnlUnpaid = createSectionPanel("Menunggu Pembayaran (Cash)", tblUnpaid, CafeColors.STATUS_UNPAID);
 
-        // Panel Kanan: Sudah Lunas (Debit)
+        // Tabel Bawah: Sudah Lunas
         modelPaid = createTableModel();
-        tblPaid = createTable(modelPaid);
+        tblPaid = createStyledTable(modelPaid);
         addTableListener(tblPaid);
-        JPanel pnlRight = createTablePanel("Sudah Lunas (Debit/QRIS)", tblPaid, CafeColors.STATUS_PAID);
+        JPanel pnlPaid = createSectionPanel("Siap Diproses (Lunas/Debit)", tblPaid, CafeColors.STATUS_PAID);
 
-        pnlIncoming.add(pnlLeft);
-        pnlIncoming.add(pnlRight);
+        pnlIncoming.add(pnlUnpaid);
+        pnlIncoming.add(pnlPaid);
 
-        // Tab 2: Monitoring (Processed)
-        modelProcessed = createTableModel();
-        tblProcessed = createTable(modelProcessed);
-        addTableListener(tblProcessed);
-        JPanel pnlMonitoring = createTablePanel("Riwayat & Proses Pesanan", tblProcessed, CafeColors.SECONDARY);
-        pnlMonitoring.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        // --- TAB 2: MONITORING ---
+        JPanel pnlMonitoring = new JPanel(new BorderLayout());
+        pnlMonitoring.setBorder(new EmptyBorder(20, 20, 20, 20));
+        pnlMonitoring.setBackground(CafeColors.BACKGROUND);
+
+        modelProcessing = createTableModel();
+        tblProcessing = createStyledTable(modelProcessing);
+        addTableListener(tblProcessing);
+        JPanel pnlProcContent = createSectionPanel("Sedang Diproses di Dapur", tblProcessing,
+                CafeColors.STATUS_PROCESS);
+        pnlMonitoring.add(pnlProcContent, BorderLayout.CENTER);
+
+        // --- TAB 3: RIWAYAT ---
+        JPanel pnlHistory = new JPanel(new BorderLayout());
+        pnlHistory.setBorder(new EmptyBorder(20, 20, 20, 20));
+        pnlHistory.setBackground(CafeColors.BACKGROUND);
+
+        modelCompleted = createTableModel();
+        tblCompleted = createStyledTable(modelCompleted);
+        addTableListener(tblCompleted);
+        JPanel pnlHistContent = createSectionPanel("Riwayat Pesanan Selesai", tblCompleted, CafeColors.STATUS_DONE);
+        pnlHistory.add(pnlHistContent, BorderLayout.CENTER);
 
         tabbedPane.addTab("Pesanan Masuk", pnlIncoming);
-        tabbedPane.addTab("Monitoring Pesanan", pnlMonitoring);
+        tabbedPane.addTab("Monitoring", pnlMonitoring);
+        tabbedPane.addTab("Riwayat", pnlHistory);
 
         add(tabbedPane, BorderLayout.CENTER);
     }
 
-    // --- HELPER METHODS UNTUK MEMBUAT UI ---
+    // =========================================
+    // HELPER METHODS
+    // =========================================
 
-    private JButton createButton(String text, String iconPath) {
+    private JButton createStyledButton(String text, Color bg) {
         JButton btn = new JButton(text);
-        btn.setFont(new Font("Segoe UI", Font.BOLD, 12));
-        btn.setBackground(CafeColors.SECONDARY);
-        btn.setForeground(CafeColors.WHITE);
+        btn.setUI(new BasicButtonUI()); // FIX: Matikan style Windows agar warna muncul
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        btn.setBackground(bg);
+        btn.setForeground(Color.WHITE);
         btn.setFocusPainted(false);
-        btn.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
+        btn.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        btn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                btn.setBackground(bg.darker());
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                btn.setBackground(bg);
+            }
+        });
+
         return btn;
+    }
+
+    private JPanel createSectionPanel(String title, JTable table, Color accentColor) {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(Color.WHITE);
+        panel.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1));
+
+        JLabel lblHeader = new JLabel(title);
+        lblHeader.setOpaque(true);
+        lblHeader.setBackground(Color.WHITE);
+        lblHeader.setForeground(accentColor);
+        lblHeader.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        lblHeader.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 0, 2, 0, accentColor),
+                new EmptyBorder(10, 15, 10, 15)));
+
+        panel.add(lblHeader, BorderLayout.NORTH);
+        panel.add(new JScrollPane(table), BorderLayout.CENTER);
+        return panel;
     }
 
     private DefaultTableModel createTableModel() {
         return new DefaultTableModel(
                 new Object[][] {},
-                new String[] { "ID Order", "Nama", "Meja", "Total", "Waktu", "Status" }) {
+                new String[] { "ID Order", "Nama Customer", "Meja", "Total Harga", "Waktu" }) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Tabel tidak bisa diedit langsung
+                return false;
             }
         };
     }
 
-    private JTable createTable(DefaultTableModel model) {
+    private JTable createStyledTable(DefaultTableModel model) {
         JTable table = new JTable(model);
-        table.setRowHeight(30);
+        table.setRowHeight(40);
         table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        table.setShowVerticalLines(false);
+        table.setShowGrid(true);
+        table.setGridColor(CafeColors.TABLE_GRID);
+        table.setIntercellSpacing(new Dimension(1, 1));
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.setSelectionBackground(CafeColors.TABLE_SELECTION);
+        table.setSelectionForeground(Color.BLACK);
 
-        // Style Header
         JTableHeader header = table.getTableHeader();
         header.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        header.setBackground(Color.WHITE);
-        header.setForeground(CafeColors.TEXT_DARK);
+        header.setBackground(CafeColors.TABLE_HEADER_BG);
+        header.setForeground(CafeColors.TABLE_HEADER_TEXT);
+        header.setPreferredSize(new Dimension(0, 40));
 
-        // Center Alignment untuk beberapa kolom
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
+        DefaultTableCellRenderer paddedRenderer = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                    boolean isSelected, boolean hasFocus, int row, int column) {
+                super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                setBorder(new EmptyBorder(0, 10, 0, 10));
+                return this;
+            }
+        };
+
+        table.setDefaultRenderer(Object.class, paddedRenderer);
         table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer); // ID
         table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer); // Meja
-        table.getColumnModel().getColumn(5).setCellRenderer(centerRenderer); // Status
+        table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer); // Waktu
 
         return table;
     }
 
-    private JPanel createTablePanel(String title, JTable table, Color headerColor) {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(Color.WHITE);
-        panel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
-
-        // Header Panel Kecil di atas tabel
-        JLabel lblHeader = new JLabel(title);
-        lblHeader.setOpaque(true);
-        lblHeader.setBackground(headerColor);
-        lblHeader.setForeground(Color.WHITE);
-        lblHeader.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        lblHeader.setHorizontalAlignment(SwingConstants.CENTER);
-        lblHeader.setBorder(BorderFactory.createEmptyBorder(8, 0, 8, 0));
-
-        panel.add(lblHeader, BorderLayout.NORTH);
-        panel.add(new JScrollPane(table), BorderLayout.CENTER);
-
-        // Hint Text di bawah tabel
-        JLabel lblHint = new JLabel(" *Klik baris untuk melihat detail & aksi");
-        lblHint.setFont(new Font("Segoe UI", Font.ITALIC, 11));
-        lblHint.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        panel.add(lblHint, BorderLayout.SOUTH);
-
-        return panel;
-    }
-
-    // --- LOGIC UPDATE DATA ---
-
-    public void refreshData() {
-        // 1. Clear Data Lama
-        modelUnpaid.setRowCount(0);
-        modelPaid.setRowCount(0);
-        modelProcessed.setRowCount(0);
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-
-        // 2. Isi Tabel Unpaid (Cash)
-        List<Order> unpaidOrders = controller.getUnpaidPendingOrders();
-        for (Order o : unpaidOrders) {
-            modelUnpaid.addRow(new Object[] {
-                    o.getOrderId(),
-                    o.getCustomerName(),
-                    o.getTableNumber(),
-                    "Rp " + (int) o.getTotalAmount(),
-                    o.getOrderTime().format(formatter),
-                    "BELUM LUNAS"
-            });
-        }
-
-        // 3. Isi Tabel Paid (Debit)
-        List<Order> paidOrders = controller.getPaidPendingOrders();
-        for (Order o : paidOrders) {
-            modelPaid.addRow(new Object[] {
-                    o.getOrderId(),
-                    o.getCustomerName(),
-                    o.getTableNumber(),
-                    "Rp " + (int) o.getTotalAmount(),
-                    o.getOrderTime().format(formatter),
-                    "LUNAS (Verifikasi)"
-            });
-        }
-
-        // 4. Isi Tabel Processed
-        List<Order> processedOrders = controller.getProcessedOrders();
-        for (Order o : processedOrders) {
-            modelProcessed.addRow(new Object[] {
-                    o.getOrderId(),
-                    o.getCustomerName(),
-                    o.getTableNumber(),
-                    "Rp " + (int) o.getTotalAmount(),
-                    o.getOrderTime().format(formatter),
-                    o.getOrderStatus()
-            });
-        }
-    }
-
-    // Method baru untuk mendeteksi klik pada tabel
     private void addTableListener(JTable table) {
         table.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -249,20 +244,16 @@ public class CashierDashboard extends JPanel {
                 if (row == -1)
                     return;
 
-                // Ambil Order ID dari kolom ke-0
-                String orderId = (String) table.getValueAt(row, 0);
+                Object idObj = table.getValueAt(row, 0);
+                String orderIdStr = idObj.toString();
 
-                // Ambil detail order dari controller
-                Order order = controller.getOrderDetail(orderId);
+                Order order = controller.getOrderDetail(orderIdStr);
 
                 if (order != null) {
-                    // Buka Dialog Detail
-                    // Menggunakan SwingUtilities untuk mendapatkan Frame parent
                     JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(CashierDashboard.this);
                     OrderDetailDialog dialog = new OrderDetailDialog(parentFrame, controller, order);
-                    dialog.setVisible(true); // Aplikasi akan berhenti di sini sampai dialog ditutup (Modal)
+                    dialog.setVisible(true);
 
-                    // Setelah dialog ditutup, cek apakah perlu refresh
                     if (dialog.isOrderUpdated()) {
                         refreshData();
                     }
@@ -271,12 +262,52 @@ public class CashierDashboard extends JPanel {
         });
     }
 
-    // Main method untuk testing tampilan ini secara mandiri (Tanpa Login)
+    public void refreshData() {
+        modelUnpaid.setRowCount(0);
+        modelPaid.setRowCount(0);
+        modelProcessing.setRowCount(0);
+        modelCompleted.setRowCount(0);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        List<Order> unpaidOrders = controller.getUnpaidPendingOrders();
+        for (Order o : unpaidOrders)
+            modelUnpaid.addRow(createRowData(o, formatter));
+
+        List<Order> paidOrders = controller.getPaidPendingOrders();
+        for (Order o : paidOrders)
+            modelPaid.addRow(createRowData(o, formatter));
+
+        List<Order> processingOrders = controller.getProcessingOrders();
+        for (Order o : processingOrders)
+            modelProcessing.addRow(createRowData(o, formatter));
+
+        List<Order> completedOrders = controller.getCompletedOrders();
+        for (Order o : completedOrders)
+            modelCompleted.addRow(createRowData(o, formatter));
+    }
+
+    private Object[] createRowData(Order o, DateTimeFormatter formatter) {
+        return new Object[] {
+                o.getOrderId(),
+                o.getCustomerName(),
+                o.getTableNumber(),
+                "Rp " + (int) o.getTotalAmount(),
+                o.getOrderTime().format(formatter)
+        };
+    }
+
     public static void main(String[] args) {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ex) {
+        }
+
         JFrame frame = new JFrame("Test Cashier System");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1000, 700);
+        frame.setSize(1200, 800);
         frame.add(new CashierDashboard());
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 }
