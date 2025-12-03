@@ -6,6 +6,8 @@ package ui.customer;
 
 import app.controller.CartController;
 import app.controller.CartItemsController;
+import app.controller.OrderController;
+import app.controller.OrderItemsController;
 import app.controller.ProductController;
 import app.controller.UserController;
 import java.awt.BorderLayout;
@@ -29,6 +31,7 @@ import javax.swing.SwingUtilities;
 import models.Cart;
 import models.CartItem;
 import models.Category;
+import models.Order;
 import models.Product;
 import models.User;
 import ui.KF;
@@ -152,22 +155,70 @@ public class KeranjangCustomer extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCheckoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCheckoutMouseClicked
-        // TODO add your handling code here:
+        try {
+            User thisUser = userController.findByUsername(KF.flayoutCustomer.lblUsername.getText());
+            Cart thisCart = cartcontroller.getCartByUser(thisUser.getUser_id());
+            if (thisCart == null) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Keranjang kosong!");
+                return;
+            }
+
+            List<CartItem> cartItems = cartItemsController.getItemsByCart(thisCart.getCart_id());
+            if (cartItems.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Keranjang kosong!");
+                return;
+            }
+
+            int totalAmount = 0;
+            for (CartItem item : cartItems) {
+                Product p = productController.getProductById(item.getProduct_id());
+                totalAmount += p.getPrice() * item.getQuantity();
+            }
+
+            Order order = new Order();
+            orderController.addOrder(thisUser.getUser_id(), totalAmount, 0, totalAmount, "Unpaid", "Waiting", "");
+            
+            Order thisOrder = orderController.findLastOrderByUser(thisUser.getUser_id());
+
+            for (CartItem item : cartItems) {
+                Product p = productController.getProductById(item.getProduct_id());
+
+                int subtotal = p.getPrice() * item.getQuantity();
+
+                orderItemsController.addOrderItem(
+                        thisOrder.getOrder_id(),
+                        p.getProduct_id(),
+                        item.getQuantity(),
+                        p.getPrice(),
+                        subtotal,
+                        ""
+                );
+            }
+
+            for (CartItem item : cartItems) {
+                cartItemsController.deleteCartItem(item.getCart_item_id());
+            }
+
+            javax.swing.JOptionPane.showMessageDialog(this, "Checkout berhasil! Total: Rp " + totalAmount);
+
+            totalPrice = 0;
+            loadProducts();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            javax.swing.JOptionPane.showMessageDialog(this, "Terjadi kesalahan saat checkout: " + e.getMessage());
+        }
     }//GEN-LAST:event_btnCheckoutMouseClicked
 
     private void setupContainers() {
-        // Panel utama menumpuk vertikal
         JPanel prodContainer = new JPanel();
         prodContainer.setLayout(new BoxLayout(prodContainer, BoxLayout.Y_AXIS));
         prodContainer.setBackground(Color.WHITE);
 
-        // kasih jarak antar card
         prodContainer.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // simpan sebagai client property agar loadProducts bisa akses
         pnlContainerCart.putClientProperty("container", prodContainer);
 
-        // ScrollPane untuk scroll vertical
         JScrollPane scroll = new JScrollPane(prodContainer,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -240,7 +291,7 @@ public class KeranjangCustomer extends javax.swing.JPanel {
 
         JPanel btnPanel = new JPanel();
         btnPanel.setBackground(Color.WHITE);
-        btnPanel.setLayout(new GridBagLayout()); // supaya tombol tetap di tengah vertikal
+        btnPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -274,7 +325,7 @@ public class KeranjangCustomer extends javax.swing.JPanel {
                     totalPrice += p.getPrice() * item.getQuantity();
                 }
             }
-            
+
             lblTotal.setText(totalPrice.toString());
 
             container.revalidate();
@@ -291,6 +342,8 @@ public class KeranjangCustomer extends javax.swing.JPanel {
     CartItemsController cartItemsController = CartItemsController.getInstance();
     UserController userController = UserController.getInstance();
     ProductController productController = ProductController.getInstance();
+    OrderController orderController = OrderController.getInstance();
+    OrderItemsController orderItemsController = OrderItemsController.getInstance();
 
     public void setUser() {
         setupContainers();

@@ -94,4 +94,21 @@ public class OrderController {
         }
         return result;
     }
+
+    public Order findLastOrderByUser(Integer userId) throws Exception {
+        List<Order> orders = getOrdersByUserId(userId);
+        if (orders.isEmpty()) {
+            return null;
+        }
+
+        Order lastOrder = orders.get(0);
+        for (Order o : orders) {
+            if (o.getOrder_id() > lastOrder.getOrder_id()) {
+                lastOrder = o;
+            }
+        }
+
+        return lastOrder;
+    }
+
 }

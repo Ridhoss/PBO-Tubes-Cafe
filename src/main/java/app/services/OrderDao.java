@@ -21,6 +21,7 @@ public class OrderDao extends GenericDaoImpl<Integer, Order> {
                 "orders",
                 "order_id",
                 "user_id",
+                "total_amount",
                 "discount",
                 "final_amount",
                 "payment_status",
@@ -32,11 +33,12 @@ public class OrderDao extends GenericDaoImpl<Integer, Order> {
     @Override
     protected void setParams(PreparedStatement ps, Order o) throws Exception {
         ps.setInt(1, o.getUser_id());
-        ps.setInt(2, o.getDiscount());
-        ps.setInt(3, o.getFinal_amount());
-        ps.setString(4, o.getPayment_status());
-        ps.setString(5, o.getOrder_status());
-        ps.setString(6, o.getNotes());
+        ps.setInt(2, o.getTotal_amount());
+        ps.setInt(3, o.getDiscount() != null ? o.getDiscount() : 0);
+        ps.setInt(4, o.getFinal_amount() != null ? o.getFinal_amount() : o.getTotal_amount());
+        ps.setString(5, o.getPayment_status());
+        ps.setString(6, o.getOrder_status());
+        ps.setString(7, o.getNotes() != null ? o.getNotes() : "");
     }
 
     @Override

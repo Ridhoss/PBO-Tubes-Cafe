@@ -31,12 +31,11 @@ public class OrderItemsDao extends GenericDaoImpl<Integer, OrderItems> {
 
     @Override
     protected void setParams(PreparedStatement ps, OrderItems o) throws Exception {
-        ps.setInt(1, o.getOrder_item_id());
-        ps.setInt(2, o.getOrder_id());
-        ps.setInt(3, o.getProduct_id());
-        ps.setInt(4, o.getQuantity());
-        ps.setInt(5, o.getOriginal_price());
-        ps.setInt(6, o.getSubtotal());
+        ps.setInt(1, o.getOrder_id());
+        ps.setInt(2, o.getProduct_id());
+        ps.setInt(3, o.getQuantity());
+        ps.setInt(4, o.getOriginal_price());
+        ps.setInt(5, o.getSubtotal());
         ps.setString(6, o.getNote());
     }
 
