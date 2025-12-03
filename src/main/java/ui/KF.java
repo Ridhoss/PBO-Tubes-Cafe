@@ -17,17 +17,28 @@ import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
+import ui.admin.CategoriAdmin;
+import ui.admin.DashboardAdmin;
+import ui.admin.ProductAdmin;
+import ui.admin.categori.TambahCategori;
 
 /**
  *
  * @author RIDHO
  */
 public class KF {
-
-    public static LayoutAdmin flayout = new LayoutAdmin();
+    // auth
     public static Login flogin = new Login();
-    public static Register fregister = new Register();
-
+    
+    //admin
+    public static LayoutAdmin flayoutAdmin = new LayoutAdmin();
+    public static DashboardAdmin fdashAdmin = new DashboardAdmin();
+    public static ProductAdmin fproductAdmin = new ProductAdmin();
+    public static CategoriAdmin fCategoriAdmin = new CategoriAdmin();
+    
+    //category
+    public static TambahCategori fAddCategory = new TambahCategori();
+    
     public static void UntukInternalFrame(JPanel panelapa, JInternalFrame frameapa) {
         try {
             panelapa.removeAll();

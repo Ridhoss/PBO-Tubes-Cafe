@@ -9,6 +9,8 @@ import database.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import models.Category;
 
@@ -69,5 +71,19 @@ public class CategoriesDao extends GenericDaoImpl<Integer, Category> {
         try (PreparedStatement ps = conn.prepareStatement("DELETE FROM categories")) {
             ps.executeUpdate();
         }
+    }
+
+    public List<Category> findAll() throws Exception {
+        List<Category> list = new ArrayList<>();
+        Connection conn = DBConnection.getInstance().getConnection();
+        String sql = "SELECT * FROM categories ORDER BY category_id ASC";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                list.add(mapResult(rs));
+            }
+        }
+
+        return list;
     }
 }

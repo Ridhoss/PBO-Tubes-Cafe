@@ -6,6 +6,7 @@ package app.controller;
 
 import models.Category;
 import app.services.CategoriesDao;
+import java.util.List;
 
 /**
  *
@@ -49,5 +50,22 @@ public class CategoryController {
         }
 
         categoryDao.delete(c.getCategory_id());
+    }
+
+    public List<Category> getAllCategories() throws Exception {
+        return categoryDao.findAll();
+    }
+
+    public List<Category> getParentCategories() throws Exception {
+        List<Category> allCategories = categoryDao.findAll();
+        List<Category> parentCategories = new java.util.ArrayList<>();
+
+        for (Category c : allCategories) {
+            if (c.getParent_id() == null) {
+                parentCategories.add(c);
+            }
+        }
+
+        return parentCategories;
     }
 }

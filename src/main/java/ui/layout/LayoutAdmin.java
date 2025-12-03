@@ -4,12 +4,14 @@
  */
 package ui.layout;
 
+import ui.KF;
+
 /**
  *
  * @author RIDHO
  */
 public class LayoutAdmin extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(LayoutAdmin.class.getName());
 
     /**
@@ -32,18 +34,24 @@ public class LayoutAdmin extends javax.swing.JFrame {
         pnlSidebar = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
+        btnDashboard = new javax.swing.JLabel();
+        btnProduct = new javax.swing.JLabel();
+        btnCategori = new javax.swing.JLabel();
+        btnLogout = new javax.swing.JLabel();
+        btnOrders = new javax.swing.JLabel();
+        btnUser = new javax.swing.JLabel();
         pnlUtama = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        pnlHeader.setBackground(new java.awt.Color(255, 255, 255));
+        pnlHeader.setBackground(new java.awt.Color(69, 104, 130));
+        pnlHeader.setForeground(new java.awt.Color(69, 104, 130));
 
         javax.swing.GroupLayout pnlHeaderLayout = new javax.swing.GroupLayout(pnlHeader);
         pnlHeader.setLayout(pnlHeaderLayout);
         pnlHeaderLayout.setHorizontalGroup(
             pnlHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 491, Short.MAX_VALUE)
+            .addGap(0, 1059, Short.MAX_VALUE)
         );
         pnlHeaderLayout.setVerticalGroup(
             pnlHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -69,10 +77,50 @@ public class LayoutAdmin extends javax.swing.JFrame {
             .addGap(0, 3, Short.MAX_VALUE)
         );
 
-        jLabel2.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("Dashboard");
+        btnDashboard.setBackground(new java.awt.Color(255, 255, 255));
+        btnDashboard.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btnDashboard.setForeground(new java.awt.Color(255, 255, 255));
+        btnDashboard.setText("Dashboard");
+        btnDashboard.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnDashboardMouseClicked(evt);
+            }
+        });
+
+        btnProduct.setBackground(new java.awt.Color(255, 255, 255));
+        btnProduct.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btnProduct.setForeground(new java.awt.Color(255, 255, 255));
+        btnProduct.setText("Product");
+        btnProduct.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnProductMouseClicked(evt);
+            }
+        });
+
+        btnCategori.setBackground(new java.awt.Color(255, 255, 255));
+        btnCategori.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btnCategori.setForeground(new java.awt.Color(255, 255, 255));
+        btnCategori.setText("Categori");
+        btnCategori.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnCategoriMouseClicked(evt);
+            }
+        });
+
+        btnLogout.setBackground(new java.awt.Color(255, 255, 255));
+        btnLogout.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btnLogout.setForeground(new java.awt.Color(255, 255, 255));
+        btnLogout.setText("Logout");
+
+        btnOrders.setBackground(new java.awt.Color(255, 255, 255));
+        btnOrders.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btnOrders.setForeground(new java.awt.Color(255, 255, 255));
+        btnOrders.setText("Orders");
+
+        btnUser.setBackground(new java.awt.Color(255, 255, 255));
+        btnUser.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btnUser.setForeground(new java.awt.Color(255, 255, 255));
+        btnUser.setText("User");
 
         javax.swing.GroupLayout pnlSidebarLayout = new javax.swing.GroupLayout(pnlSidebar);
         pnlSidebar.setLayout(pnlSidebarLayout);
@@ -81,7 +129,12 @@ public class LayoutAdmin extends javax.swing.JFrame {
             .addGroup(pnlSidebarLayout.createSequentialGroup()
                 .addGap(19, 19, 19)
                 .addGroup(pnlSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
+                    .addComponent(btnUser)
+                    .addComponent(btnLogout)
+                    .addComponent(btnCategori)
+                    .addComponent(btnProduct)
+                    .addComponent(btnOrders)
+                    .addComponent(btnDashboard)
                     .addGroup(pnlSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
@@ -95,8 +148,18 @@ public class LayoutAdmin extends javax.swing.JFrame {
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(70, 70, 70)
-                .addComponent(jLabel2)
-                .addContainerGap(354, Short.MAX_VALUE))
+                .addComponent(btnDashboard)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnOrders)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnProduct)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnCategori)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnUser)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 503, Short.MAX_VALUE)
+                .addComponent(btnLogout)
+                .addGap(27, 27, 27))
         );
 
         javax.swing.GroupLayout pnlUtamaLayout = new javax.swing.GroupLayout(pnlUtama);
@@ -132,6 +195,19 @@ public class LayoutAdmin extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnDashboardMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDashboardMouseClicked
+        KF.UntukPanel(pnlUtama, KF.fdashAdmin);
+    }//GEN-LAST:event_btnDashboardMouseClicked
+
+    private void btnProductMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnProductMouseClicked
+        KF.UntukPanel(pnlUtama, KF.fproductAdmin);
+    }//GEN-LAST:event_btnProductMouseClicked
+
+    private void btnCategoriMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCategoriMouseClicked
+        KF.UntukPanel(pnlUtama, KF.fCategoriAdmin);
+        KF.fCategoriAdmin.loadTable();
+    }//GEN-LAST:event_btnCategoriMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -158,8 +234,13 @@ public class LayoutAdmin extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel btnCategori;
+    private javax.swing.JLabel btnDashboard;
+    private javax.swing.JLabel btnLogout;
+    private javax.swing.JLabel btnOrders;
+    private javax.swing.JLabel btnProduct;
+    private javax.swing.JLabel btnUser;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel pnlHeader;
     private javax.swing.JPanel pnlSidebar;
