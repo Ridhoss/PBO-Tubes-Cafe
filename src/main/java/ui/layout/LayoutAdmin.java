@@ -4,6 +4,7 @@
  */
 package ui.layout;
 
+import javax.swing.JOptionPane;
 import ui.KF;
 
 /**
@@ -40,18 +41,19 @@ public class LayoutAdmin extends javax.swing.JFrame {
         btnLogout = new javax.swing.JLabel();
         btnOrders = new javax.swing.JLabel();
         btnUser = new javax.swing.JLabel();
+        btnUser1 = new javax.swing.JLabel();
         pnlUtamaAdmin = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        pnlHeader.setBackground(new java.awt.Color(69, 104, 130));
+        pnlHeader.setBackground(new java.awt.Color(27, 60, 83));
         pnlHeader.setForeground(new java.awt.Color(69, 104, 130));
 
         javax.swing.GroupLayout pnlHeaderLayout = new javax.swing.GroupLayout(pnlHeader);
         pnlHeader.setLayout(pnlHeaderLayout);
         pnlHeaderLayout.setHorizontalGroup(
             pnlHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1059, Short.MAX_VALUE)
+            .addGap(0, 852, Short.MAX_VALUE)
         );
         pnlHeaderLayout.setVerticalGroup(
             pnlHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -100,7 +102,7 @@ public class LayoutAdmin extends javax.swing.JFrame {
         btnCategori.setBackground(new java.awt.Color(255, 255, 255));
         btnCategori.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         btnCategori.setForeground(new java.awt.Color(255, 255, 255));
-        btnCategori.setText("Categori");
+        btnCategori.setText("Category");
         btnCategori.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnCategoriMouseClicked(evt);
@@ -111,6 +113,11 @@ public class LayoutAdmin extends javax.swing.JFrame {
         btnLogout.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         btnLogout.setForeground(new java.awt.Color(255, 255, 255));
         btnLogout.setText("Logout");
+        btnLogout.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnLogoutMouseClicked(evt);
+            }
+        });
 
         btnOrders.setBackground(new java.awt.Color(255, 255, 255));
         btnOrders.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -121,6 +128,16 @@ public class LayoutAdmin extends javax.swing.JFrame {
         btnUser.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         btnUser.setForeground(new java.awt.Color(255, 255, 255));
         btnUser.setText("User");
+        btnUser.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnUserMouseClicked(evt);
+            }
+        });
+
+        btnUser1.setBackground(new java.awt.Color(255, 255, 255));
+        btnUser1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btnUser1.setForeground(new java.awt.Color(255, 255, 255));
+        btnUser1.setText("Payment");
 
         javax.swing.GroupLayout pnlSidebarLayout = new javax.swing.GroupLayout(pnlSidebar);
         pnlSidebar.setLayout(pnlSidebarLayout);
@@ -129,6 +146,7 @@ public class LayoutAdmin extends javax.swing.JFrame {
             .addGroup(pnlSidebarLayout.createSequentialGroup()
                 .addGap(19, 19, 19)
                 .addGroup(pnlSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnUser1)
                     .addComponent(btnUser)
                     .addComponent(btnLogout)
                     .addComponent(btnCategori)
@@ -157,7 +175,9 @@ public class LayoutAdmin extends javax.swing.JFrame {
                 .addComponent(btnCategori)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnUser)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 503, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnUser1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 446, Short.MAX_VALUE)
                 .addComponent(btnLogout)
                 .addGap(27, 27, 27))
         );
@@ -201,12 +221,36 @@ public class LayoutAdmin extends javax.swing.JFrame {
 
     private void btnProductMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnProductMouseClicked
         KF.UntukPanel(pnlUtamaAdmin, KF.fproductAdmin);
+        KF.fproductAdmin.loadTable();
     }//GEN-LAST:event_btnProductMouseClicked
 
     private void btnCategoriMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCategoriMouseClicked
-        KF.UntukPanel(pnlUtamaAdmin, KF.fCategoriAdmin);
-        KF.fCategoriAdmin.loadTable();
+        KF.UntukPanel(pnlUtamaAdmin, KF.fCategoryAdmin);
+        KF.fCategoryAdmin.loadTable();
     }//GEN-LAST:event_btnCategoriMouseClicked
+
+    private void btnUserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnUserMouseClicked
+        KF.UntukPanel(pnlUtamaAdmin, KF.fUserAdmin);
+        KF.fUserAdmin.loadTable();
+    }//GEN-LAST:event_btnUserMouseClicked
+
+    private void btnLogoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLogoutMouseClicked
+        int confirm = JOptionPane.showConfirmDialog(
+                null,
+                "Yakin ingin Logout?",
+                "Konfirmasi Logout",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+        );
+
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        KF.flogin.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+        KF.flogin.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnLogoutMouseClicked
 
     /**
      * @param args the command line arguments
@@ -240,6 +284,7 @@ public class LayoutAdmin extends javax.swing.JFrame {
     private javax.swing.JLabel btnOrders;
     private javax.swing.JLabel btnProduct;
     private javax.swing.JLabel btnUser;
+    private javax.swing.JLabel btnUser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel pnlHeader;

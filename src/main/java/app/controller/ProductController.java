@@ -15,8 +15,22 @@ import java.util.List;
  */
 public class ProductController {
 
-    private final ProductsDao productDao = new ProductsDao();
+    private static ProductController instance;
 
+    private final ProductsDao productDao;
+
+    private ProductController() {
+        productDao = new ProductsDao();
+    }
+
+    public static synchronized ProductController getInstance() {
+        if (instance == null) {
+            instance = new ProductController();
+        }
+        return instance;
+    }
+
+    // === Methods ===
     public void addProduct(
             Integer categoryId,
             String productName,
@@ -25,8 +39,7 @@ public class ProductController {
             Integer costPrice,
             Integer stock,
             Boolean isActive,
-            String imagePath
-    ) throws Exception {
+            String imagePath) throws Exception {
 
         Product p = new Product();
 
@@ -51,8 +64,7 @@ public class ProductController {
             Integer costPrice,
             Integer stock,
             Boolean isActive,
-            String imagePath
-    ) throws Exception {
+            String imagePath) throws Exception {
 
         Product existing = productDao.findById(productId);
 
@@ -80,6 +92,26 @@ public class ProductController {
         }
 
         productDao.delete(p.getProduct_id());
+    }
+
+    public Product getProductById(Integer productId) throws Exception {
+        Product p = productDao.findById(productId);
+        if (p == null) {
+            throw new Exception("Product dengan ID " + productId + " tidak ditemukan");
+        }
+        return p;
+    }
+
+    public Product getProductByName(String productName) throws Exception {
+        Product p = productDao.findByName(productName);
+        if (p == null) {
+            throw new Exception("Product dengan nama '" + productName + "' tidak ditemukan");
+        }
+        return p;
+    }
+
+    public java.util.List<Product> getAllProducts() throws Exception {
+        return productDao.getAll();
     }
 
     public List<Product> getAllProducts() throws Exception {

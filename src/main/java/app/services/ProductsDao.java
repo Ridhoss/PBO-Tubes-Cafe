@@ -31,8 +31,7 @@ public class ProductsDao extends GenericDaoImpl<Integer, Product> {
                 "cost_price",
                 "stock",
                 "is_active",
-                "image_path"
-        );
+                "image_path");
     }
 
     @Override
@@ -67,10 +66,12 @@ public class ProductsDao extends GenericDaoImpl<Integer, Product> {
         p.setImage_path(rs.getString("image_path"));
 
         p.setCreated_at(rs.getTimestamp("created_at") != null
-                ? rs.getTimestamp("created_at").toLocalDateTime() : null);
+                ? rs.getTimestamp("created_at").toLocalDateTime()
+                : null);
 
         p.setUpdated_at(rs.getTimestamp("updated_at") != null
-                ? rs.getTimestamp("updated_at").toLocalDateTime() : null);
+                ? rs.getTimestamp("updated_at").toLocalDateTime()
+                : null);
 
         return p;
     }
@@ -80,6 +81,57 @@ public class ProductsDao extends GenericDaoImpl<Integer, Product> {
         try (PreparedStatement ps = conn.prepareStatement("DELETE FROM products")) {
             ps.executeUpdate();
         }
+    }
+
+    public Product findById(Integer id) throws Exception {
+        String sql = "SELECT * FROM products WHERE product_id = ?";
+        Connection conn = DBConnection.getInstance().getConnection();
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapResult(rs);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public Product findByName(String name) throws Exception {
+        String sql = "SELECT * FROM products WHERE LOWER(product_name) = LOWER(?)";
+        Connection conn = DBConnection.getInstance().getConnection();
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, name);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapResult(rs);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public java.util.List<Product> getAll() throws Exception {
+        java.util.List<Product> list = new java.util.ArrayList<>();
+
+        String sql = "SELECT * FROM products ORDER BY product_id ASC";
+        Connection conn = DBConnection.getInstance().getConnection();
+
+        try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                list.add(mapResult(rs));
+            }
+
+        }
+
+        return list;
     }
 
     public List<Product> findByCategoryList(List<Integer> ids) throws Exception {

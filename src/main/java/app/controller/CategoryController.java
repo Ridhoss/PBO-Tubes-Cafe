@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package app.controller;
 
 import models.Category;
@@ -13,13 +9,22 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author RIDHO
- */
 public class CategoryController {
 
-    CategoriesDao categoryDao = new CategoriesDao();
+    private static CategoryController instance;
+
+    private final CategoriesDao categoryDao;
+
+    private CategoryController() {
+        categoryDao = new CategoriesDao();
+    }
+
+    public static synchronized CategoryController getInstance() {
+        if (instance == null) {
+            instance = new CategoryController();
+        }
+        return instance;
+    }
 
     public void addCategory(Integer parentId, String name, String type) throws Exception {
         Category c = new Category();
@@ -32,7 +37,6 @@ public class CategoryController {
     }
 
     public void updateCategory(Integer categoryId, Integer parentId, String name, String type) throws Exception {
-
         Category existing = categoryDao.findById(categoryId);
 
         if (existing == null) {
@@ -47,7 +51,6 @@ public class CategoryController {
     }
 
     public void deleteCategory(Integer categoryId) throws Exception {
-
         Category c = categoryDao.findById(categoryId);
 
         if (c == null) {
@@ -74,6 +77,40 @@ public class CategoryController {
         return parentCategories;
     }
 
+    public List<Category> getCategories() throws Exception {
+        List<Category> allCategories = categoryDao.findAll();
+        List<Category> categories = new java.util.ArrayList<>();
+
+        for (Category c : allCategories) {
+            if (c.getParent_id() != null) {
+                categories.add(c);
+            }
+        }
+
+        return categories;
+    }
+
+    public Category findCategoryById(Integer categoryId) throws Exception {
+        Category c = categoryDao.findById(categoryId);
+        if (c == null) {
+            throw new Exception("Category ID " + categoryId + " tidak ditemukan");
+        }
+        return c;
+    }
+
+    public Category findCategoryByName(String name) throws Exception {
+        String search = name.toLowerCase();
+        List<Category> allCategories = categoryDao.findAll();
+
+        for (Category c : allCategories) {
+            if (c.getCategory_name() != null && c.getCategory_name().toLowerCase().equals(search)) {
+                return c;
+            }
+        }
+
+        throw new Exception("Category dengan nama \"" + name + "\" tidak ditemukan");
+    }
+    
     public List<Integer> getAllChildIds(int parentId) throws Exception {
         List<Category> all = categoryDao.findAll();
         List<Integer> result = new ArrayList<>();

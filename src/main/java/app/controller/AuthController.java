@@ -14,10 +14,27 @@ import util.PasswordUtil;
  */
 public class AuthController {
 
-    public static void Register(String username, String password, String fullName,
-            String email, String phone) throws Exception {
+    // === Singleton Instance ===
+    private static AuthController instance;
 
-        UsersDao userDao = new UsersDao();
+    // === DAO ===
+    private final UsersDao userDao;
+
+    // === Private constructor ===
+    private AuthController() {
+        userDao = new UsersDao();
+    }
+
+    public static synchronized AuthController getInstance() {
+        if (instance == null) {
+            instance = new AuthController();
+        }
+        return instance;
+    }
+
+    // === Register ===
+    public void register(String username, String password, String fullName,
+            String email, String phone) throws Exception {
 
         if (userDao.findByUsername(username) != null) {
             throw new Exception("Username sudah digunakan");
@@ -35,22 +52,24 @@ public class AuthController {
         userDao.insert(u);
     }
 
-    public static User Login(String username, String password) throws Exception {
-        UsersDao userDao = new UsersDao();
+    // === Login ===
+    public User login(String username, String password) throws Exception {
+
         User user = userDao.findByUsername(username);
-        
+
         if (user == null) {
             throw new Exception("Username tidak ditemukan");
         }
         if (!user.getIs_active()) {
             throw new Exception("Akun ini tidak aktif");
         }
-        
+
         String hashedInputPassword = PasswordUtil.hash(password);
+
         if (!hashedInputPassword.equals(user.getPassword())) {
             throw new Exception("Password salah");
         }
-        
+
         return user;
     }
 }

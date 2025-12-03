@@ -17,10 +17,16 @@ import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
-import ui.admin.CategoriAdmin;
+import ui.admin.CategoryAdmin;
 import ui.admin.DashboardAdmin;
 import ui.admin.ProductAdmin;
-import ui.admin.categori.TambahCategori;
+import ui.admin.UserAdmin;
+import ui.admin.category.EditCategory;
+import ui.admin.category.TambahCategory;
+import ui.admin.product.EditProduct;
+import ui.admin.product.TambahProduct;
+import ui.admin.user.EditUser;
+import ui.admin.user.TambahUser;
 import ui.customer.DashboardCustomer;
 import ui.layout.CustomerLayout;
 
@@ -31,19 +37,29 @@ import ui.layout.CustomerLayout;
 public class KF {
     // auth
     public static Login flogin = new Login();
+    public static Register fregister = new Register();
     
     //admin
     public static LayoutAdmin flayoutAdmin = new LayoutAdmin();
     public static DashboardAdmin fdashAdmin = new DashboardAdmin();
     public static ProductAdmin fproductAdmin = new ProductAdmin();
-    public static CategoriAdmin fCategoriAdmin = new CategoriAdmin();
+    public static CategoryAdmin fCategoryAdmin = new CategoryAdmin();
+    public static UserAdmin fUserAdmin = new UserAdmin();
     
     //category admin
-    public static TambahCategori fAddCategory = new TambahCategori();
+    public static TambahCategory fAddCategory = new TambahCategory();
+    public static EditCategory feditCategory = new EditCategory();
+    //product admin
+    public static TambahProduct fAddProduct = new TambahProduct();
+    public static EditProduct fEditProduct = new EditProduct();
+    //user admin
+    public static TambahUser fAddUser = new TambahUser();
+    public static EditUser fEditUser = new EditUser();
     
     //user 
     public static CustomerLayout flayoutCustomer = new CustomerLayout();
     public static DashboardCustomer fdashCustomer = new DashboardCustomer();
+    
     
     public static void UntukInternalFrame(JPanel panelapa, JInternalFrame frameapa) {
         try {
@@ -67,20 +83,19 @@ public class KF {
         panelTarget.repaint();
     }
 
-    public static void UntukJdialog(JDialog dialogapa, JFrame frameapa) {
-        dialogapa.setUndecorated(true);
-        dialogapa.getRootPane().setBackground(new Color(0, 0, 0, 200));
-        dialogapa.setBackground(new Color(0, 0, 0, 180));
-        dialogapa.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-        dialogapa.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
-        int lokasix, lokasiy;
-
-        lokasix = frameapa.getLocationOnScreen().x + 7;
-        lokasiy = frameapa.getLocationOnScreen().y;
-        dialogapa.setLocation(new Point(lokasix, lokasiy));
-        dialogapa.setSize(frameapa.getWidth() - 14, frameapa.getHeight() - 8);
-        dialogapa.setVisible(true);
-
-    }
+//    public static void UntukJdialog(JDialog dialogapa, JFrame frameapa) {
+//        dialogapa.setUndecorated(true);
+//        dialogapa.getRootPane().setBackground(new Color(0, 0, 0, 200));
+//        dialogapa.setBackground(new Color(0, 0, 0, 180));
+//        dialogapa.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+//        dialogapa.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+//
+//        int lokasix, lokasiy;
+//
+//        lokasix = frameapa.getLocationOnScreen().x + 7;
+//        lokasiy = frameapa.getLocationOnScreen().y;
+//        dialogapa.setLocation(new Point(lokasix, lokasiy));
+//        dialogapa.setSize(frameapa.getWidth() - 14, frameapa.getHeight() - 8);
+//        dialogapa.setVisible(true);
+//    }
 }

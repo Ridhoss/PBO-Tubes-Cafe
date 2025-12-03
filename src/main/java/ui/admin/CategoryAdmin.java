@@ -6,6 +6,7 @@ package ui.admin;
 
 import app.controller.CategoryController;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
@@ -16,12 +17,12 @@ import ui.KF;
  *
  * @author RIDHO
  */
-public class CategoriAdmin extends javax.swing.JPanel {
+public class CategoryAdmin extends javax.swing.JPanel {
 
     /**
      * Creates new form CategoriAdmin
      */
-    public CategoriAdmin() {
+    public CategoryAdmin() {
         initComponents();
     }
 
@@ -38,6 +39,7 @@ public class CategoriAdmin extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblCategori = new javax.swing.JTable();
         btnAddCategori = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -50,9 +52,16 @@ public class CategoriAdmin extends javax.swing.JPanel {
             }
         ));
         tblCategori.setRowHeight(40);
+        tblCategori.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblCategoriMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblCategori);
         if (tblCategori.getColumnModel().getColumnCount() > 0) {
-            tblCategori.getColumnModel().getColumn(0).setPreferredWidth(10);
+            tblCategori.getColumnModel().getColumn(0).setMaxWidth(100);
+            tblCategori.getColumnModel().getColumn(3).setMaxWidth(200);
+            tblCategori.getColumnModel().getColumn(4).setMaxWidth(200);
         }
 
         btnAddCategori.setText("Add Categori");
@@ -62,6 +71,9 @@ public class CategoriAdmin extends javax.swing.JPanel {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setText("DATA CATEGORY");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -69,19 +81,23 @@ public class CategoriAdmin extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1138, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnAddCategori, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1138, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(btnAddCategori, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(btnAddCategori, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 746, Short.MAX_VALUE)
+                .addComponent(btnAddCategori, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -97,16 +113,77 @@ public class CategoriAdmin extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    CategoryController categorycontroller = CategoryController.getInstance();
+
     private void btnAddCategoriMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddCategoriMouseClicked
         JPanel pnlUtama = (JPanel) SwingUtilities.getAncestorOfClass(JPanel.class, this);
         KF.UntukPanel(pnlUtama, KF.fAddCategory);
         KF.fAddCategory.InputDataCmb();
     }//GEN-LAST:event_btnAddCategoriMouseClicked
 
+    private void tblCategoriMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCategoriMouseClicked
+        int baris = tblCategori.getSelectedRow();
+        int kolom = tblCategori.getSelectedColumn();
+
+        if (kolom == 3) {
+            DefaultTableModel tModel = (DefaultTableModel) tblCategori.getModel();
+            String namaCategory = tModel.getValueAt(baris, 1).toString();
+
+            try {
+                Category thisCategory = categorycontroller.findCategoryByName(namaCategory);
+
+                JPanel pnlUtama = (JPanel) SwingUtilities.getAncestorOfClass(JPanel.class, this);
+                KF.UntukPanel(pnlUtama, KF.feditCategory);
+                KF.feditCategory.InputDataCmb();
+                KF.feditCategory.setEditData(thisCategory);
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Gagal load data: " + ex.getMessage());
+            }
+
+        } else if (kolom == 4) {
+            DefaultTableModel tModel = (DefaultTableModel) tblCategori.getModel();
+            String namaCategory = tModel.getValueAt(baris, 1).toString();
+
+            try {
+                Category thisCategory = categorycontroller.findCategoryByName(namaCategory);
+
+                String pesanKonfirmasi;
+                if (thisCategory.getParent_id() == null) {
+                    pesanKonfirmasi
+                            = "Kategori \"" + namaCategory + "\" adalah HEAD CATEGORY.\n"
+                            + "Semua child category akan kehilangan parent (parent_id = NULL).\n\n"
+                            + "Tetap hapus?";
+                } else {
+                    pesanKonfirmasi
+                            = "Yakin ingin menghapus kategori \"" + namaCategory + "\"?";
+                }
+
+                int confirm = JOptionPane.showConfirmDialog(
+                        null,
+                        pesanKonfirmasi,
+                        "Konfirmasi Hapus",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.WARNING_MESSAGE
+                );
+                if (confirm != JOptionPane.YES_OPTION) {
+                    return;
+                }
+
+                categorycontroller.deleteCategory(thisCategory.getCategory_id());
+                JOptionPane.showMessageDialog(null, "Kategori berhasil dihapus!");
+
+                tModel.removeRow(baris);
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e.getMessage());
+            }
+        }
+    }//GEN-LAST:event_tblCategoriMouseClicked
+
     public void loadTable() {
         try {
-            CategoryController controller = new CategoryController();
-            List<Category> categories = controller.getAllCategories();
+            List<Category> categories = categorycontroller.getAllCategories();
 
             DefaultTableModel model = (DefaultTableModel) tblCategori.getModel();
             model.setRowCount(0);
@@ -130,6 +207,7 @@ public class CategoriAdmin extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddCategori;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblCategori;

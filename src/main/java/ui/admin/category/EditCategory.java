@@ -2,23 +2,27 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package ui.admin.categori;
+package ui.admin.category;
 
 import app.controller.CategoryController;
 import app.services.CategoriesDao;
 import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import models.Category;
+import ui.KF;
 
 /**
  *
  * @author RIDHO
  */
-public class TambahCategori extends javax.swing.JPanel {
+public class EditCategory extends javax.swing.JPanel {
 
     /**
      * Creates new form TambahCategori
      */
-    public TambahCategori() {
+    public EditCategory() {
         initComponents();
     }
 
@@ -38,11 +42,12 @@ public class TambahCategori extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         cmbHeadCategory = new javax.swing.JComboBox<>();
         btnSave = new javax.swing.JButton();
+        lblOldCategory = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel1.setText("Tambah Categori");
+        jLabel1.setText("Edit Category");
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel2.setText("Category name");
@@ -53,6 +58,14 @@ public class TambahCategori extends javax.swing.JPanel {
         cmbHeadCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         btnSave.setText("Save");
+        btnSave.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnSaveMouseClicked(evt);
+            }
+        });
+
+        lblOldCategory.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lblOldCategory.setText("-");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -65,7 +78,10 @@ public class TambahCategori extends javax.swing.JPanel {
                     .addComponent(jLabel3)
                     .addComponent(txtCategory)
                     .addComponent(jLabel2)
-                    .addComponent(jLabel1)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblOldCategory))
                     .addComponent(btnSave, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE))
                 .addContainerGap(790, Short.MAX_VALUE))
         );
@@ -73,7 +89,9 @@ public class TambahCategori extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(43, 43, 43)
-                .addComponent(jLabel1)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(lblOldCategory))
                 .addGap(60, 60, 60)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -99,10 +117,44 @@ public class TambahCategori extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    CategoryController categorycontroller = CategoryController.getInstance();
+
+    private void btnSaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveMouseClicked
+        String categoryName = txtCategory.getText();
+
+        Object selectedItem = cmbHeadCategory.getSelectedItem();
+        String headCategory = null;
+
+        if (!"No Parent".equals(selectedItem)) {
+            headCategory = selectedItem.toString();
+        }
+
+        try {
+            Category thisCategory = categorycontroller.findCategoryByName(lblOldCategory.getText());
+
+            Category parent = null;
+            if (headCategory != null) {
+                parent = categorycontroller.findCategoryByName(headCategory);
+            }
+
+            categorycontroller.updateCategory(thisCategory.getCategory_id(), parent != null ? parent.getCategory_id() : null, categoryName, parent != null ? parent.getCategory_name().toLowerCase() : categoryName.toLowerCase());
+
+            JOptionPane.showMessageDialog(this, "Edit Success!",
+                    "Sukses", JOptionPane.INFORMATION_MESSAGE);
+
+            JPanel pnlUtama = (JPanel) SwingUtilities.getAncestorOfClass(JPanel.class, this);
+            KF.UntukPanel(pnlUtama, KF.fCategoryAdmin);
+            KF.fCategoryAdmin.loadTable();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.getLogger(EditCategory.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+    }//GEN-LAST:event_btnSaveMouseClicked
+
     public void InputDataCmb() {
         try {
-            CategoryController controller = new CategoryController();
-            List<Category> parentCategories = controller.getParentCategories();
+            List<Category> parentCategories = categorycontroller.getParentCategories();
 
             cmbHeadCategory.removeAllItems();
             cmbHeadCategory.addItem("No Parent");
@@ -116,6 +168,23 @@ public class TambahCategori extends javax.swing.JPanel {
         }
     }
 
+    public void setEditData(Category c) {
+        txtCategory.setText(c.getCategory_name());
+        lblOldCategory.setText(c.getCategory_name());
+
+        if (c.getParent_id() == null) {
+            cmbHeadCategory.setSelectedItem("No Parent");
+        } else {
+            try {
+                Category parent = categorycontroller.findCategoryById(c.getParent_id());
+                cmbHeadCategory.setSelectedItem(parent.getCategory_name());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSave;
     private javax.swing.JComboBox<String> cmbHeadCategory;
@@ -123,6 +192,7 @@ public class TambahCategori extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lblOldCategory;
     private javax.swing.JTextField txtCategory;
     // End of variables declaration//GEN-END:variables
 }

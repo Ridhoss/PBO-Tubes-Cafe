@@ -27,9 +27,9 @@ public class DevelopmentSeeders {
             userDao.deleteAll();
 
             Object[][] users = {
-                {"customer", "password123", "Customer", "customer@gmail.com", "08123456789", "customer"},
-                {"admin", "password123", "Admin", "admin@gmail.com", "0812343216789", "admin"},
-                {"cashier", "password123", "Cashier", "cashier@gmail.com", "0812345632789", "cashier"}
+                {"customer", "123", "Customer", "customer@gmail.com", "08123456789", "customer"},
+                {"admin", "123", "Admin", "admin@gmail.com", "0812343216789", "admin"},
+                {"cashier", "123", "Cashier", "cashier@gmail.com", "0812345632789", "cashier"}
             };
 
             for (Object[] data : users) {
