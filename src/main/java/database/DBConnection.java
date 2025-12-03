@@ -9,14 +9,13 @@ import java.sql.DriverManager;
 
 public class DBConnection {
 
-    private static DBConnection instance; // 1 instance saja
+    private static DBConnection instance;
     private Connection connection;
 
     private static final String URL = "jdbc:postgresql://localhost:5432/dbtubespbo";
     private static final String USER = "postgres";
     private static final String PASS = "1234";
 
-    // Constructor private → tidak bisa diinstansiasi dari luar
     private DBConnection() throws Exception {
         connection = DriverManager.getConnection(URL, USER, PASS);
     }
