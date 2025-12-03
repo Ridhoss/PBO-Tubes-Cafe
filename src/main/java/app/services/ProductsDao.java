@@ -9,6 +9,8 @@ import database.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import models.Product;
 
@@ -79,4 +81,31 @@ public class ProductsDao extends GenericDaoImpl<Integer, Product> {
             ps.executeUpdate();
         }
     }
+
+    public List<Product> findByCategoryList(List<Integer> ids) throws Exception {
+        if (ids == null || ids.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        String inSql = String.join(",", ids.stream().map(id -> "?").toList());
+
+        String sql = "SELECT * FROM products WHERE category_id IN (" + inSql + ")";
+
+        Connection conn = DBConnection.getInstance().getConnection();
+        PreparedStatement ps = conn.prepareStatement(sql);
+
+        for (int i = 0; i < ids.size(); i++) {
+            ps.setInt(i + 1, ids.get(i));
+        }
+
+        ResultSet rs = ps.executeQuery();
+
+        List<Product> list = new ArrayList<>();
+        while (rs.next()) {
+            list.add(mapResult(rs));
+        }
+
+        return list;
+    }
+
 }

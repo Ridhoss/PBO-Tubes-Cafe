@@ -6,6 +6,8 @@ package app.controller;
 
 import models.Product;
 import app.services.ProductsDao;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -79,4 +81,13 @@ public class ProductController {
 
         productDao.delete(p.getProduct_id());
     }
+
+    public List<Product> getAllProducts() throws Exception {
+        return productDao.findAll();
+    }
+
+    public List<Product> getProductsByCategoryList(List<Integer> ids) throws Exception {
+        return productDao.findByCategoryList(ids);
+    }
+
 }

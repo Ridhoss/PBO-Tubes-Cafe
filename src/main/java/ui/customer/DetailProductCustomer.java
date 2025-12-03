@@ -8,12 +8,12 @@ package ui.customer;
  *
  * @author Dell
  */
-public class KeranjangCustomer extends javax.swing.JPanel {
+public class DetailProductCustomer extends javax.swing.JPanel {
 
     /**
-     * Creates new form KeranjangCustomer
+     * Creates new form DetailProductCustomer
      */
-    public KeranjangCustomer() {
+    public DetailProductCustomer() {
         initComponents();
     }
 
@@ -30,11 +30,11 @@ public class KeranjangCustomer extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1110, Short.MAX_VALUE)
+            .addGap(0, 1132, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 692, Short.MAX_VALUE)
+            .addGap(0, 665, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
