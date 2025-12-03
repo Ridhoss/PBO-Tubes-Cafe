@@ -24,7 +24,13 @@ public class CartDao extends GenericDaoImpl<Integer, Cart> {
         super(
                 "cart",
                 "cart_id",
-                "user_id"
+                "user_id",
+                "order_date",
+                "discount",
+                "final_amount",
+                "payment_status",
+                "order_status",
+                "notes"  
         );
     }
 

@@ -79,6 +79,11 @@ public class KeranjangCustomer extends javax.swing.JPanel {
         pnlkeranjang1.setBackground(new java.awt.Color(255, 255, 255));
 
         btnCheckout.setText("Checkout");
+        btnCheckout.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnCheckoutMouseClicked(evt);
+            }
+        });
 
         lblTotal.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblTotal.setText("0");
@@ -93,14 +98,11 @@ public class KeranjangCustomer extends javax.swing.JPanel {
             .addGroup(pnlkeranjang1Layout.createSequentialGroup()
                 .addGap(23, 23, 23)
                 .addComponent(btnCheckout)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 700, Short.MAX_VALUE)
-                .addComponent(lblTotal)
-                .addGap(176, 176, 176))
-            .addGroup(pnlkeranjang1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlkeranjang1Layout.createSequentialGroup()
-                    .addContainerGap(706, Short.MAX_VALUE)
-                    .addComponent(jLabel2)
-                    .addGap(202, 202, 202)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addGap(18, 18, 18)
+                .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(127, 127, 127))
         );
         pnlkeranjang1Layout.setVerticalGroup(
             pnlkeranjang1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -108,13 +110,9 @@ public class KeranjangCustomer extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(pnlkeranjang1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCheckout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE))
+                    .addComponent(lblTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE))
                 .addContainerGap())
-            .addGroup(pnlkeranjang1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(pnlkeranjang1Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
-                    .addContainerGap()))
         );
 
         JlabelKeranjang1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -152,6 +150,10 @@ public class KeranjangCustomer extends javax.swing.JPanel {
                     .addContainerGap(748, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnCheckoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCheckoutMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCheckoutMouseClicked
 
     private void setupContainers() {
         // Panel utama menumpuk vertikal
@@ -205,17 +207,21 @@ public class KeranjangCustomer extends javax.swing.JPanel {
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
         infoPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JLabel lblQty = new JLabel("Qty: " + i.getQuantity());
+        int quantity = i.getQuantity();
+        int price = p.getPrice();
+        int subtotal = quantity * price;
+
+        JLabel lblQty = new JLabel("Qty: " + quantity);
         lblQty.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 
         JLabel lblName = new JLabel(p.getProduct_name());
         lblName.setFont(new Font("Segoe UI", Font.BOLD, 16));
 
-        JLabel lblPrice = new JLabel("Rp " + p.getPrice());
+        JLabel lblPrice = new JLabel("Rp " + price + " x " + quantity + " = Rp " + subtotal);
         lblPrice.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 
         infoPanel.add(lblQty);
-        infoPanel.add(Box.createVerticalStrut(5)); // jarak antar label
+        infoPanel.add(Box.createVerticalStrut(5));
         infoPanel.add(lblName);
         infoPanel.add(Box.createVerticalStrut(5));
         infoPanel.add(lblPrice);
@@ -263,9 +269,13 @@ public class KeranjangCustomer extends javax.swing.JPanel {
                 Product p = productController.getProductById(item.getProduct_id());
                 if (Boolean.TRUE.equals(p.getIs_active())) {
                     container.add(createProductCard(p, item));
-                    container.add(Box.createRigidArea(new Dimension(0, 10))); // jarak antar card
+                    container.add(Box.createRigidArea(new Dimension(0, 10)));
+
+                    totalPrice += p.getPrice() * item.getQuantity();
                 }
             }
+            
+            lblTotal.setText(totalPrice.toString());
 
             container.revalidate();
             container.repaint();
@@ -274,6 +284,8 @@ public class KeranjangCustomer extends javax.swing.JPanel {
             e.printStackTrace();
         }
     }
+
+    private Integer totalPrice = 0;
 
     CartController cartcontroller = CartController.getInstance();
     CartItemsController cartItemsController = CartItemsController.getInstance();
