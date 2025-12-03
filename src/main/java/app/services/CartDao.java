@@ -84,4 +84,22 @@ public class CartDao extends GenericDaoImpl<Integer, Cart> {
         }
         return list;
     }
+
+    public Cart findByUserId(Integer userId) throws Exception {
+        Connection conn = DBConnection.getInstance().getConnection();
+        String sql = "SELECT * FROM cart WHERE user_id = ? LIMIT 1";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapResult(rs);
+                }
+            }
+        }
+
+        return null;
+    }
+
 }

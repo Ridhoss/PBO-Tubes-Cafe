@@ -4,6 +4,8 @@
  */
 package ui.component;
 
+import app.controller.CartController;
+import app.controller.CartItemsController;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -17,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import models.Cart;
 import models.Product;
 
 /**
@@ -37,7 +40,9 @@ public class CardProduk extends JPanel {
         try {
             if (p.getImage_path() != null) {
                 String path = p.getImage_path();
-                if (!path.startsWith("/")) path = "/" + path;
+                if (!path.startsWith("/")) {
+                    path = "/" + path;
+                }
 
                 ImageIcon icon = new ImageIcon(getClass().getResource(path));
                 Image scaled = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
@@ -68,6 +73,23 @@ public class CardProduk extends JPanel {
     }
 
     private void addToCart(Product p) {
-        JOptionPane.showMessageDialog(this, "Produk ditambahkan: " + p.getProduct_name());
+        try {
+            CartController cartController = new CartController();
+            CartItemsController itemController = new CartItemsController();
+
+            Cart cart = cartController.getCartByUser(1); 
+
+            if (cart == null) {
+                cartController.createCart(1);
+                cart = cartController.getCartByUser(1);
+            }
+
+            itemController.addItem(cart.getCart_id(), p.getProduct_id(), 1);
+
+            JOptionPane.showMessageDialog(this, "Produk ditambahkan!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
 }

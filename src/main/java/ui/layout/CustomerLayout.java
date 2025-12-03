@@ -4,21 +4,74 @@
  */
 package ui.layout;
 
+import javax.swing.JOptionPane;
 import ui.KF;
+import ui.customer.KeranjangCustomer;
 
 /**
  *
  * @author Dell
  */
 public class CustomerLayout extends javax.swing.JFrame {
-    
+
+    private Integer userId = 0;
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CustomerLayout.class.getName());
 
     /**
      * Creates new form CustomerLayout
      */
     public CustomerLayout() {
+        this.userId = 1;
         initComponents();
+        initEvents();
+    }
+
+    public CustomerLayout(Integer userId) {
+        if (userId == null || userId <= 0) {
+            throw new IllegalArgumentException("User ID harus valid dan lebih dari 0");
+        }
+        this.userId = userId;
+        initComponents();
+        initEvents();
+    }
+
+    private void initEvents() {
+        btnCart.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                try {
+                    if (userId == null || userId <= 0) {
+                        JOptionPane.showMessageDialog(
+                                CustomerLayout.this,
+                                "User ID tidak valid. Silakan login kembali.",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE
+                        );
+                        return;
+                    }
+
+                    logger.log(java.util.logging.Level.INFO, "Opening cart for user: {0}", userId);
+                    KeranjangCustomer kc = new KeranjangCustomer(userId);
+                    KF.UntukPanel(pnlUtamaCustomer, kc);
+                } catch (Exception e) {
+                    logger.log(java.util.logging.Level.SEVERE, "Error opening cart", e);
+                    JOptionPane.showMessageDialog(
+                            CustomerLayout.this,
+                            "Gagal membuka keranjang: " + e.getMessage(),
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            }
+        });
+
+        btnHome.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                KF.UntukPanel(pnlUtamaCustomer, KF.fdashCustomer);
+            }
+        });
     }
 
     /**
@@ -169,8 +222,9 @@ public class CustomerLayout extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new CustomerLayout().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new CustomerLayout(1).setVisible(true));
     }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel btnCart;
