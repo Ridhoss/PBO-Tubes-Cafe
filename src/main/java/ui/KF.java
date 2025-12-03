@@ -22,6 +22,8 @@ import ui.admin.DashboardAdmin;
 import ui.admin.ProductAdmin;
 import ui.admin.category.EditCategory;
 import ui.admin.category.TambahCategory;
+import ui.admin.product.EditProduct;
+import ui.admin.product.TambahProduct;
 import ui.customer.DashboardCustomer;
 import ui.layout.CustomerLayout;
 
@@ -43,6 +45,9 @@ public class KF {
     //category admin
     public static TambahCategory fAddCategory = new TambahCategory();
     public static EditCategory feditCategory = new EditCategory();
+    //product admin
+    public static TambahProduct fAddProduct = new TambahProduct();
+    public static EditProduct fEditProduct = new EditProduct();
     
     //user 
     public static CustomerLayout flayoutCustomer = new CustomerLayout();
@@ -71,20 +76,19 @@ public class KF {
         panelTarget.repaint();
     }
 
-    public static void UntukJdialog(JDialog dialogapa, JFrame frameapa) {
-        dialogapa.setUndecorated(true);
-        dialogapa.getRootPane().setBackground(new Color(0, 0, 0, 200));
-        dialogapa.setBackground(new Color(0, 0, 0, 180));
-        dialogapa.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-        dialogapa.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
-        int lokasix, lokasiy;
-
-        lokasix = frameapa.getLocationOnScreen().x + 7;
-        lokasiy = frameapa.getLocationOnScreen().y;
-        dialogapa.setLocation(new Point(lokasix, lokasiy));
-        dialogapa.setSize(frameapa.getWidth() - 14, frameapa.getHeight() - 8);
-        dialogapa.setVisible(true);
-
-    }
+//    public static void UntukJdialog(JDialog dialogapa, JFrame frameapa) {
+//        dialogapa.setUndecorated(true);
+//        dialogapa.getRootPane().setBackground(new Color(0, 0, 0, 200));
+//        dialogapa.setBackground(new Color(0, 0, 0, 180));
+//        dialogapa.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+//        dialogapa.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+//
+//        int lokasix, lokasiy;
+//
+//        lokasix = frameapa.getLocationOnScreen().x + 7;
+//        lokasiy = frameapa.getLocationOnScreen().y;
+//        dialogapa.setLocation(new Point(lokasix, lokasiy));
+//        dialogapa.setSize(frameapa.getWidth() - 14, frameapa.getHeight() - 8);
+//        dialogapa.setVisible(true);
+//    }
 }

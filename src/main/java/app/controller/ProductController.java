@@ -20,7 +20,7 @@ public class ProductController {
     private ProductController() {
         productDao = new ProductsDao();
     }
-    
+
     public static synchronized ProductController getInstance() {
         if (instance == null) {
             instance = new ProductController();
@@ -93,4 +93,25 @@ public class ProductController {
 
         productDao.delete(p.getProduct_id());
     }
+
+    public Product getProductById(Integer productId) throws Exception {
+        Product p = productDao.findById(productId);
+        if (p == null) {
+            throw new Exception("Product dengan ID " + productId + " tidak ditemukan");
+        }
+        return p;
+    }
+
+    public Product getProductByName(String productName) throws Exception {
+        Product p = productDao.findByName(productName);
+        if (p == null) {
+            throw new Exception("Product dengan nama '" + productName + "' tidak ditemukan");
+        }
+        return p;
+    }
+
+    public java.util.List<Product> getAllProducts() throws Exception {
+        return productDao.getAll();
+    }
+
 }

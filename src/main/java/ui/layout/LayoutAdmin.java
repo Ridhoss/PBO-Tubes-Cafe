@@ -201,6 +201,7 @@ public class LayoutAdmin extends javax.swing.JFrame {
 
     private void btnProductMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnProductMouseClicked
         KF.UntukPanel(pnlUtamaAdmin, KF.fproductAdmin);
+        KF.fproductAdmin.loadTable();
     }//GEN-LAST:event_btnProductMouseClicked
 
     private void btnCategoriMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCategoriMouseClicked

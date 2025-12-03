@@ -46,7 +46,7 @@ public class TambahCategory extends javax.swing.JPanel {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel1.setText("Tambah Categori");
+        jLabel1.setText("Add Category");
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel2.setText("Category name");
@@ -146,9 +146,9 @@ public class TambahCategory extends javax.swing.JPanel {
             List<Category> parentCategories = categorycontroller.getParentCategories();
 
             cmbHeadCategory.removeAllItems();
-            cmbHeadCategory.addItem("No Parent"); // tetap String
+            cmbHeadCategory.addItem("No Parent");
             for (Category c : parentCategories) {
-                cmbHeadCategory.addItem(c.getCategory_name()); // ubah Integer ke String
+                cmbHeadCategory.addItem(c.getCategory_name());
             }
         } catch (Exception e) {
             e.printStackTrace();

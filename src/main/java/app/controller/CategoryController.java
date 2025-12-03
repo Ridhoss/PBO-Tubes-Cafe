@@ -72,6 +72,19 @@ public class CategoryController {
         return parentCategories;
     }
 
+    public List<Category> getCategories() throws Exception {
+        List<Category> allCategories = categoryDao.findAll();
+        List<Category> categories = new java.util.ArrayList<>();
+
+        for (Category c : allCategories) {
+            if (c.getParent_id() != null) {
+                categories.add(c);
+            }
+        }
+
+        return categories;
+    }
+
     public Category findCategoryById(Integer categoryId) throws Exception {
         Category c = categoryDao.findById(categoryId);
         if (c == null) {

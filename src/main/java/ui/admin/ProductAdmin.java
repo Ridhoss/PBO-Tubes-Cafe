@@ -4,6 +4,17 @@
  */
 package ui.admin;
 
+import app.controller.CategoryController;
+import app.controller.ProductController;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
+import models.Category;
+import models.Product;
+import ui.KF;
+
 /**
  *
  * @author RIDHO
@@ -26,27 +37,52 @@ public class ProductAdmin extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        btnAddCategori = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblProduct = new javax.swing.JTable();
-        btnAdd = new javax.swing.JToggleButton();
+        btnProduct = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+
+        btnAddCategori.setText("Add Categori");
+        btnAddCategori.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnAddCategoriMouseClicked(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         tblProduct.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "No", "Name", "Description", "Price", "Cost", "Stock", "Action", "Action"
             }
         ));
+        tblProduct.setRowHeight(40);
+        tblProduct.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblProductMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblProduct);
+        if (tblProduct.getColumnModel().getColumnCount() > 0) {
+            tblProduct.getColumnModel().getColumn(0).setMaxWidth(100);
+            tblProduct.getColumnModel().getColumn(6).setMaxWidth(200);
+            tblProduct.getColumnModel().getColumn(7).setMaxWidth(200);
+        }
 
-        btnAdd.setText("Add Product");
+        btnProduct.setText("Add Product");
+        btnProduct.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnProductMouseClicked(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setText("DATA PRODUCT");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -57,18 +93,22 @@ public class ProductAdmin extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1156, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(btnProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(62, 62, 62)
-                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(37, 37, 37)
+                .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
-                .addGap(247, 247, 247))
+                .addComponent(btnProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 631, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -83,9 +123,100 @@ public class ProductAdmin extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    ProductController productcontroller = ProductController.getInstance();
+    CategoryController categorycontroller = CategoryController.getInstance();
+
+    private void btnAddCategoriMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddCategoriMouseClicked
+
+    }//GEN-LAST:event_btnAddCategoriMouseClicked
+
+    private void btnProductMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnProductMouseClicked
+        JPanel pnlUtama = (JPanel) SwingUtilities.getAncestorOfClass(JPanel.class, this);
+        KF.UntukPanel(pnlUtama, KF.fAddProduct);
+        KF.fAddProduct.InputDataCmb();
+    }//GEN-LAST:event_btnProductMouseClicked
+
+    private void tblProductMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProductMouseClicked
+        int baris = tblProduct.getSelectedRow();
+        int kolom = tblProduct.getSelectedColumn();
+
+        if (kolom == 6) {
+            DefaultTableModel tModel = (DefaultTableModel) tblProduct.getModel();
+            String namaProduct = tModel.getValueAt(baris, 1).toString();
+
+            try {
+                Product thisProduct = productcontroller.getProductByName(namaProduct);
+                Category thisCategory = categorycontroller.findCategoryById(thisProduct.getCategory_id());
+
+                JPanel pnlUtama = (JPanel) SwingUtilities.getAncestorOfClass(JPanel.class, this);
+                KF.UntukPanel(pnlUtama, KF.fEditProduct);
+                KF.fEditProduct.InputDataCmb();
+                KF.fEditProduct.setEditData(thisCategory, thisProduct);
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Gagal load data: " + ex.getMessage());
+            }
+
+        } else if (kolom == 7) {
+            DefaultTableModel tModel = (DefaultTableModel) tblProduct.getModel();
+            String namaProduct = tModel.getValueAt(baris, 1).toString();
+
+            try {
+                Product thisProduct = productcontroller.getProductByName(namaProduct);
+
+                int confirm = JOptionPane.showConfirmDialog(
+                        null,
+                        "Yakin ingin menghapus data ini?",
+                        "Konfirmasi Hapus",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.WARNING_MESSAGE
+                );
+
+                if (confirm != JOptionPane.YES_OPTION) {
+                    return;
+                }
+
+                productcontroller.deleteProduct(thisProduct.getProduct_id());
+                JOptionPane.showMessageDialog(null, "Product berhasil dihapus!");
+
+                tModel.removeRow(baris);
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e.getMessage());
+            }
+        }
+    }//GEN-LAST:event_tblProductMouseClicked
+
+    public void loadTable() {
+        try {
+            List<Product> products = productcontroller.getAllProducts();
+
+            DefaultTableModel model = (DefaultTableModel) tblProduct.getModel();
+            model.setRowCount(0);
+
+            int no = 1;
+            for (Product p : products) {
+                model.addRow(new Object[]{
+                    no++,
+                    p.getProduct_name(),
+                    p.getDescription(),
+                    p.getPrice(),
+                    p.getCost_price(),
+                    p.getStock(),
+                    "Edit",
+                    "Delete"
+                });
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JToggleButton btnAdd;
+    private javax.swing.JButton btnAddCategori;
+    private javax.swing.JButton btnProduct;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblProduct;

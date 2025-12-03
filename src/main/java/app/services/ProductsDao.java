@@ -79,4 +79,55 @@ public class ProductsDao extends GenericDaoImpl<Integer, Product> {
             ps.executeUpdate();
         }
     }
+
+    public Product findById(Integer id) throws Exception {
+        String sql = "SELECT * FROM products WHERE product_id = ?";
+        Connection conn = DBConnection.getInstance().getConnection();
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapResult(rs);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public Product findByName(String name) throws Exception {
+        String sql = "SELECT * FROM products WHERE LOWER(product_name) = LOWER(?)";
+        Connection conn = DBConnection.getInstance().getConnection();
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, name);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapResult(rs);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public java.util.List<Product> getAll() throws Exception {
+        java.util.List<Product> list = new java.util.ArrayList<>();
+
+        String sql = "SELECT * FROM products ORDER BY product_id ASC";
+        Connection conn = DBConnection.getInstance().getConnection();
+
+        try (PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                list.add(mapResult(rs));
+            }
+        }
+
+        return list;
+    }
+
 }
