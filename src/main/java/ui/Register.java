@@ -229,8 +229,8 @@ public class Register extends javax.swing.JFrame {
         }
 
         try {
-            AuthController controller = new AuthController();
-            controller.Register(username, password, fullname, email, phone);
+            AuthController controller = AuthController.getInstance();
+            controller.register(username, password, fullname, email, phone);
 
             JOptionPane.showMessageDialog(this, "Register Berhasil!",
                     "Sukses", JOptionPane.INFORMATION_MESSAGE);

@@ -195,8 +195,8 @@ public class Login extends javax.swing.JFrame {
         }
 
         try {
-            AuthController controller = new AuthController();
-            User thisUser = controller.Login(username, password);
+            AuthController controller = AuthController.getInstance();
+            User thisUser = controller.login(username, password);
 
             if (thisUser != null) {
                 String hashedInput = PasswordUtil.hash(password);

@@ -13,8 +13,22 @@ import app.services.ProductsDao;
  */
 public class ProductController {
 
-    private final ProductsDao productDao = new ProductsDao();
+    private static ProductController instance;
 
+    private final ProductsDao productDao;
+
+    private ProductController() {
+        productDao = new ProductsDao();
+    }
+    
+    public static synchronized ProductController getInstance() {
+        if (instance == null) {
+            instance = new ProductController();
+        }
+        return instance;
+    }
+
+    // === Methods ===
     public void addProduct(
             Integer categoryId,
             String productName,

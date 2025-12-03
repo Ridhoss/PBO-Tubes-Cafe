@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package ui.admin.categori;
+package ui.admin.category;
 
 import app.controller.CategoryController;
 import app.services.CategoriesDao;
@@ -108,25 +108,25 @@ public class TambahCategory extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    CategoryController categorycontroller = new CategoryController();
+    CategoryController categorycontroller = CategoryController.getInstance();
 
     private void btnSaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveMouseClicked
         String categoryName = txtCategory.getText();
 
         Object selectedItem = cmbHeadCategory.getSelectedItem();
-        Integer headCategory = null;
+        String headCategory = null;
 
         if (!"No Parent".equals(selectedItem)) {
-            headCategory = Integer.valueOf(selectedItem.toString());
+            headCategory = selectedItem.toString();
         }
 
         try {
             Category parent = null;
             if (headCategory != null) {
-                parent = categorycontroller.findCategoryById(headCategory);
+                parent = categorycontroller.findCategoryByName(headCategory);
             }
 
-            categorycontroller.addCategory(headCategory, categoryName, parent != null ? parent.getCategory_name() : categoryName.toLowerCase());
+            categorycontroller.addCategory(parent != null ? parent.getCategory_id() : null, categoryName, parent != null ? parent.getCategory_name().toLowerCase() : categoryName.toLowerCase());
 
             JOptionPane.showMessageDialog(this, "Input Success!",
                     "Sukses", JOptionPane.INFORMATION_MESSAGE);
@@ -148,7 +148,7 @@ public class TambahCategory extends javax.swing.JPanel {
             cmbHeadCategory.removeAllItems();
             cmbHeadCategory.addItem("No Parent"); // tetap String
             for (Category c : parentCategories) {
-                cmbHeadCategory.addItem(c.getCategory_id().toString()); // ubah Integer ke String
+                cmbHeadCategory.addItem(c.getCategory_name()); // ubah Integer ke String
             }
         } catch (Exception e) {
             e.printStackTrace();

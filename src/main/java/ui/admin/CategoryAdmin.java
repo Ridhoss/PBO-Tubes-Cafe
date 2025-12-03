@@ -58,7 +58,9 @@ public class CategoryAdmin extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(tblCategori);
         if (tblCategori.getColumnModel().getColumnCount() > 0) {
-            tblCategori.getColumnModel().getColumn(0).setPreferredWidth(10);
+            tblCategori.getColumnModel().getColumn(0).setMaxWidth(100);
+            tblCategori.getColumnModel().getColumn(3).setMaxWidth(200);
+            tblCategori.getColumnModel().getColumn(4).setMaxWidth(200);
         }
 
         btnAddCategori.setText("Add Categori");
@@ -103,7 +105,7 @@ public class CategoryAdmin extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    CategoryController categorycontroller = new CategoryController();
+    CategoryController categorycontroller = CategoryController.getInstance();
 
     private void btnAddCategoriMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddCategoriMouseClicked
         JPanel pnlUtama = (JPanel) SwingUtilities.getAncestorOfClass(JPanel.class, this);
@@ -116,14 +118,28 @@ public class CategoryAdmin extends javax.swing.JPanel {
         int kolom = tblCategori.getSelectedColumn();
 
         if (kolom == 3) {
-            System.out.println("edit");
+            DefaultTableModel tModel = (DefaultTableModel) tblCategori.getModel();
+            String namaCategory = tModel.getValueAt(baris, 1).toString();
+
+            try {
+                Category thisCategory = categorycontroller.findCategoryByName(namaCategory);
+
+                JPanel pnlUtama = (JPanel) SwingUtilities.getAncestorOfClass(JPanel.class, this);
+                KF.UntukPanel(pnlUtama, KF.feditCategory);
+                KF.feditCategory.InputDataCmb();
+                KF.feditCategory.setEditData(thisCategory);
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Gagal load data: " + ex.getMessage());
+            }
+
         } else if (kolom == 4) {
             DefaultTableModel tModel = (DefaultTableModel) tblCategori.getModel();
             String namaCategory = tModel.getValueAt(baris, 1).toString();
 
             try {
                 Category thisCategory = categorycontroller.findCategoryByName(namaCategory);
-                
+
                 String pesanKonfirmasi;
                 if (thisCategory.getParent_id() == null) {
                     pesanKonfirmasi
@@ -154,7 +170,6 @@ public class CategoryAdmin extends javax.swing.JPanel {
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, e.getMessage());
             }
-
         }
     }//GEN-LAST:event_tblCategoriMouseClicked
 

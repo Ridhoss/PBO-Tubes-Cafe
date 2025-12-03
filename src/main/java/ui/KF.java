@@ -20,7 +20,8 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
 import ui.admin.CategoryAdmin;
 import ui.admin.DashboardAdmin;
 import ui.admin.ProductAdmin;
-import ui.admin.categori.TambahCategory;
+import ui.admin.category.EditCategory;
+import ui.admin.category.TambahCategory;
 import ui.customer.DashboardCustomer;
 import ui.layout.CustomerLayout;
 
@@ -41,6 +42,7 @@ public class KF {
     
     //category admin
     public static TambahCategory fAddCategory = new TambahCategory();
+    public static EditCategory feditCategory = new EditCategory();
     
     //user 
     public static CustomerLayout flayoutCustomer = new CustomerLayout();

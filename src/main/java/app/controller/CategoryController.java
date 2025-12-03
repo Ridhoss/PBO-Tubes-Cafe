@@ -1,20 +1,25 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package app.controller;
 
 import models.Category;
 import app.services.CategoriesDao;
 import java.util.List;
 
-/**
- *
- * @author RIDHO
- */
 public class CategoryController {
 
-    CategoriesDao categoryDao = new CategoriesDao();
+    private static CategoryController instance;
+
+    private final CategoriesDao categoryDao;
+
+    private CategoryController() {
+        categoryDao = new CategoriesDao();
+    }
+
+    public static synchronized CategoryController getInstance() {
+        if (instance == null) {
+            instance = new CategoryController();
+        }
+        return instance;
+    }
 
     public void addCategory(Integer parentId, String name, String type) throws Exception {
         Category c = new Category();
@@ -27,7 +32,6 @@ public class CategoryController {
     }
 
     public void updateCategory(Integer categoryId, Integer parentId, String name, String type) throws Exception {
-
         Category existing = categoryDao.findById(categoryId);
 
         if (existing == null) {
@@ -42,7 +46,6 @@ public class CategoryController {
     }
 
     public void deleteCategory(Integer categoryId) throws Exception {
-
         Category c = categoryDao.findById(categoryId);
 
         if (c == null) {
@@ -86,7 +89,7 @@ public class CategoryController {
                 return c;
             }
         }
-        
+
         throw new Exception("Category dengan nama \"" + name + "\" tidak ditemukan");
     }
 }
