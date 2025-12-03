@@ -6,6 +6,7 @@ package ui.admin;
 
 import app.controller.CategoryController;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
@@ -16,12 +17,12 @@ import ui.KF;
  *
  * @author RIDHO
  */
-public class CategoriAdmin extends javax.swing.JPanel {
+public class CategoryAdmin extends javax.swing.JPanel {
 
     /**
      * Creates new form CategoriAdmin
      */
-    public CategoriAdmin() {
+    public CategoryAdmin() {
         initComponents();
     }
 
@@ -50,6 +51,11 @@ public class CategoriAdmin extends javax.swing.JPanel {
             }
         ));
         tblCategori.setRowHeight(40);
+        tblCategori.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblCategoriMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblCategori);
         if (tblCategori.getColumnModel().getColumnCount() > 0) {
             tblCategori.getColumnModel().getColumn(0).setPreferredWidth(10);
@@ -97,16 +103,64 @@ public class CategoriAdmin extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    CategoryController categorycontroller = new CategoryController();
+
     private void btnAddCategoriMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAddCategoriMouseClicked
         JPanel pnlUtama = (JPanel) SwingUtilities.getAncestorOfClass(JPanel.class, this);
         KF.UntukPanel(pnlUtama, KF.fAddCategory);
         KF.fAddCategory.InputDataCmb();
     }//GEN-LAST:event_btnAddCategoriMouseClicked
 
+    private void tblCategoriMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCategoriMouseClicked
+        int baris = tblCategori.getSelectedRow();
+        int kolom = tblCategori.getSelectedColumn();
+
+        if (kolom == 3) {
+            System.out.println("edit");
+        } else if (kolom == 4) {
+            DefaultTableModel tModel = (DefaultTableModel) tblCategori.getModel();
+            String namaCategory = tModel.getValueAt(baris, 1).toString();
+
+            try {
+                Category thisCategory = categorycontroller.findCategoryByName(namaCategory);
+                
+                String pesanKonfirmasi;
+                if (thisCategory.getParent_id() == null) {
+                    pesanKonfirmasi
+                            = "Kategori \"" + namaCategory + "\" adalah HEAD CATEGORY.\n"
+                            + "Semua child category akan kehilangan parent (parent_id = NULL).\n\n"
+                            + "Tetap hapus?";
+                } else {
+                    pesanKonfirmasi
+                            = "Yakin ingin menghapus kategori \"" + namaCategory + "\"?";
+                }
+
+                int confirm = JOptionPane.showConfirmDialog(
+                        null,
+                        pesanKonfirmasi,
+                        "Konfirmasi Hapus",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.WARNING_MESSAGE
+                );
+                if (confirm != JOptionPane.YES_OPTION) {
+                    return;
+                }
+
+                categorycontroller.deleteCategory(thisCategory.getCategory_id());
+                JOptionPane.showMessageDialog(null, "Kategori berhasil dihapus!");
+
+                tModel.removeRow(baris);
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e.getMessage());
+            }
+
+        }
+    }//GEN-LAST:event_tblCategoriMouseClicked
+
     public void loadTable() {
         try {
-            CategoryController controller = new CategoryController();
-            List<Category> categories = controller.getAllCategories();
+            List<Category> categories = categorycontroller.getAllCategories();
 
             DefaultTableModel model = (DefaultTableModel) tblCategori.getModel();
             model.setRowCount(0);

@@ -7,18 +7,22 @@ package ui.admin.categori;
 import app.controller.CategoryController;
 import app.services.CategoriesDao;
 import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import models.Category;
+import ui.KF;
 
 /**
  *
  * @author RIDHO
  */
-public class TambahCategori extends javax.swing.JPanel {
+public class TambahCategory extends javax.swing.JPanel {
 
     /**
      * Creates new form TambahCategori
      */
-    public TambahCategori() {
+    public TambahCategory() {
         initComponents();
     }
 
@@ -53,6 +57,11 @@ public class TambahCategori extends javax.swing.JPanel {
         cmbHeadCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         btnSave.setText("Save");
+        btnSave.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnSaveMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -99,15 +108,47 @@ public class TambahCategori extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    CategoryController categorycontroller = new CategoryController();
+
+    private void btnSaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveMouseClicked
+        String categoryName = txtCategory.getText();
+
+        Object selectedItem = cmbHeadCategory.getSelectedItem();
+        Integer headCategory = null;
+
+        if (!"No Parent".equals(selectedItem)) {
+            headCategory = Integer.valueOf(selectedItem.toString());
+        }
+
+        try {
+            Category parent = null;
+            if (headCategory != null) {
+                parent = categorycontroller.findCategoryById(headCategory);
+            }
+
+            categorycontroller.addCategory(headCategory, categoryName, parent != null ? parent.getCategory_name() : categoryName.toLowerCase());
+
+            JOptionPane.showMessageDialog(this, "Input Success!",
+                    "Sukses", JOptionPane.INFORMATION_MESSAGE);
+
+            JPanel pnlUtama = (JPanel) SwingUtilities.getAncestorOfClass(JPanel.class, this);
+            KF.UntukPanel(pnlUtama, KF.fCategoryAdmin);
+            KF.fCategoryAdmin.loadTable();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.getLogger(TambahCategory.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+    }//GEN-LAST:event_btnSaveMouseClicked
+
     public void InputDataCmb() {
         try {
-            CategoryController controller = new CategoryController();
-            List<Category> parentCategories = controller.getParentCategories();
+            List<Category> parentCategories = categorycontroller.getParentCategories();
 
             cmbHeadCategory.removeAllItems();
-            cmbHeadCategory.addItem("No Parent");
+            cmbHeadCategory.addItem("No Parent"); // tetap String
             for (Category c : parentCategories) {
-                cmbHeadCategory.addItem(c.getCategory_name());
+                cmbHeadCategory.addItem(c.getCategory_id().toString()); // ubah Integer ke String
             }
         } catch (Exception e) {
             e.printStackTrace();

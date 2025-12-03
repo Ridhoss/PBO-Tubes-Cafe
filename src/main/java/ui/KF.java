@@ -17,10 +17,10 @@ import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
-import ui.admin.CategoriAdmin;
+import ui.admin.CategoryAdmin;
 import ui.admin.DashboardAdmin;
 import ui.admin.ProductAdmin;
-import ui.admin.categori.TambahCategori;
+import ui.admin.categori.TambahCategory;
 import ui.customer.DashboardCustomer;
 import ui.layout.CustomerLayout;
 
@@ -31,19 +31,21 @@ import ui.layout.CustomerLayout;
 public class KF {
     // auth
     public static Login flogin = new Login();
+    public static Register fregister = new Register();
     
     //admin
     public static LayoutAdmin flayoutAdmin = new LayoutAdmin();
     public static DashboardAdmin fdashAdmin = new DashboardAdmin();
     public static ProductAdmin fproductAdmin = new ProductAdmin();
-    public static CategoriAdmin fCategoriAdmin = new CategoriAdmin();
+    public static CategoryAdmin fCategoryAdmin = new CategoryAdmin();
     
     //category admin
-    public static TambahCategori fAddCategory = new TambahCategori();
+    public static TambahCategory fAddCategory = new TambahCategory();
     
     //user 
     public static CustomerLayout flayoutCustomer = new CustomerLayout();
     public static DashboardCustomer fdashCustomer = new DashboardCustomer();
+    
     
     public static void UntukInternalFrame(JPanel panelapa, JInternalFrame frameapa) {
         try {

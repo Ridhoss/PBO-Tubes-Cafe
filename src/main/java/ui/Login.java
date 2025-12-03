@@ -4,9 +4,11 @@
  */
 package ui;
 
+import app.controller.AuthController;
 import javax.swing.JOptionPane;
 import models.User;
 import app.services.UsersDao;
+import util.PasswordUtil;
 
 /**
  *
@@ -42,7 +44,7 @@ public class Login extends javax.swing.JFrame {
         btnSignUp = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabelEmail = new javax.swing.JLabel();
-        txtEmail = new javax.swing.JTextField();
+        txtUsername = new javax.swing.JTextField();
         jLabelPass = new javax.swing.JLabel();
         txtPassword = new javax.swing.JPasswordField();
         btnSignIn = new javax.swing.JButton();
@@ -92,6 +94,11 @@ public class Login extends javax.swing.JFrame {
         btnSignUp.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnSignUp.setForeground(new java.awt.Color(74, 112, 169));
         btnSignUp.setText("Sign Up");
+        btnSignUp.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnSignUpMouseClicked(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
@@ -104,7 +111,7 @@ public class Login extends javax.swing.JFrame {
 
         jLabelEmail.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabelEmail.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabelEmail.setText("Email");
+        jLabelEmail.setText("Username");
 
         jLabelPass.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabelPass.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -127,9 +134,9 @@ public class Login extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabelEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
+                        .addComponent(jLabelEmail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(324, 324, 324))
-                    .addComponent(txtEmail)
+                    .addComponent(txtUsername)
                     .addComponent(jLabelPass, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtPassword)
                     .addComponent(btnSignIn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -141,7 +148,7 @@ public class Login extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabelEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabelPass, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -165,7 +172,7 @@ public class Login extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 588, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
@@ -178,42 +185,65 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSignInMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSignInMouseClicked
-//        String email = txtEmail.getText();
-//        String password = new String(txtPassword.getPassword());
-//
-//        if (email.isEmpty() || password.isEmpty()) {
-//            JOptionPane.showMessageDialog(this, "Email dan password wajib diisi!",
-//                    "Error", JOptionPane.ERROR_MESSAGE);
-//            return;
-//        }
-//
-//        try {
-//            UsersDao dao = new UsersDao();
-//            // Cari user berdasarkan email
-//            User user = dao.findByEmail(email);
-//
-//            if (user != null) {
-//                // Misal kolom password ada di User
-//                if (user.getPassword().equals(password)) {
-//                    JOptionPane.showMessageDialog(this, "Login berhasil!",
-//                            "Sukses", JOptionPane.INFORMATION_MESSAGE);
-//                    // Bisa lanjut buka JFrame lain
-//                    // new DashboardFrame().setVisible(true);
-//                    // this.dispose();
-//                } else {
-//                    JOptionPane.showMessageDialog(this, "Password salah!",
-//                            "Error", JOptionPane.ERROR_MESSAGE);
-//                }
-//            } else {
-//                JOptionPane.showMessageDialog(this, "User tidak ditemukan!",
-//                        "Error", JOptionPane.ERROR_MESSAGE);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            JOptionPane.showMessageDialog(this, "Terjadi kesalahan: " + e.getMessage(),
-//                    "Error", JOptionPane.ERROR_MESSAGE);
-//        }
+        String username = txtUsername.getText();
+        String password = new String(txtPassword.getPassword());
+
+        if (username.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Username dan password wajib diisi!",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            AuthController controller = new AuthController();
+            User thisUser = controller.Login(username, password);
+
+            if (thisUser != null) {
+                String hashedInput = PasswordUtil.hash(password);
+
+                if (thisUser.getPassword().equals(hashedInput)) {
+                    switch (thisUser.getRole()) {
+                        case "customer":
+                            KF.UntukPanel(KF.flayoutCustomer.pnlUtamaCustomer, KF.fdashCustomer);
+                            KF.flayoutCustomer.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+                            KF.flayoutCustomer.setVisible(true);
+                            break;
+                        case "cashier":
+
+                            break;
+                        case "admin":
+                            KF.UntukPanel(KF.flayoutAdmin.pnlUtamaAdmin, KF.fdashAdmin);
+                            KF.flayoutAdmin.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+                            KF.flayoutAdmin.setVisible(true);
+                            break;
+                        default:
+                            JOptionPane.showMessageDialog(this, "Role Tidak Ada!",
+                                    "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    JOptionPane.showMessageDialog(this, "Login berhasil!",
+                            "Sukses", JOptionPane.INFORMATION_MESSAGE);
+
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Password salah!",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "User tidak ditemukan!",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Terjadi kesalahan: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnSignInMouseClicked
+
+    private void btnSignUpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSignUpMouseClicked
+        KF.fregister.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+        KF.fregister.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnSignUpMouseClicked
 
     /**
      * @param args the command line arguments
@@ -252,7 +282,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JTextField txtEmail;
     private javax.swing.JPasswordField txtPassword;
+    private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
 }

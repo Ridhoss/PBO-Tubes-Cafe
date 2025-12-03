@@ -4,12 +4,17 @@
  */
 package ui;
 
+import app.controller.AuthController;
+import javax.swing.JOptionPane;
+import models.User;
+import util.PasswordUtil;
+
 /**
  *
  * @author Dell
  */
 public class Register extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Register.class.getName());
 
     /**
@@ -105,6 +110,11 @@ public class Register extends javax.swing.JFrame {
         btnSignIn.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnSignIn.setForeground(new java.awt.Color(74, 112, 169));
         btnSignIn.setText("Sign In");
+        btnSignIn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnSignInMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -191,9 +201,9 @@ public class Register extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 507, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 536, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 510, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -206,11 +216,45 @@ public class Register extends javax.swing.JFrame {
 
     private void btnSignUpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSignUpMouseClicked
 
+        String username = txtUsername.getText();
+        String fullname = txtFullname.getText();
+        String email = txtEmail.getText();
+        String phone = txtPhone.getText();
+        String password = txtPassword.getText();
+
+        if (username.isEmpty() || password.isEmpty() || email.isEmpty() || phone.isEmpty() || fullname.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Semua field wajib diisi!",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            AuthController controller = new AuthController();
+            controller.Register(username, password, fullname, email, phone);
+
+            JOptionPane.showMessageDialog(this, "Register Berhasil!",
+                    "Sukses", JOptionPane.INFORMATION_MESSAGE);
+
+            KF.flogin.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+            KF.flogin.setVisible(true);
+            this.dispose();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Terjadi kesalahan: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnSignUpMouseClicked
 
     private void btnSignUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignUpActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnSignUpActionPerformed
+
+    private void btnSignInMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSignInMouseClicked
+        KF.flogin.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+        KF.flogin.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnSignInMouseClicked
 
     /**
      * @param args the command line arguments

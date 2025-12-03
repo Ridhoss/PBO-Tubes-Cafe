@@ -68,4 +68,25 @@ public class CategoryController {
 
         return parentCategories;
     }
+
+    public Category findCategoryById(Integer categoryId) throws Exception {
+        Category c = categoryDao.findById(categoryId);
+        if (c == null) {
+            throw new Exception("Category ID " + categoryId + " tidak ditemukan");
+        }
+        return c;
+    }
+
+    public Category findCategoryByName(String name) throws Exception {
+        String search = name.toLowerCase();
+        List<Category> allCategories = categoryDao.findAll();
+
+        for (Category c : allCategories) {
+            if (c.getCategory_name() != null && c.getCategory_name().toLowerCase().equals(search)) {
+                return c;
+            }
+        }
+        
+        throw new Exception("Category dengan nama \"" + name + "\" tidak ditemukan");
+    }
 }

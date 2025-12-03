@@ -100,7 +100,7 @@ public class LayoutAdmin extends javax.swing.JFrame {
         btnCategori.setBackground(new java.awt.Color(255, 255, 255));
         btnCategori.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         btnCategori.setForeground(new java.awt.Color(255, 255, 255));
-        btnCategori.setText("Categori");
+        btnCategori.setText("Category");
         btnCategori.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnCategoriMouseClicked(evt);
@@ -204,8 +204,8 @@ public class LayoutAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_btnProductMouseClicked
 
     private void btnCategoriMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCategoriMouseClicked
-        KF.UntukPanel(pnlUtamaAdmin, KF.fCategoriAdmin);
-        KF.fCategoriAdmin.loadTable();
+        KF.UntukPanel(pnlUtamaAdmin, KF.fCategoryAdmin);
+        KF.fCategoryAdmin.loadTable();
     }//GEN-LAST:event_btnCategoriMouseClicked
 
     /**
