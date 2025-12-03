@@ -9,6 +9,8 @@ import database.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import models.Product;
 
@@ -29,8 +31,7 @@ public class ProductsDao extends GenericDaoImpl<Integer, Product> {
                 "cost_price",
                 "stock",
                 "is_active",
-                "image_path"
-        );
+                "image_path");
     }
 
     @Override
@@ -65,10 +66,12 @@ public class ProductsDao extends GenericDaoImpl<Integer, Product> {
         p.setImage_path(rs.getString("image_path"));
 
         p.setCreated_at(rs.getTimestamp("created_at") != null
-                ? rs.getTimestamp("created_at").toLocalDateTime() : null);
+                ? rs.getTimestamp("created_at").toLocalDateTime()
+                : null);
 
         p.setUpdated_at(rs.getTimestamp("updated_at") != null
-                ? rs.getTimestamp("updated_at").toLocalDateTime() : null);
+                ? rs.getTimestamp("updated_at").toLocalDateTime()
+                : null);
 
         return p;
     }
@@ -125,6 +128,33 @@ public class ProductsDao extends GenericDaoImpl<Integer, Product> {
             while (rs.next()) {
                 list.add(mapResult(rs));
             }
+
+        }
+
+        return list;
+    }
+
+    public List<Product> findByCategoryList(List<Integer> ids) throws Exception {
+        if (ids == null || ids.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        String inSql = String.join(",", ids.stream().map(id -> "?").toList());
+
+        String sql = "SELECT * FROM products WHERE category_id IN (" + inSql + ")";
+
+        Connection conn = DBConnection.getInstance().getConnection();
+        PreparedStatement ps = conn.prepareStatement(sql);
+
+        for (int i = 0; i < ids.size(); i++) {
+            ps.setInt(i + 1, ids.get(i));
+        }
+
+        ResultSet rs = ps.executeQuery();
+
+        List<Product> list = new ArrayList<>();
+        while (rs.next()) {
+            list.add(mapResult(rs));
         }
 
         return list;

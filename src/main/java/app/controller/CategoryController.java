@@ -2,6 +2,11 @@ package app.controller;
 
 import models.Category;
 import app.services.CategoriesDao;
+import database.DBConnection;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryController {
@@ -105,4 +110,21 @@ public class CategoryController {
 
         throw new Exception("Category dengan nama \"" + name + "\" tidak ditemukan");
     }
+    
+    public List<Integer> getAllChildIds(int parentId) throws Exception {
+        List<Category> all = categoryDao.findAll();
+        List<Integer> result = new ArrayList<>();
+        findChildren(parentId, all, result);
+        return result;
+    }
+
+    private void findChildren(int parentId, List<Category> all, List<Integer> result) {
+        for (Category c : all) {
+            if (c.getParent_id() != null && c.getParent_id() == parentId) {
+                result.add(c.getCategory_id());
+                findChildren(c.getCategory_id(), all, result);
+            }
+        }
+    }
+
 }

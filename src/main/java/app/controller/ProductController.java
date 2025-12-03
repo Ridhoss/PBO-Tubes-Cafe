@@ -6,6 +6,8 @@ package app.controller;
 
 import models.Product;
 import app.services.ProductsDao;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -37,8 +39,7 @@ public class ProductController {
             Integer costPrice,
             Integer stock,
             Boolean isActive,
-            String imagePath
-    ) throws Exception {
+            String imagePath) throws Exception {
 
         Product p = new Product();
 
@@ -63,8 +64,7 @@ public class ProductController {
             Integer costPrice,
             Integer stock,
             Boolean isActive,
-            String imagePath
-    ) throws Exception {
+            String imagePath) throws Exception {
 
         Product existing = productDao.findById(productId);
 
@@ -112,6 +112,14 @@ public class ProductController {
 
     public java.util.List<Product> getAllProducts() throws Exception {
         return productDao.getAll();
+    }
+
+    public List<Product> getAllProducts() throws Exception {
+        return productDao.findAll();
+    }
+
+    public List<Product> getProductsByCategoryList(List<Integer> ids) throws Exception {
+        return productDao.findByCategoryList(ids);
     }
 
 }
