@@ -20,10 +20,13 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
 import ui.admin.CategoryAdmin;
 import ui.admin.DashboardAdmin;
 import ui.admin.ProductAdmin;
+import ui.admin.UserAdmin;
 import ui.admin.category.EditCategory;
 import ui.admin.category.TambahCategory;
 import ui.admin.product.EditProduct;
 import ui.admin.product.TambahProduct;
+import ui.admin.user.EditUser;
+import ui.admin.user.TambahUser;
 import ui.customer.DashboardCustomer;
 import ui.layout.CustomerLayout;
 
@@ -41,6 +44,7 @@ public class KF {
     public static DashboardAdmin fdashAdmin = new DashboardAdmin();
     public static ProductAdmin fproductAdmin = new ProductAdmin();
     public static CategoryAdmin fCategoryAdmin = new CategoryAdmin();
+    public static UserAdmin fUserAdmin = new UserAdmin();
     
     //category admin
     public static TambahCategory fAddCategory = new TambahCategory();
@@ -48,6 +52,9 @@ public class KF {
     //product admin
     public static TambahProduct fAddProduct = new TambahProduct();
     public static EditProduct fEditProduct = new EditProduct();
+    //user admin
+    public static TambahUser fAddUser = new TambahUser();
+    public static EditUser fEditUser = new EditUser();
     
     //user 
     public static CustomerLayout flayoutCustomer = new CustomerLayout();

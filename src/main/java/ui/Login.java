@@ -220,9 +220,7 @@ public class Login extends javax.swing.JFrame {
                             JOptionPane.showMessageDialog(this, "Role Tidak Ada!",
                                     "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                    JOptionPane.showMessageDialog(this, "Login berhasil!",
-                            "Sukses", JOptionPane.INFORMATION_MESSAGE);
-
+                    clearInput();
                     this.dispose();
                 } else {
                     JOptionPane.showMessageDialog(this, "Password salah!",
@@ -244,6 +242,11 @@ public class Login extends javax.swing.JFrame {
         KF.fregister.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnSignUpMouseClicked
+
+    public void clearInput() {
+        txtPassword.setText("");
+        txtUsername.setText("");
+    }
 
     /**
      * @param args the command line arguments
