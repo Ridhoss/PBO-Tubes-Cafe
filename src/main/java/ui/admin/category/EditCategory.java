@@ -139,7 +139,7 @@ public class EditCategory extends javax.swing.JPanel {
 
             categorycontroller.updateCategory(thisCategory.getCategory_id(), parent != null ? parent.getCategory_id() : null, categoryName, parent != null ? parent.getCategory_name().toLowerCase() : categoryName.toLowerCase());
 
-            JOptionPane.showMessageDialog(this, "Input Success!",
+            JOptionPane.showMessageDialog(this, "Edit Success!",
                     "Sukses", JOptionPane.INFORMATION_MESSAGE);
 
             JPanel pnlUtama = (JPanel) SwingUtilities.getAncestorOfClass(JPanel.class, this);
