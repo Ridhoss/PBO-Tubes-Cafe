@@ -79,4 +79,39 @@ public class CartItemsDao extends GenericDaoImpl<Integer, CartItem> {
         }
         return list;
     }
+
+    public List<CartItem> findByCartId(Integer cartId) throws Exception {
+        List<CartItem> items = new ArrayList<>();
+        String sql = "SELECT * FROM cart_items WHERE cart_id = ? ORDER BY cart_item_id ASC";
+
+        try (Connection conn = DBConnection.getInstance().getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, cartId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    items.add(mapResult(rs));
+                }
+            }
+        }
+        return items;
+    }
+
+    public CartItem findByCartAndProduct(Integer cartId, Integer productId) throws Exception {
+        CartItem item = null;
+        String sql = "SELECT * FROM cart_items WHERE cart_id = ? AND product_id = ?";
+
+        try (Connection conn = DBConnection.getInstance().getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, cartId);
+            ps.setInt(2, productId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    item = mapResult(rs);
+                }
+            }
+        }
+        return item;
+    }
+
 }
