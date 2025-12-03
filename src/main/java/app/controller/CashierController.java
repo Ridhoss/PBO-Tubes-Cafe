@@ -90,4 +90,18 @@ public class CashierController {
     public Order getOrderDetail(String orderId) {
         return ordersDao.findOrderByID(orderId);
     }
+
+    /**
+     * Mengubah status pesanan menjadi COMPLETED (Selesai).
+     * Dipanggil ketika pesanan sudah disajikan/diambil.
+     */
+    public boolean completeOrder(String orderId) {
+        Order order = ordersDao.findOrderByID(orderId);
+        
+        if (order != null && order.getOrderStatus().equals("PROCESSING")) {
+            order.setOrderStatus("COMPLETED");
+            return true;
+        }
+        return false;
+    }
 }

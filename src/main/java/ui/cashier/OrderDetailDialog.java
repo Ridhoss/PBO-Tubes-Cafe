@@ -15,7 +15,7 @@ public class OrderDetailDialog extends JDialog {
 
     private CashierController controller;
     private Order order;
-    private boolean orderUpdated = false; 
+    private boolean orderUpdated = false;
 
     // Komponen UI yang perlu diakses global di class ini
     private JLabel lblStatusValue;
@@ -23,10 +23,10 @@ public class OrderDetailDialog extends JDialog {
     private JButton btnPay; // Tombol baru untuk bayar
 
     public OrderDetailDialog(JFrame parent, CashierController controller, Order order) {
-        super(parent, "Detail Pesanan: " + order.getOrderId(), true); 
+        super(parent, "Detail Pesanan: " + order.getOrderId(), true);
         this.controller = controller;
         this.order = order;
-        
+
         setSize(650, 550); // Sedikit diperbesar
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout());
@@ -45,29 +45,29 @@ public class OrderDetailDialog extends JDialog {
         addInfo(pnlInfo, "Nama Customer:", order.getCustomerName());
         addInfo(pnlInfo, "Nomor Meja:", order.getTableNumber());
         addInfo(pnlInfo, "Metode Bayar:", order.getPaymentType());
-        
+
         JLabel lblStatusLabel = new JLabel("Status Bayar:");
         lblStatusLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        
+
         lblStatusValue = new JLabel(order.isPaid() ? "LUNAS" : "BELUM LUNAS");
         lblStatusValue.setFont(new Font("Segoe UI", Font.BOLD, 16));
         lblStatusValue.setForeground(order.isPaid() ? CafeColors.STATUS_PAID : CafeColors.STATUS_UNPAID);
-        
+
         pnlInfo.add(lblStatusLabel);
         pnlInfo.add(lblStatusValue);
 
         add(pnlInfo, BorderLayout.NORTH);
 
         // --- 2. TABEL ITEM ---
-        String[] columns = {"Nama Menu", "Qty", "Notes", "Subtotal"};
+        String[] columns = { "Nama Menu", "Qty", "Notes", "Subtotal" };
         DefaultTableModel model = new DefaultTableModel(columns, 0);
-        
+
         for (OrderItem item : order.getItems()) {
-            model.addRow(new Object[]{
-                item.getProduct().getProduct_name(),
-                item.getQuantity(),
-                item.getNotes(),
-                "Rp " + (int)item.getSubtotal()
+            model.addRow(new Object[] {
+                    item.getProduct().getProduct_name(),
+                    item.getQuantity(),
+                    item.getNotes(),
+                    "Rp " + (int) item.getSubtotal()
             });
         }
 
@@ -75,7 +75,7 @@ public class OrderDetailDialog extends JDialog {
         table.setRowHeight(30);
         table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
-        
+
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
@@ -90,7 +90,7 @@ public class OrderDetailDialog extends JDialog {
         pnlFooter.setBorder(new EmptyBorder(20, 20, 20, 20));
         pnlFooter.setBackground(CafeColors.BACKGROUND);
 
-        JLabel lblTotal = new JLabel("Total: Rp " + (int)order.getTotalAmount());
+        JLabel lblTotal = new JLabel("Total: Rp " + (int) order.getTotalAmount());
         lblTotal.setFont(new Font("Segoe UI", Font.BOLD, 22));
         lblTotal.setForeground(CafeColors.PRIMARY);
         pnlFooter.add(lblTotal, BorderLayout.WEST);
@@ -113,7 +113,7 @@ public class OrderDetailDialog extends JDialog {
         btnApprove.addActionListener(e -> processApproval());
 
         pnlButtons.add(btnClose);
-        pnlButtons.add(btnPay);     // Tambahkan tombol Bayar
+        pnlButtons.add(btnPay); // Tambahkan tombol Bayar
         pnlButtons.add(btnApprove); // Tambahkan tombol Approve
         pnlFooter.add(pnlButtons, BorderLayout.EAST);
 
@@ -124,23 +124,45 @@ public class OrderDetailDialog extends JDialog {
     }
 
     private void updateButtonState() {
-        // Jika belum lunas, tombol Approve mati, tombol Bayar nyala
+        // 1. Jika Belum Lunas (CASH PENDING)
         if (!order.isPaid()) {
             btnPay.setVisible(true);
             btnApprove.setEnabled(false);
             btnApprove.setText("Menunggu Pembayaran");
             btnApprove.setBackground(Color.LIGHT_GRAY);
-        } else {
-            // Jika sudah lunas
+        }
+        // 2. Jika Sudah Lunas (PAID)
+        else {
             btnPay.setVisible(false); // Sembunyikan tombol bayar
-            
-            if (order.getOrderStatus().equals("PENDING")) {
+
+            String status = order.getOrderStatus();
+
+            if (status.equals("PENDING")) {
+                // Siap di-Approve
                 btnApprove.setEnabled(true);
                 btnApprove.setText("Approve Pesanan");
-                btnApprove.setBackground(CafeColors.STATUS_PAID);
+                btnApprove.setBackground(CafeColors.STATUS_PAID); // Hijau
+
+                // Reset action listener agar tidak menumpuk (PENTING!)
+                for (var al : btnApprove.getActionListeners())
+                    btnApprove.removeActionListener(al);
+                btnApprove.addActionListener(e -> processApproval());
+
+            } else if (status.equals("PROCESSING")) {
+                // Sedang diproses -> Siap diselesaikan
+                btnApprove.setEnabled(true);
+                btnApprove.setText("Selesaikan Pesanan");
+                btnApprove.setBackground(CafeColors.SECONDARY); // Biru
+
+                // Reset action listener
+                for (var al : btnApprove.getActionListeners())
+                    btnApprove.removeActionListener(al);
+                btnApprove.addActionListener(e -> processCompletion());
+
             } else {
+                // Sudah Selesai (COMPLETED)
                 btnApprove.setEnabled(false);
-                btnApprove.setText("Sudah Diproses");
+                btnApprove.setText("Pesanan Selesai");
                 btnApprove.setBackground(Color.LIGHT_GRAY);
             }
         }
@@ -148,15 +170,15 @@ public class OrderDetailDialog extends JDialog {
 
     private void processPayment() {
         int confirm = JOptionPane.showConfirmDialog(this,
-            "Terima pembayaran senilai Rp " + (int)order.getTotalAmount() + "?",
-            "Konfirmasi Pembayaran", JOptionPane.YES_NO_OPTION);
+                "Terima pembayaran senilai Rp " + (int) order.getTotalAmount() + "?",
+                "Konfirmasi Pembayaran", JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
             boolean success = controller.markOrderAsPaid(order.getOrderId());
             if (success) {
                 JOptionPane.showMessageDialog(this, "Pembayaran Berhasil Diterima!");
                 orderUpdated = true;
-                
+
                 // Update UI langsung tanpa tutup dialog
                 lblStatusValue.setText("LUNAS");
                 lblStatusValue.setForeground(CafeColors.STATUS_PAID);
@@ -165,15 +187,32 @@ public class OrderDetailDialog extends JDialog {
         }
     }
 
+    // Aksi 1: Approve (Pending -> Processing)
     private void processApproval() {
-        int confirm = JOptionPane.showConfirmDialog(this, 
-            "Approve pesanan ini dan kirim ke dapur?", 
-            "Konfirmasi", JOptionPane.YES_NO_OPTION);
-            
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Approve pesanan ini dan kirim ke dapur?",
+                "Konfirmasi Approve", JOptionPane.YES_NO_OPTION);
+
         if (confirm == JOptionPane.YES_OPTION) {
             boolean success = controller.approveOrder(order.getOrderId());
             if (success) {
-                JOptionPane.showMessageDialog(this, "Pesanan Berhasil Di-Approve!");
+                JOptionPane.showMessageDialog(this, "Pesanan Masuk Antrian Dapur (Processing).");
+                orderUpdated = true;
+                dispose();
+            }
+        }
+    }
+
+    // Aksi 2: Complete (Processing -> Completed)
+    private void processCompletion() {
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Tandai pesanan ini sebagai SELESAI (Sudah disajikan)?",
+                "Konfirmasi Selesai", JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            boolean success = controller.completeOrder(order.getOrderId());
+            if (success) {
+                JOptionPane.showMessageDialog(this, "Status Pesanan: COMPLETED.");
                 orderUpdated = true;
                 dispose();
             }
