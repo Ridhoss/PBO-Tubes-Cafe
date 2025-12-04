@@ -28,9 +28,11 @@ import ui.admin.product.EditProduct;
 import ui.admin.product.TambahProduct;
 import ui.admin.user.EditUser;
 import ui.admin.user.TambahUser;
+import ui.cashier.CashierDashboard;
 import ui.customer.DashboardCustomer;
 import ui.customer.DetailProductCustomer;
 import ui.customer.KeranjangCustomer;
+import ui.layout.CashierLayout;
 import ui.layout.CustomerLayout;
 
 /**
@@ -66,6 +68,10 @@ public class KF {
     public static DashboardCustomer fdashCustomer = new DashboardCustomer();
     public static DetailProductCustomer fDetailProductCustomer = new DetailProductCustomer();
     public static KeranjangCustomer fkeranjang = new KeranjangCustomer();
+    
+    //cashier
+    public static CashierLayout fcashierlayout = new CashierLayout();
+    public static CashierDashboard fcashierDash = new CashierDashboard();
 
     public static void UntukInternalFrame(JPanel panelapa, JInternalFrame frameapa) {
         try {

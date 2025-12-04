@@ -212,7 +212,9 @@ public class Login extends javax.swing.JFrame {
                             KF.flayoutCustomer.setDataLayout(username);
                             break;
                         case "cashier":
-
+                            KF.UntukPanel(KF.fcashierlayout.pnlUtamaCashier, KF.fcashierDash);
+                            KF.fcashierlayout.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+                            KF.fcashierlayout.setVisible(true);
                             break;
                         case "admin":
                             KF.UntukPanel(KF.flayoutAdmin.pnlUtamaAdmin, KF.fdashAdmin);
