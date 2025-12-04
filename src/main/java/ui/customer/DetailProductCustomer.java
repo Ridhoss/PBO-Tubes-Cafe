@@ -8,8 +8,20 @@ import app.controller.CartController;
 import app.controller.CartItemsController;
 import app.controller.ProductController;
 import app.controller.UserController;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Image;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import models.Cart;
 import models.Product;
@@ -25,8 +37,64 @@ public class DetailProductCustomer extends javax.swing.JPanel {
     /**
      * Creates new form DetailProductCustomer
      */
+    private Product product;
+
     public DetailProductCustomer() {
         initComponents();
+    }
+
+    public DetailProductCustomer(Product product) {
+        this.product = product;
+        initComponents();
+        initDetail();
+    }
+
+    private void initDetail() {
+        setLayout(new BorderLayout());
+        setBackground(Color.WHITE);
+
+        // GAMBAR
+        JLabel img = new JLabel("No Image", SwingConstants.CENTER);
+        img.setPreferredSize(new Dimension(300, 300));
+
+        try {
+            if (product.getImage_path() != null) {
+                ImageIcon icon = new ImageIcon(getClass().getResource("/" + product.getImage_path()));
+                Image scaled = icon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
+                img.setIcon(new ImageIcon(scaled));
+                img.setText("");
+            }
+        } catch (Exception e) {
+            System.out.println("Gagal ambil gambar");
+        }
+
+        JLabel lblName = new JLabel(product.getProduct_name());
+        lblName.setFont(new Font("Segoe UI", Font.BOLD, 24));
+
+        JTextArea txtDesc = new JTextArea(product.getDescription());
+        txtDesc.setLineWrap(true);
+        txtDesc.setWrapStyleWord(true);
+        txtDesc.setEditable(false);
+
+        JLabel lblPrice = new JLabel("Rp " + String.format("%,d", product.getPrice()));
+        lblPrice.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        lblPrice.setForeground(Color.decode("#2C7A7B"));
+
+        JButton btnAdd = new JButton("Add To Cart");
+
+        JPanel infoPanel = new JPanel();
+        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
+        infoPanel.setBackground(Color.WHITE);
+        infoPanel.add(lblName);
+        infoPanel.add(Box.createVerticalStrut(10));
+        infoPanel.add(lblPrice);
+        infoPanel.add(Box.createVerticalStrut(20));
+        infoPanel.add(txtDesc);
+        infoPanel.add(Box.createVerticalStrut(20));
+        infoPanel.add(btnAdd);
+
+        add(img, BorderLayout.WEST);
+        add(infoPanel, BorderLayout.CENTER);
     }
 
     /**
@@ -42,7 +110,7 @@ public class DetailProductCustomer extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        lblProducName = new javax.swing.JLabel();
+        lblProductName = new javax.swing.JLabel();
         lblTitleDesc = new javax.swing.JLabel();
         btnMinus = new javax.swing.JButton();
         btnAdd = new javax.swing.JButton();
@@ -78,8 +146,8 @@ public class DetailProductCustomer extends javax.swing.JPanel {
                 .addContainerGap(145, Short.MAX_VALUE))
         );
 
-        lblProducName.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
-        lblProducName.setText("Product Name");
+        lblProductName.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        lblProductName.setText("Product Name");
 
         lblTitleDesc.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblTitleDesc.setText("Description:");
@@ -138,7 +206,7 @@ public class DetailProductCustomer extends javax.swing.JPanel {
                         .addGap(66, 66, 66)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblTitleDesc)
-                            .addComponent(lblProducName)
+                            .addComponent(lblProductName)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(lblDesc1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -154,7 +222,7 @@ public class DetailProductCustomer extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lblProducName)
+                        .addComponent(lblProductName)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblDesc1)
@@ -220,7 +288,7 @@ public class DetailProductCustomer extends javax.swing.JPanel {
                 thisCart = cartcontroller.getCartByUser(thisUser.getUser_id());
             }
 
-            Product thisProduct = productcontroler.getProductByName(lblProducName.getText());
+            Product thisProduct = productcontroler.getProductByName(lblProductName.getText());
             
             caritemcontroller.insertCartItem(thisCart.getCart_id(), thisProduct.getProduct_id(), Integer.valueOf(lblQty.getText()));
 
@@ -245,10 +313,11 @@ public class DetailProductCustomer extends javax.swing.JPanel {
     }
 
     public void loadData(Product p) {
-        lblProducName.setText(p.getProduct_name());
+        lblProductName.setText(p.getProduct_name());
         lblDesc.setText(p.getDescription());
         lblQty.setText(this.qty.toString());
         lblStock.setText(p.getStock().toString());
+        this.qty = 1;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -261,7 +330,7 @@ public class DetailProductCustomer extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel lblDesc;
     private javax.swing.JLabel lblDesc1;
-    private javax.swing.JLabel lblProducName;
+    private javax.swing.JLabel lblProductName;
     private javax.swing.JLabel lblQty;
     private javax.swing.JLabel lblStock;
     private javax.swing.JLabel lblTitleDesc;

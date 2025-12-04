@@ -55,7 +55,7 @@
                           <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="lblTitleDesc" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblProducName" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblProductName" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <Component id="lblDesc1" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
@@ -77,7 +77,7 @@
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="lblProducName" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblProductName" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="lblDesc1" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -147,7 +147,7 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JLabel" name="lblProducName">
+        <Component class="javax.swing.JLabel" name="lblProductName">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="36" style="1"/>

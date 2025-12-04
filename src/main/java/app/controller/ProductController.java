@@ -19,7 +19,7 @@ public class ProductController {
 
     private final ProductsDao productDao;
 
-    private ProductController() {
+    public ProductController() {
         productDao = new ProductsDao();
     }
 
@@ -110,8 +110,12 @@ public class ProductController {
         return p;
     }
 
-    public java.util.List<Product> getAllProducts() throws Exception {
-        return productDao.getAll();
+    // public java.util.List<Product> getAllProducts() throws Exception {
+    //     return productDao.getAll();
+    // }
+
+    public List<Product> getAllProducts() throws Exception {
+        return productDao.findAll();
     }
 
     public List<Product> getProductsByCategoryList(List<Integer> ids) throws Exception {
