@@ -26,7 +26,8 @@ public class OrderDao extends GenericDaoImpl<Integer, Order> {
                 "final_amount",
                 "payment_status",
                 "order_status",
-                "notes"
+                "notes",
+                "table_code"
         );
     }
 
@@ -39,6 +40,7 @@ public class OrderDao extends GenericDaoImpl<Integer, Order> {
         ps.setString(5, o.getPayment_status());
         ps.setString(6, o.getOrder_status());
         ps.setString(7, o.getNotes() != null ? o.getNotes() : "");
+        ps.setString(8, o.getTableCode());
     }
 
     @Override
@@ -61,6 +63,9 @@ public class OrderDao extends GenericDaoImpl<Integer, Order> {
         o.setOrder_date(rs.getTimestamp("order_date") != null
                 ? rs.getTimestamp("order_date").toLocalDateTime()
                 : null);
+       
+        o.setOrderCode(rs.getString("order_code"));
+        o.setTableCode(rs.getString("table_code"));
 
         return o;
     }

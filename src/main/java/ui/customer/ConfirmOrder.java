@@ -76,6 +76,8 @@ public class ConfirmOrder extends javax.swing.JPanel {
         lblPaymentInfo = new javax.swing.JLabel();
         cmbPaymentInfo = new javax.swing.JComboBox<>();
         btnOrder = new javax.swing.JButton();
+        lblPaymentInfo1 = new javax.swing.JLabel();
+        cmbTableInfo = new javax.swing.JComboBox<>();
 
         JlabelKeranjang1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         JlabelKeranjang1.setForeground(new java.awt.Color(74, 112, 169));
@@ -133,6 +135,11 @@ public class ConfirmOrder extends javax.swing.JPanel {
             }
         });
 
+        lblPaymentInfo1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        lblPaymentInfo1.setText("Table Info:");
+
+        cmbTableInfo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         javax.swing.GroupLayout pnlDetailOrderLayout = new javax.swing.GroupLayout(pnlDetailOrder);
         pnlDetailOrder.setLayout(pnlDetailOrderLayout);
         pnlDetailOrderLayout.setHorizontalGroup(
@@ -159,7 +166,11 @@ public class ConfirmOrder extends javax.swing.JPanel {
                                 .addGap(18, 18, 18)
                                 .addGroup(pnlDetailOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(cmbPaymentInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblPaymentInfo))))
+                                    .addComponent(lblPaymentInfo))
+                                .addGap(18, 18, 18)
+                                .addGroup(pnlDetailOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cmbTableInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblPaymentInfo1))))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -185,7 +196,11 @@ public class ConfirmOrder extends javax.swing.JPanel {
                     .addGroup(pnlDetailOrderLayout.createSequentialGroup()
                         .addComponent(lblPaymentInfo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cmbPaymentInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(cmbPaymentInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlDetailOrderLayout.createSequentialGroup()
+                        .addComponent(lblPaymentInfo1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cmbTableInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(81, 81, 81)
                 .addComponent(btnOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25))
@@ -229,7 +244,7 @@ public class ConfirmOrder extends javax.swing.JPanel {
                 return;
             }
 
-            if (cmbPaymentInfo.getSelectedItem() == null || cmbPaymentMethod.getSelectedItem() == null) {
+            if (cmbPaymentInfo.getSelectedItem() == null || cmbPaymentMethod.getSelectedItem() == null || cmbTableInfo.getSelectedItem() == null) {
                 return;
             }
 
@@ -251,9 +266,10 @@ public class ConfirmOrder extends javax.swing.JPanel {
                 Product p = productController.getProductById(item.getProduct_id());
                 totalAmount += p.getPrice() * item.getQuantity();
             }
+            
+            String table = cmbTableInfo.getSelectedItem().toString();
 
-            orderController.addOrder(thisUser.getUser_id(), totalAmount, 0, totalAmount, "Paid", "Waiting", "");
-
+            orderController.addOrder(thisUser.getUser_id(), totalAmount, 0, totalAmount, "Paid", "Waiting", "", table);
             Order thisOrder = orderController.findLastOrderByUser(thisUser.getUser_id());
 
             for (CartItem item : cartItems) {
@@ -489,7 +505,19 @@ public class ConfirmOrder extends javax.swing.JPanel {
 
         cmbPaymentInfo.removeAllItems();
         cmbPaymentInfo.setEnabled(false);
-        
+
+        cmbTableInfo.removeAllItems();
+        cmbTableInfo.addItem("A1");
+        cmbTableInfo.addItem("A2");
+        cmbTableInfo.addItem("A3");
+        cmbTableInfo.addItem("A4");
+        cmbTableInfo.addItem("A5");
+        cmbTableInfo.addItem("B1");
+        cmbTableInfo.addItem("B2");
+        cmbTableInfo.addItem("B3");
+        cmbTableInfo.addItem("B4");
+        cmbTableInfo.addItem("B5");
+
         totalPrice = 0;
         totalitem = 0;
     }
@@ -499,10 +527,12 @@ public class ConfirmOrder extends javax.swing.JPanel {
     private javax.swing.JButton btnOrder;
     private javax.swing.JComboBox<String> cmbPaymentInfo;
     private javax.swing.JComboBox<String> cmbPaymentMethod;
+    private javax.swing.JComboBox<String> cmbTableInfo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel lblPaymentInfo;
+    private javax.swing.JLabel lblPaymentInfo1;
     private javax.swing.JLabel lblTotalOrderItem;
     private javax.swing.JLabel lblTotalPrice;
     private javax.swing.JPanel pnlDetailOrder;

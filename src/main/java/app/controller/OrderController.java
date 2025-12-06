@@ -31,7 +31,7 @@ public class OrderController {
     }
 
     public void addOrder(Integer userId, Integer totalAmount, Integer discount,
-            Integer finalAmount, String paymentStatus, String orderStatus, String notes) throws Exception {
+            Integer finalAmount, String paymentStatus, String orderStatus, String notes, String tableCode) throws Exception {
         Order o = new Order();
         o.setUser_id(userId);
         o.setTotal_amount(totalAmount);
@@ -40,13 +40,14 @@ public class OrderController {
         o.setPayment_status(paymentStatus);
         o.setOrder_status(orderStatus);
         o.setNotes(notes);
+        o.setTableCode(tableCode);
 
         orderDao.insert(o);
     }
 
     public void updateOrder(Integer orderId, Integer userId, Integer totalAmount,
             Integer discount, Integer finalAmount, String paymentStatus,
-            String orderStatus, String notes) throws Exception {
+            String orderStatus, String notes, String tableCode) throws Exception {
         Order existing = orderDao.findById(orderId);
 
         if (existing == null) {
@@ -60,6 +61,7 @@ public class OrderController {
         existing.setPayment_status(paymentStatus);
         existing.setOrder_status(orderStatus);
         existing.setNotes(notes);
+        existing.setTableCode(tableCode);
 
         orderDao.update(existing);
     }
