@@ -99,6 +99,7 @@ public class DetailProductCustomer extends javax.swing.JPanel {
         btnMinus.setBackground(new java.awt.Color(239, 236, 227));
         btnMinus.setText("-");
         btnMinus.setBorderPainted(false);
+        btnMinus.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnMinus.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnMinusMouseClicked(evt);
@@ -108,6 +109,7 @@ public class DetailProductCustomer extends javax.swing.JPanel {
         btnAdd.setBackground(new java.awt.Color(239, 236, 227));
         btnAdd.setText("+");
         btnAdd.setBorderPainted(false);
+        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAdd.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnAddMouseClicked(evt);
@@ -121,6 +123,7 @@ public class DetailProductCustomer extends javax.swing.JPanel {
         btnAddCart.setForeground(new java.awt.Color(255, 255, 255));
         btnAddCart.setText("Add to Cart");
         btnAddCart.setBorderPainted(false);
+        btnAddCart.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAddCart.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnAddCartMouseClicked(evt);

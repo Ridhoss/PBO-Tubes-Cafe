@@ -57,6 +57,7 @@ public class CustomerLayout extends javax.swing.JFrame {
         btnHome.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         btnHome.setForeground(new java.awt.Color(255, 255, 255));
         btnHome.setText("Home");
+        btnHome.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnHome.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnHomeMouseClicked(evt);
@@ -66,6 +67,7 @@ public class CustomerLayout extends javax.swing.JFrame {
         btnOrder.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         btnOrder.setForeground(new java.awt.Color(255, 255, 255));
         btnOrder.setText("Order");
+        btnOrder.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnOrder.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnOrderMouseClicked(evt);
@@ -75,6 +77,7 @@ public class CustomerLayout extends javax.swing.JFrame {
         btnLogout.setFont(new java.awt.Font("Segoe UI", 0, 17)); // NOI18N
         btnLogout.setForeground(new java.awt.Color(255, 255, 255));
         btnLogout.setText("Logout");
+        btnLogout.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnLogout.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnLogoutMouseClicked(evt);
@@ -84,6 +87,7 @@ public class CustomerLayout extends javax.swing.JFrame {
         btnCart.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         btnCart.setForeground(new java.awt.Color(255, 255, 255));
         btnCart.setText("Cart");
+        btnCart.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnCart.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnCartMouseClicked(evt);

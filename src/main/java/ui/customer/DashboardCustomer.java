@@ -212,8 +212,10 @@ public class DashboardCustomer extends javax.swing.JPanel {
 
         JButton btn = new JButton("View");
         btn.setFocusPainted(false);
-        btn.setBackground(new Color(240, 240, 240));
+        btn.setBackground(new Color(74,112,169));
         btn.setPreferredSize(new Dimension(120, 40));
+        btn.setForeground(Color.WHITE);
+        btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         btn.addActionListener(e -> {
             JPanel pnlUtama = (JPanel) SwingUtilities.getAncestorOfClass(JPanel.class, this);

@@ -17,11 +17,16 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.List;
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -31,8 +36,10 @@ import javax.swing.SwingUtilities;
 import models.Cart;
 import models.CartItem;
 import models.Order;
+import models.Payment;
 import models.Product;
 import models.User;
+import paymentfactory.PaymentFactory;
 import ui.KF;
 
 /**
@@ -118,6 +125,8 @@ public class ConfirmOrder extends javax.swing.JPanel {
         btnOrder.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnOrder.setForeground(new java.awt.Color(255, 255, 255));
         btnOrder.setText("Order Now");
+        btnOrder.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnOrder.setDefaultCapable(false);
         btnOrder.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnOrderMouseClicked(evt);
@@ -269,7 +278,16 @@ public class ConfirmOrder extends javax.swing.JPanel {
             String method = cmbPaymentMethod.getSelectedItem().toString();
             String info = cmbPaymentInfo.getSelectedItem().toString();
 
-            paymentcontroller.addPayment(thisOrder.getOrder_id(), method, totalAmount, 0, info);
+//            paymentcontroller.addPayment(thisOrder.getOrder_id(), method, totalAmount, 0, info);
+            Payment payment = PaymentFactory.createPayment(
+                    method,
+                    thisOrder.getOrder_id(),
+                    totalAmount,
+                    0,
+                    info
+            );
+
+            paymentcontroller.addPaymentNew(payment);
 
             javax.swing.JOptionPane.showMessageDialog(this, "Checkout berhasil! Total: Rp " + totalAmount);
 
@@ -279,7 +297,7 @@ public class ConfirmOrder extends javax.swing.JPanel {
             JPanel pnlUtama = (JPanel) SwingUtilities.getAncestorOfClass(JPanel.class, this);
             KF.UntukPanel(pnlUtama, KF.fdashCustomer);
             KF.fdashCustomer.loadProducts(null);
-            
+
         } catch (Exception ex) {
             System.getLogger(ConfirmOrder.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
@@ -347,15 +365,41 @@ public class ConfirmOrder extends javax.swing.JPanel {
 
         // ===== Image Panel =====
         JPanel imagePanel = new JPanel();
-        imagePanel.setPreferredSize(new Dimension(120, 120));
+        imagePanel.setPreferredSize(new Dimension(200, 120));
         imagePanel.setBackground(new Color(240, 240, 240));
         imagePanel.setLayout(new GridBagLayout());
 
-        JLabel lblImage = new JLabel("No Image"); // bisa diganti ImageIcon nanti
-        lblImage.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblImage.setForeground(new Color(100, 100, 100));
-        imagePanel.add(lblImage);
+        JLabel imageLabel = new JLabel();
+        imageLabel.setHorizontalAlignment(JLabel.CENTER);
 
+        if (p.getImage_path() != null && !p.getImage_path().isEmpty()) {
+            try {
+                File file = new File(p.getImage_path());
+                if (file.exists()) {
+                    BufferedImage img = ImageIO.read(file);
+
+                    // Resize to fit panel
+                    Image scaled = img.getScaledInstance(
+                            200, // width
+                            120, // height
+                            Image.SCALE_SMOOTH
+                    );
+
+                    imageLabel.setIcon(new ImageIcon(scaled));
+                } else {
+                    imageLabel.setText("Image Not Found");
+                }
+            } catch (Exception e) {
+                imageLabel.setText("Error Loading Image");
+            }
+        } else {
+            imageLabel.setText("No Image");
+        }
+
+        imageLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        imageLabel.setForeground(new Color(100, 100, 100));
+
+        imagePanel.add(imageLabel);
         card.add(imagePanel, BorderLayout.WEST);
 
         // ===== Info Panel =====
@@ -445,6 +489,9 @@ public class ConfirmOrder extends javax.swing.JPanel {
 
         cmbPaymentInfo.removeAllItems();
         cmbPaymentInfo.setEnabled(false);
+        
+        totalPrice = 0;
+        totalitem = 0;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

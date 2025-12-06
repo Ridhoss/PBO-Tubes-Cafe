@@ -18,11 +18,16 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Insets;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.List;
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -86,6 +91,7 @@ public class KeranjangCustomer extends javax.swing.JPanel {
         btnCheckout.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnCheckout.setText("Order");
         btnCheckout.setBorderPainted(false);
+        btnCheckout.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnCheckout.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnCheckoutMouseClicked(evt);
@@ -163,7 +169,7 @@ public class KeranjangCustomer extends javax.swing.JPanel {
         JPanel pnlUtama = (JPanel) SwingUtilities.getAncestorOfClass(JPanel.class, this);
         KF.UntukPanel(pnlUtama, KF.forderpayment);
         KF.forderpayment.setOrderItem();
-        
+
         loadProducts();
     }//GEN-LAST:event_btnCheckoutMouseClicked
 
@@ -198,15 +204,41 @@ public class KeranjangCustomer extends javax.swing.JPanel {
 
         // ===== Image Panel =====
         JPanel imagePanel = new JPanel();
-        imagePanel.setPreferredSize(new Dimension(120, 120));
+        imagePanel.setPreferredSize(new Dimension(200, 120));
         imagePanel.setBackground(new Color(240, 240, 240));
         imagePanel.setLayout(new GridBagLayout());
 
-        JLabel lblImage = new JLabel("No Image"); // bisa diganti ImageIcon nanti
-        lblImage.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblImage.setForeground(new Color(100, 100, 100));
-        imagePanel.add(lblImage);
+        JLabel imageLabel = new JLabel();
+        imageLabel.setHorizontalAlignment(JLabel.CENTER);
 
+        if (p.getImage_path() != null && !p.getImage_path().isEmpty()) {
+            try {
+                File file = new File(p.getImage_path());
+                if (file.exists()) {
+                    BufferedImage img = ImageIO.read(file);
+
+                    // Resize to fit panel
+                    Image scaled = img.getScaledInstance(
+                            200, // width
+                            120, // height
+                            Image.SCALE_SMOOTH
+                    );
+
+                    imageLabel.setIcon(new ImageIcon(scaled));
+                } else {
+                    imageLabel.setText("Image Not Found");
+                }
+            } catch (Exception e) {
+                imageLabel.setText("Error Loading Image");
+            }
+        } else {
+            imageLabel.setText("No Image");
+        }
+
+        imageLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        imageLabel.setForeground(new Color(100, 100, 100));
+
+        imagePanel.add(imageLabel);
         card.add(imagePanel, BorderLayout.WEST);
 
         // ===== Info Panel =====
@@ -326,6 +358,8 @@ public class KeranjangCustomer extends javax.swing.JPanel {
     public void setKeranjang() {
         setupContainers();
         loadProducts();
+        
+        totalPrice = 0;
     }
 
 
