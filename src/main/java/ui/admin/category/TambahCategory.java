@@ -126,7 +126,7 @@ public class TambahCategory extends javax.swing.JPanel {
                 parent = categorycontroller.findCategoryByName(headCategory);
             }
 
-            categorycontroller.addCategory(parent != null ? parent.getCategory_id() : null, categoryName, parent != null ? parent.getCategory_name().toLowerCase() : categoryName.toLowerCase());
+            categorycontroller.addCategory(parent != null ? parent.getCategory_id() : null, categoryName, parent != null ? parent.getCategory_name().toLowerCase() : categoryName.toLowerCase(), null);
 
             JOptionPane.showMessageDialog(this, "Input Success!",
                     "Sukses", JOptionPane.INFORMATION_MESSAGE);

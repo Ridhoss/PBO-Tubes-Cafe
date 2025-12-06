@@ -17,6 +17,7 @@ public class Category {
     private String category_name;
     private String category_type;
     private LocalDateTime created_at;
+    private String image_path;
 
     public Category() {
     }
@@ -66,5 +67,13 @@ public class Category {
 
     public void setCreated_at(LocalDateTime created_at) {
         this.created_at = created_at;
+    }
+
+    public String getImage_path() {
+        return image_path;
+    }
+
+    public void setImage_path(String image_path) {
+        this.image_path = image_path;
     }
 }

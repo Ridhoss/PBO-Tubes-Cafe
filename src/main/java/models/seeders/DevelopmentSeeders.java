@@ -8,6 +8,9 @@ import app.controller.AuthController;
 import app.services.CategoriesDao;
 import app.services.ProductsDao;
 import app.services.UsersDao;
+import database.DBConnection;
+import java.sql.Connection;
+import java.sql.Statement;
 import models.User;
 import models.Category;
 import models.Product;
@@ -21,6 +24,21 @@ public class DevelopmentSeeders {
 
     public static void main(String[] args) {
         try {
+            Connection conn = DBConnection.getInstance().getConnection();
+            Statement st = conn.createStatement();
+
+            st.execute("ALTER TABLE products DISABLE TRIGGER ALL");
+            st.execute("ALTER TABLE categories DISABLE TRIGGER ALL");
+            st.execute("ALTER TABLE users DISABLE TRIGGER ALL");
+
+            st.execute("TRUNCATE TABLE products RESTART IDENTITY CASCADE");
+            st.execute("TRUNCATE TABLE categories RESTART IDENTITY CASCADE");
+            st.execute("TRUNCATE TABLE users RESTART IDENTITY CASCADE");
+
+            st.execute("ALTER TABLE products ENABLE TRIGGER ALL");
+            st.execute("ALTER TABLE categories ENABLE TRIGGER ALL");
+            st.execute("ALTER TABLE users ENABLE TRIGGER ALL");
+
 //            seeder user
             UsersDao userDao = new UsersDao();
 
@@ -51,14 +69,14 @@ public class DevelopmentSeeders {
             categoryDao.deleteAll();
 
             Object[][] categories = {
-                {null, "Food", "food"},
-                {null, "Drink", "drink"},
-                {null, "Dessert", "dessert"},
-                {1, "Main Course", "food"},
-                {1, "Snacks", "food"},
-                {2, "Coffee", "drink"},
-                {2, "Juice", "drink"},
-                {3, "Cake", "dessert"}
+                {null, "Food", "food", "categoryimages/icon_food.png"},
+                {null, "Drink", "drink", "categoryimages/icon_drink.png"},
+                {null, "Dessert", "dessert", "categoryimages/icon_dessert.png"},
+                {1, "Main Course", "food", "categoryimages/icon_maincourse.png"},
+                {1, "Snacks", "food", "categoryimages/icon_snack.png"},
+                {2, "Coffee", "drink", "categoryimages/icon_coffe.png"},
+                {2, "Juice", "drink", "categoryimages/icon_juice.png"},
+                {3, "Cake", "dessert", "categoryimages/icon_cake.png"}
             };
 
             for (Object[] data : categories) {
@@ -67,6 +85,7 @@ public class DevelopmentSeeders {
                 c.setParent_id((Integer) data[0]);
                 c.setCategory_name((String) data[1]);
                 c.setCategory_type((String) data[2]);
+                c.setImage_path((String) data[3]);
 
                 categoryDao.insert(c);
             }
@@ -76,16 +95,16 @@ public class DevelopmentSeeders {
             productDao.deleteAll();
 
             Object[][] products = {
-                {4, "Nasi Goreng Spesial", "Nasi goreng dengan telur dan ayam", 25000, 15000, 20, true, null},
-                {4, "Ayam Geprek", "Ayam crispy dengan sambal geprek", 22000, 12000, 15, true, null},
-                {5, "Kentang Goreng", "French fries dengan saus", 15000, 8000, 30, true, null},
-                {5, "Risoles Mayo", "Risoles isi mayo dan smoked beef", 12000, 6000, 25, true, null},
-                {6, "Kopi Latte", "Kopi susu latte panas", 20000, 9000, 10, true, null},
-                {6, "Es Kopi Susu", "Kopi susu gula aren", 18000, 8000, 18, true, null},
-                {7, "Jus Alpukat", "Alpukat segar tanpa gula", 17000, 9000, 12, true, null},
-                {7, "Jus Jeruk", "Jeruk peras asli", 15000, 7000, 20, true, null},
-                {8, "Cheesecake", "Kue keju lembut", 28000, 16000, 8, true, null},
-                {8, "Chocolate Brownies", "Brownies coklat premium", 25000, 14000, 10, true, null}
+                {4, "Nasi Goreng Spesial", "Nasi goreng dengan telur dan ayam", 25000, 15000, 20, true, "productimages/NasiGoreng.jpg"},
+                {4, "Ayam Geprek", "Ayam crispy dengan sambal geprek", 22000, 12000, 15, true, "productimages/AyamGeprek.jpg"},
+                {5, "Kentang Goreng", "French fries dengan saus", 15000, 8000, 30, true, "productimages/KentangGoreng.jpg"},
+                {5, "Risoles Mayo", "Risoles isi mayo dan smoked beef", 12000, 6000, 25, true, "productimages/RisolesMayo.jpg"},
+                {6, "Kopi Latte", "Kopi susu latte panas", 20000, 9000, 10, true, "productimages/KopiLatte.jpg"},
+                {6, "Es Kopi Susu", "Kopi susu gula aren", 18000, 8000, 18, true, "productimages/EsKopisusu.jpg"},
+                {7, "Jus Alpukat", "Alpukat segar tanpa gula", 17000, 9000, 12, true, "productimages/JusAlpukat.jpg"},
+                {7, "Jus Jeruk", "Jeruk peras asli", 15000, 7000, 20, true, "productimages/JusJeruk.jpg"},
+                {8, "Cheesecake", "Kue keju lembut", 28000, 16000, 8, true, "productimages/cheese.jpg"},
+                {8, "Chocolate Brownies", "Brownies coklat premium", 25000, 14000, 10, true, "productimages/Brownies.jpg"}
             };
 
             for (Object[] data : products) {

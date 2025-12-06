@@ -66,7 +66,7 @@ public class KeranjangCustomer extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         JlabelKeranjang1 = new javax.swing.JLabel();
 
-        pnlContainerCart.setBackground(new java.awt.Color(255, 255, 0));
+        pnlContainerCart.setBackground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout pnlContainerCartLayout = new javax.swing.GroupLayout(pnlContainerCart);
         pnlContainerCart.setLayout(pnlContainerCartLayout);
@@ -345,7 +345,7 @@ public class KeranjangCustomer extends javax.swing.JPanel {
     OrderController orderController = OrderController.getInstance();
     OrderItemsController orderItemsController = OrderItemsController.getInstance();
 
-    public void setUser() {
+    public void setKeranjang() {
         setupContainers();
         loadProducts();
     }

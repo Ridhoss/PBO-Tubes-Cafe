@@ -113,13 +113,21 @@ public class ProductController {
     // public java.util.List<Product> getAllProducts() throws Exception {
     //     return productDao.getAll();
     // }
-
     public List<Product> getAllProducts() throws Exception {
         return productDao.findAll();
     }
 
     public List<Product> getProductsByCategoryList(List<Integer> ids) throws Exception {
         return productDao.findByCategoryList(ids);
+    }
+
+    public void updateStock(Integer productId, Integer newStock) throws Exception {
+        Product p = productDao.findById(productId);
+        if (p == null) {
+            throw new Exception("Product ID " + productId + " tidak ditemukan");
+        }
+        p.setStock(newStock);
+        productDao.updateStock(productId, newStock);
     }
 
 }

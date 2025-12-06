@@ -160,4 +160,15 @@ public class ProductsDao extends GenericDaoImpl<Integer, Product> {
         return list;
     }
 
+    public void updateStock(Integer productId, Integer newStock) throws Exception {
+        String sql = "UPDATE products SET stock = ? WHERE product_id = ?";
+        
+        Connection conn = DBConnection.getInstance().getConnection();
+        PreparedStatement ps = conn.prepareStatement(sql);
+        
+        ps.setInt(1, newStock);
+        ps.setInt(2, productId);
+        ps.executeUpdate();
+    }
+
 }

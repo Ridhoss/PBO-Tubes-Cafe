@@ -26,7 +26,8 @@ public class CategoriesDao extends GenericDaoImpl<Integer, Category> {
                 "category_id",
                 "parent_id",
                 "category_name",
-                "category_type"
+                "category_type",
+                "image_path"
         );
     }
 
@@ -41,6 +42,7 @@ public class CategoriesDao extends GenericDaoImpl<Integer, Category> {
 
         ps.setString(2, c.getCategory_name());
         ps.setString(3, c.getCategory_type());
+        ps.setString(4, c.getImage_path());
     }
 
     @Override
@@ -62,6 +64,8 @@ public class CategoriesDao extends GenericDaoImpl<Integer, Category> {
 
         c.setCreated_at(rs.getTimestamp("created_at") != null
                 ? rs.getTimestamp("created_at").toLocalDateTime() : null);
+
+        c.setImage_path(rs.getString("image_path"));
 
         return c;
     }

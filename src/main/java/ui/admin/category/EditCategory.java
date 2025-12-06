@@ -137,7 +137,7 @@ public class EditCategory extends javax.swing.JPanel {
                 parent = categorycontroller.findCategoryByName(headCategory);
             }
 
-            categorycontroller.updateCategory(thisCategory.getCategory_id(), parent != null ? parent.getCategory_id() : null, categoryName, parent != null ? parent.getCategory_name().toLowerCase() : categoryName.toLowerCase());
+            categorycontroller.updateCategory(thisCategory.getCategory_id(), parent != null ? parent.getCategory_id() : null, categoryName, parent != null ? parent.getCategory_name().toLowerCase() : categoryName.toLowerCase(), null);
 
             JOptionPane.showMessageDialog(this, "Edit Success!",
                     "Sukses", JOptionPane.INFORMATION_MESSAGE);

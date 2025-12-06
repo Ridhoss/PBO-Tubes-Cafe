@@ -60,7 +60,15 @@ public class ProductAdmin extends javax.swing.JPanel {
             new String [] {
                 "No", "Name", "Description", "Price", "Cost", "Stock", "Action", "Action"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         tblProduct.setRowHeight(40);
         tblProduct.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
