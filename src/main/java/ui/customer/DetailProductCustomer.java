@@ -71,6 +71,7 @@ public class DetailProductCustomer extends javax.swing.JPanel {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(74, 112, 169));
         jLabel1.setText("Detail Product");
 
         jPanel2.setPreferredSize(new java.awt.Dimension(450, 300));
@@ -95,14 +96,18 @@ public class DetailProductCustomer extends javax.swing.JPanel {
         lblTitleDesc.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblTitleDesc.setText("Description:");
 
+        btnMinus.setBackground(new java.awt.Color(239, 236, 227));
         btnMinus.setText("-");
+        btnMinus.setBorderPainted(false);
         btnMinus.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnMinusMouseClicked(evt);
             }
         });
 
+        btnAdd.setBackground(new java.awt.Color(239, 236, 227));
         btnAdd.setText("+");
+        btnAdd.setBorderPainted(false);
         btnAdd.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnAddMouseClicked(evt);
@@ -112,7 +117,10 @@ public class DetailProductCustomer extends javax.swing.JPanel {
         lblQty.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblQty.setText("0");
 
+        btnAddCart.setBackground(new java.awt.Color(74, 112, 169));
+        btnAddCart.setForeground(new java.awt.Color(255, 255, 255));
         btnAddCart.setText("Add to Cart");
+        btnAddCart.setBorderPainted(false);
         btnAddCart.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnAddCartMouseClicked(evt);
