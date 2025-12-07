@@ -31,8 +31,10 @@ import ui.admin.user.TambahUser;
 import ui.cashier.CashierDashboard;
 import ui.customer.ConfirmOrder;
 import ui.customer.DashboardCustomer;
+import ui.customer.DetailOrder;
 import ui.customer.DetailProductCustomer;
 import ui.customer.KeranjangCustomer;
+import ui.customer.OrderMenu;
 import ui.layout.CashierLayout;
 import ui.layout.CustomerLayout;
 
@@ -70,6 +72,8 @@ public class KF {
     public static DetailProductCustomer fDetailProductCustomer = new DetailProductCustomer();
     public static KeranjangCustomer fkeranjang = new KeranjangCustomer();
     public static ConfirmOrder forderpayment = new ConfirmOrder();
+    public static OrderMenu fordermenu = new OrderMenu();
+    public static DetailOrder fdetailorder = new DetailOrder();
     
     //cashier
     public static CashierLayout fcashierlayout = new CashierLayout();

@@ -48,7 +48,7 @@ public class OrderItemsDao extends GenericDaoImpl<Integer, OrderItems> {
     protected OrderItems mapResult(ResultSet rs) throws Exception {
         OrderItems o = new OrderItems();
 
-        o.setOrder_item_id(rs.getInt("order_items_id"));
+        o.setOrder_item_id(rs.getInt("order_item_id"));
         o.setOrder_id(rs.getInt("order_id"));
         o.setProduct_id(rs.getInt("product_id"));
         o.setQuantity(rs.getInt("quantity"));

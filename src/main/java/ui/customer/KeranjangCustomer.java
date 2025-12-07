@@ -163,11 +163,40 @@ public class KeranjangCustomer extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCheckoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCheckoutMouseClicked
-        JPanel pnlUtama = (JPanel) SwingUtilities.getAncestorOfClass(JPanel.class, this);
-        KF.UntukPanel(pnlUtama, KF.forderpayment);
-        KF.forderpayment.setOrderItem();
+        try {
+            int confirm = JOptionPane.showConfirmDialog(
+                    this,
+                    "Apakah yakin ingin memesan orderan?",
+                    "Konfirmasi PEsan",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+            );
 
-        loadProducts();
+            if (confirm != JOptionPane.YES_OPTION) {
+                return;
+            }
+
+            User thisUser = userController.findByUsername(KF.flayoutCustomer.lblUsername.getText());
+            Cart thisCart = cartcontroller.getCartByUser(thisUser.getUser_id());
+            if (thisCart == null) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Keranjang kosong!");
+                return;
+            }
+
+            List<CartItem> cartItems = cartItemsController.getItemsByCart(thisCart.getCart_id());
+            if (cartItems.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Keranjang kosong!");
+                return;
+            }
+
+            JPanel pnlUtama = (JPanel) SwingUtilities.getAncestorOfClass(JPanel.class, this);
+            KF.UntukPanel(pnlUtama, KF.forderpayment);
+            KF.forderpayment.setOrderItem();
+
+            loadProducts();
+        } catch (Exception ex) {
+            System.getLogger(KeranjangCustomer.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
     }//GEN-LAST:event_btnCheckoutMouseClicked
 
     private void setupContainers() {
@@ -356,7 +385,7 @@ public class KeranjangCustomer extends javax.swing.JPanel {
     public void setKeranjang() {
         setupContainers();
         loadProducts();
-        
+
         totalPrice = 0;
     }
 
