@@ -9,9 +9,12 @@ import app.controller.UserController;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import models.Order;
 import models.User;
 import models.OrderItems;
+import ui.KF;
 
 /**
  *
@@ -47,17 +50,17 @@ public class OrderAdmin extends javax.swing.JPanel {
 
         tblOrder.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "No", "Order ID", "Order Code", "Order Date", "Customer", "Payment Status", "Order Status", "Action"
+                "No", "Order ID", "Order Code", "Order Date", "Customer", "Payment Status", "Order Status", "Table Code", "Total Payment", "Action", "Action"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, true, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -65,10 +68,17 @@ public class OrderAdmin extends javax.swing.JPanel {
             }
         });
         tblOrder.setRowHeight(40);
+        tblOrder.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblOrderMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblOrder);
         if (tblOrder.getColumnModel().getColumnCount() > 0) {
-            tblOrder.getColumnModel().getColumn(5).setMaxWidth(200);
+            tblOrder.getColumnModel().getColumn(0).setMaxWidth(50);
             tblOrder.getColumnModel().getColumn(7).setMaxWidth(100);
+            tblOrder.getColumnModel().getColumn(9).setMaxWidth(200);
+            tblOrder.getColumnModel().getColumn(10).setMaxWidth(100);
         }
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -104,18 +114,15 @@ public class OrderAdmin extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    OrderController orderController = OrderController.getInstance();
-    UserController userController = UserController.getInstance();
-
-    private void tblOrderMouseClicked(java.awt.event.MouseEvent evt) {
+    private void tblOrderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblOrderMouseClicked
         int row = tblOrder.getSelectedRow();
         int col = tblOrder.getSelectedColumn();
 
-        if (col == 7) {
+        if (col == 10) {
 
             DefaultTableModel model = (DefaultTableModel) tblOrder.getModel();
 
-            Integer orderId = Integer.parseInt(model.getValueAt(row, 1).toString()); 
+            Integer orderId = Integer.parseInt(model.getValueAt(row, 1).toString());
 
             int confirm = JOptionPane.showConfirmDialog(
                     null,
@@ -133,13 +140,29 @@ public class OrderAdmin extends javax.swing.JPanel {
                 orderController.deleteOrder(orderId);
 
                 JOptionPane.showMessageDialog(null, "Order berhasil dihapus!");
-                model.removeRow(row);
+                loadTable();
 
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "Gagal hapus order: " + ex.getMessage());
             }
+        } else if (col == 9) {
+            try {
+                DefaultTableModel model = (DefaultTableModel) tblOrder.getModel();
+                Integer orderId = Integer.parseInt(model.getValueAt(row, 1).toString());
+                
+                Order thisOrder = orderController.findOrderById(orderId);
+                
+                JPanel pnlUtama = (JPanel) SwingUtilities.getAncestorOfClass(JPanel.class, this);
+                KF.UntukPanel(pnlUtama, KF.forderitemadmin);
+                KF.forderitemadmin.loadTable(thisOrder);
+            } catch (Exception ex) {
+                System.getLogger(OrderAdmin.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
         }
-    }
+    }//GEN-LAST:event_tblOrderMouseClicked
+
+    OrderController orderController = OrderController.getInstance();
+    UserController userController = UserController.getInstance();
 
     public void loadTable() {
         try {
@@ -152,14 +175,19 @@ public class OrderAdmin extends javax.swing.JPanel {
 
             for (Order o : orders) {
 
+                User thisUser = userController.findById(o.getUser_id());
+
                 model.addRow(new Object[]{
                     no++,
                     o.getOrder_id(),
-                    o.getOrder_id(),
+                    o.getOrderCode(),
                     o.getOrder_date(),
-                    o.getUser_id(),
+                    thisUser.getUsername(),
                     o.getPayment_status(),
                     o.getOrder_status(),
+                    o.getTableCode(),
+                    o.getFinal_amount(),
+                    "Detail",
                     "Delete"
                 });
             }

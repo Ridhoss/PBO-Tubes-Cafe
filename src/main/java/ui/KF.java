@@ -21,6 +21,7 @@ import models.User;
 import ui.admin.CategoryAdmin;
 import ui.admin.DashboardAdmin;
 import ui.admin.OrderAdmin;
+import ui.admin.OrderItemDetail;
 import ui.admin.ProductAdmin;
 import ui.admin.UserAdmin;
 import ui.admin.category.EditCategory;
@@ -57,6 +58,7 @@ public class KF {
     public static CategoryAdmin fCategoryAdmin = new CategoryAdmin();
     public static UserAdmin fUserAdmin = new UserAdmin();
     public static OrderAdmin fOrderAdmin = new OrderAdmin();
+    public static OrderItemDetail forderitemadmin = new OrderItemDetail();
 
 
     //category admin
@@ -103,20 +105,4 @@ public class KF {
         panelTarget.revalidate();
         panelTarget.repaint();
     }
-
-//    public static void UntukJdialog(JDialog dialogapa, JFrame frameapa) {
-//        dialogapa.setUndecorated(true);
-//        dialogapa.getRootPane().setBackground(new Color(0, 0, 0, 200));
-//        dialogapa.setBackground(new Color(0, 0, 0, 180));
-//        dialogapa.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-//        dialogapa.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-//
-//        int lokasix, lokasiy;
-//
-//        lokasix = frameapa.getLocationOnScreen().x + 7;
-//        lokasiy = frameapa.getLocationOnScreen().y;
-//        dialogapa.setLocation(new Point(lokasix, lokasiy));
-//        dialogapa.setSize(frameapa.getWidth() - 14, frameapa.getHeight() - 8);
-//        dialogapa.setVisible(true);
-//    }
 }
