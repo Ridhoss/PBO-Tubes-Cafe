@@ -15,13 +15,14 @@ public class BarcodeScannerDialog extends JDialog {
 
     CashierController cashiercontroller = CashierController.getInstance();
     OrderController ordercontroller = OrderController.getInstance();
+    
     private JTextField txtBarcode;
-    private boolean scanSuccess = false;
+    private boolean scanSuccess = false; // Flag untuk refresh dashboard
 
     public BarcodeScannerDialog(JFrame parent, CashierController controller) {
-        super(parent, "Scan Barcode / QR", true);
+        super(parent, "Scan Barcode / QR", true); // Modal true
 
-        setSize(400, 250);
+        setSize(450, 300);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout());
         
@@ -34,55 +35,71 @@ public class BarcodeScannerDialog extends JDialog {
         panel.setBorder(new EmptyBorder(30, 30, 30, 30));
         panel.setBackground(CafeColors.BACKGROUND);
 
-        // Icon & Label
-        JLabel lblIcon = new JLabel("📷"); // Placeholder Icon
-        lblIcon.setFont(new Font("Segoe UI", Font.PLAIN, 40));
+        // Icon
+        JLabel lblIcon = new JLabel("📷"); 
+        lblIcon.setFont(new Font("Segoe UI", Font.PLAIN, 60));
         lblIcon.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel lblInstruction = new JLabel("Scan Barcode Customer di sini:");
+        // Label Instruksi
+        JLabel lblInstruction = new JLabel("Scan Barcode / Masukkan Kode Order:");
         lblInstruction.setFont(new Font("Segoe UI", Font.BOLD, 14));
         lblInstruction.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Input Field (Simulasi Scanner)
+        // Input Field
         txtBarcode = new JTextField();
-        txtBarcode.setFont(new Font("Consolas", Font.BOLD, 18));
+        txtBarcode.setFont(new Font("Consolas", Font.BOLD, 20));
         txtBarcode.setHorizontalAlignment(JTextField.CENTER);
-        txtBarcode.setMaximumSize(new Dimension(300, 40));
+        txtBarcode.setMaximumSize(new Dimension(300, 50));
         
-        // Tombol Aksi
-        JButton btnSimulate = new JButton("Simulasi Scan");
-        btnSimulate.setBackground(CafeColors.PRIMARY);
-        btnSimulate.setForeground(Color.WHITE);
-        btnSimulate.setAlignmentX(Component.CENTER_ALIGNMENT);
+        // Tombol Cari
+        JButton btnSearch = new JButton("Cari Pesanan");
+        btnSearch.setBackground(CafeColors.PRIMARY);
+        btnSearch.setForeground(Color.WHITE);
+        btnSearch.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnSearch.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnSearch.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
-        // Logic Scan
+        // --- LOGIC SEARCH ---
         Runnable doScan = () -> {
             try {
                 String code = txtBarcode.getText().trim();
-                if (code.isEmpty()) return;
+                if (code.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Kode tidak boleh kosong!");
+                    return;
+                }
                 
+                // Cari order via Controller (Bisa by ID integer atau String Code)
+                // Karena getOrderDetail terima String, pastikan controller handle parsing
                 Order order = cashiercontroller.getOrderDetail(code);
+                
                 if (order != null) {
-                    scanSuccess = true;
-                    dispose(); // Tutup scanner
+                    // Tutup scanner dulu agar terlihat seamless
+                    dispose(); 
                     
-                    // Buka Detail Pesanan Langsung
+                    // Buka Detail Pesanan
                     SwingUtilities.invokeLater(() -> {
                         OrderDetailDialog detailDialog = new OrderDetailDialog(parent, cashiercontroller, ordercontroller, order);
                         detailDialog.setVisible(true);
+                        
+                        // Cek apakah ada update status di dialog
+                        if (detailDialog.isOrderUpdated()) {
+                            scanSuccess = true; 
+                        }
                     });
                 } else {
-                    JOptionPane.showMessageDialog(this, "Order ID tidak ditemukan!", "Scan Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Order dengan ID/Kode '" + code + "' tidak ditemukan!", "Not Found", JOptionPane.ERROR_MESSAGE);
                     txtBarcode.selectAll();
+                    txtBarcode.requestFocus();
                 }
             } catch (Exception ex) {
-                System.getLogger(BarcodeScannerDialog.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error Database: " + ex.getMessage());
             }
         };
 
-        btnSimulate.addActionListener(e -> doScan.run());
+        // Listeners
+        btnSearch.addActionListener(e -> doScan.run());
         
-        // Enter key listener (Scanner fisik biasanya kirim ENTER setelah scan)
         txtBarcode.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -93,16 +110,17 @@ public class BarcodeScannerDialog extends JDialog {
         });
 
         panel.add(lblIcon);
-        panel.add(Box.createVerticalStrut(10));
+        panel.add(Box.createVerticalStrut(20));
         panel.add(lblInstruction);
-        panel.add(Box.createVerticalStrut(15));
+        panel.add(Box.createVerticalStrut(10));
         panel.add(txtBarcode);
-        panel.add(Box.createVerticalStrut(15));
-        panel.add(btnSimulate);
+        panel.add(Box.createVerticalStrut(20));
+        panel.add(btnSearch);
 
         add(panel, BorderLayout.CENTER);
     }
     
+    // Getter untuk Dashboard tahu harus refresh atau tidak
     public boolean isScanSuccess() {
         return scanSuccess;
     }
