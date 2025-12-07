@@ -4,6 +4,15 @@
  */
 package ui.admin;
 
+import app.controller.OrderController;
+import app.controller.UserController;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JOptionPane;
+import models.Order;
+import models.User;
+import models.OrderItems;
+
 /**
  *
  * @author Dell
@@ -28,26 +37,46 @@ public class OrderAdmin extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblOrder = new javax.swing.JTable();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setText("DATA ODER CUSTOMER");
 
+        tblOrder.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "No", "Order ID", "Order Code", "Order Date", "Customer", "Payment Status", "Order Status", "Action"
+            }
+        ));
+        jScrollPane1.setViewportView(tblOrder);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabel1)
-                .addGap(0, 936, Short.MAX_VALUE))
+                .addGap(14, 14, 14)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1173, Short.MAX_VALUE))
+                .addGap(23, 23, 23))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(37, 37, 37)
                 .addComponent(jLabel1)
-                .addContainerGap(783, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 581, Short.MAX_VALUE)
+                .addGap(32, 32, 32))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -62,9 +91,76 @@ public class OrderAdmin extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    OrderController orderController = OrderController.getInstance();
+    UserController userController = UserController.getInstance();
+
+    private void tblOrderMouseClicked(java.awt.event.MouseEvent evt) {
+        int row = tblOrder.getSelectedRow();
+        int col = tblOrder.getSelectedColumn();
+
+        if (col == 7) {
+
+            DefaultTableModel model = (DefaultTableModel) tblOrder.getModel();
+
+            Integer orderId = Integer.parseInt(model.getValueAt(row, 1).toString()); 
+
+            int confirm = JOptionPane.showConfirmDialog(
+                    null,
+                    "Yakin ingin menghapus order ini?",
+                    "Konfirmasi Hapus",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+            if (confirm != JOptionPane.YES_OPTION) {
+                return;
+            }
+
+            try {
+                orderController.deleteOrder(orderId);
+
+                JOptionPane.showMessageDialog(null, "Order berhasil dihapus!");
+                model.removeRow(row);
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Gagal hapus order: " + ex.getMessage());
+            }
+        }
+    }
+
+    public void loadTable() {
+        try {
+            List<Order> orders = orderController.getAllOrders();
+
+            DefaultTableModel model = (DefaultTableModel) tblOrder.getModel();
+            model.setRowCount(0);
+
+            int no = 1;
+
+            for (Order o : orders) {
+
+                model.addRow(new Object[]{
+                    no++,
+                    o.getOrder_id(),
+                    o.getOrder_id(),
+                    o.getOrder_date(),
+                    o.getUser_id(),
+                    o.getPayment_status(),
+                    o.getOrder_status(),
+                    "Delete"
+                });
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tblOrder;
     // End of variables declaration//GEN-END:variables
 }
