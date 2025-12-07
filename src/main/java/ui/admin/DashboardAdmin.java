@@ -4,11 +4,16 @@
  */
 package ui.admin;
 
+import app.controller.OrderController;
+import app.controller.OrderItemsController;
+import app.controller.ProductController;
 import app.controller.UserController;
 import app.services.ProductsDao;
 import app.services.UsersDao;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import models.Order;
+import models.OrderItems;
 import models.Product;
 import models.User;
 
@@ -23,58 +28,11 @@ public class DashboardAdmin extends javax.swing.JPanel {
      */
     public DashboardAdmin() {
         initComponents();
-        loadDashboardData();
-        loadRiwayatStok();
-        loadTotalUser();
-//        loadTotalPesanan();
     }
 
-    private void loadDashboardData() {
-        try {
-            ProductsDao productDao = new ProductsDao();
-
-            int totalProduk = productDao.getAll().size();
-
-            int totalStok = 0;
-            for (Product p : productDao.getAll()) {
-                totalStok += p.getStock();
-            }
-
-            jTotalProduk.setText(String.valueOf(totalProduk));
-            jLabelStokProduk.setText(String.valueOf(totalStok));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void loadTotalUser() {
-        try {
-            UserController userController = UserController.getInstance();
-            List<User> users = userController.getAllUsers();
-
-            jLabel3.setText(String.valueOf(users.size()));
-
-        } catch (Exception e) {
-            jLabel3.setText("Total User: ERROR");
-        }
-    }
-
-//    private void loadTotalPesanan() {
-//        try {
-//            OrdersDao orderDao = new OrdersDao();
-//            List<Order> orders = orderDao.getAll();
-//
-//            jLabelTotalPesanan.setText(String.valueOf(orders.size()));
-//
-//        } catch (Exception e) {
-//            jLabelTotalPesanan.setText("Total Pesanan: 0");
-//        }
-//    }
     private void loadRiwayatStok() {
         try {
-            ProductsDao productDao = new ProductsDao();
-            List<Product> products = productDao.getAll();
+            List<Product> products = productcont.getAllProducts();
 
             DefaultTableModel model = (DefaultTableModel) jTableRiwatStok.getModel();
             model.setRowCount(0);
@@ -87,11 +45,68 @@ public class DashboardAdmin extends javax.swing.JPanel {
                     p.getStock(),
                     p.getUpdated_at()
                 });
+
+                totalProduct += 1;
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void loadTotalPesanan() {
+        try {
+            List<Order> orderlist = ordercont.getAllOrders();
+
+            for (Order object : orderlist) {
+                List<OrderItems> orderitemlist = orderitemcont.getItemsByOrderId(object.getOrder_id());
+
+                for (OrderItems orderItems : orderitemlist) {
+                    totalOrderItems += orderItems.getQuantity();
+                }
+                totalOrder += 1;
+            }
+        } catch (Exception ex) {
+            System.getLogger(DashboardAdmin.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+    }
+
+    private void loadTotalUser() {
+        try {
+            List<User> userlist = usercont.getAllUsers();
+
+            for (User user : userlist) {
+                totalUser += 1;
+            }
+        } catch (Exception ex) {
+            System.getLogger(DashboardAdmin.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+    }
+
+    OrderController ordercont = OrderController.getInstance();
+    ProductController productcont = ProductController.getInstance();
+    UserController usercont = UserController.getInstance();
+    OrderItemsController orderitemcont = OrderItemsController.getInstance();
+
+    Integer totalUser = 0;
+    Integer totalProduct = 0;
+    Integer totalOrderItems = 0;
+    Integer totalOrder = 0;
+
+    public void LoadData() {
+        totalUser = 0;
+        totalProduct = 0;
+        totalOrderItems = 0;
+        totalOrder = 0;
+
+        loadRiwayatStok();
+        loadTotalPesanan();
+        loadTotalUser();
+
+        lblTotalPesanan.setText(totalOrder.toString());
+        lblTotalUser.setText(totalUser.toString());
+        lblOrderItem.setText(totalOrderItems.toString());
+        lblTotalProduk.setText(totalProduct.toString());
     }
 
     /**
@@ -107,19 +122,19 @@ public class DashboardAdmin extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         pnlTotalPesan = new javax.swing.JPanel();
-        jLabelTotalPesanan = new javax.swing.JLabel();
+        lblTotalPesanan = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         pnlTotalproduk = new javax.swing.JPanel();
-        jTotalProduk = new javax.swing.JLabel();
+        lblTotalProduk = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         pnlStokProduk = new javax.swing.JPanel();
-        jLabelStokProduk = new javax.swing.JLabel();
+        lblOrderItem = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableRiwatStok = new javax.swing.JTable();
         jLabelRiwayat = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
+        lblTotalUser = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
 
         jLabel2.setText("jLabel2");
@@ -129,39 +144,39 @@ public class DashboardAdmin extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setText("Dashboard Admin");
 
-        jLabelTotalPesanan.setFont(new java.awt.Font("Segoe UI", 1, 23)); // NOI18N
-        jLabelTotalPesanan.setText("50");
+        lblTotalPesanan.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        lblTotalPesanan.setText("50");
 
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        jLabel7.setText("Total Pesanan ");
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel7.setText("Total Orders");
 
         javax.swing.GroupLayout pnlTotalPesanLayout = new javax.swing.GroupLayout(pnlTotalPesan);
         pnlTotalPesan.setLayout(pnlTotalPesanLayout);
         pnlTotalPesanLayout.setHorizontalGroup(
             pnlTotalPesanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlTotalPesanLayout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addGroup(pnlTotalPesanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabelTotalPesanan))
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addGap(29, 29, 29)
+                .addGroup(pnlTotalPesanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblTotalPesanan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(101, Short.MAX_VALUE))
         );
         pnlTotalPesanLayout.setVerticalGroup(
             pnlTotalPesanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlTotalPesanLayout.createSequentialGroup()
-                .addContainerGap(18, Short.MAX_VALUE)
+                .addGap(17, 17, 17)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabelTotalPesanan)
-                .addGap(49, 49, 49))
+                .addComponent(lblTotalPesanan)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jTotalProduk.setFont(new java.awt.Font("Segoe UI", 1, 23)); // NOI18N
-        jTotalProduk.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jTotalProduk.setText("20");
+        lblTotalProduk.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        lblTotalProduk.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblTotalProduk.setText("20");
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        jLabel4.setText("Total Produk");
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel4.setText("Total Products");
 
         javax.swing.GroupLayout pnlTotalprodukLayout = new javax.swing.GroupLayout(pnlTotalproduk);
         pnlTotalproduk.setLayout(pnlTotalprodukLayout);
@@ -171,8 +186,8 @@ public class DashboardAdmin extends javax.swing.JPanel {
                 .addGap(36, 36, 36)
                 .addGroup(pnlTotalprodukLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jTotalProduk, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(47, Short.MAX_VALUE))
+                    .addComponent(lblTotalProduk, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(101, Short.MAX_VALUE))
         );
         pnlTotalprodukLayout.setVerticalGroup(
             pnlTotalprodukLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -180,16 +195,16 @@ public class DashboardAdmin extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTotalProduk)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(lblTotalProduk)
+                .addContainerGap(45, Short.MAX_VALUE))
         );
 
-        jLabelStokProduk.setFont(new java.awt.Font("Segoe UI", 1, 23)); // NOI18N
-        jLabelStokProduk.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabelStokProduk.setText("10");
+        lblOrderItem.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        lblOrderItem.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblOrderItem.setText("10");
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        jLabel5.setText("Stok Produk");
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel5.setText("Total Ordered Items");
 
         javax.swing.GroupLayout pnlStokProdukLayout = new javax.swing.GroupLayout(pnlStokProduk);
         pnlStokProduk.setLayout(pnlStokProdukLayout);
@@ -199,8 +214,8 @@ public class DashboardAdmin extends javax.swing.JPanel {
                 .addGap(39, 39, 39)
                 .addGroup(pnlStokProdukLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabelStokProduk, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(54, Short.MAX_VALUE))
+                    .addComponent(lblOrderItem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(101, Short.MAX_VALUE))
         );
         pnlStokProdukLayout.setVerticalGroup(
             pnlStokProdukLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -208,7 +223,7 @@ public class DashboardAdmin extends javax.swing.JPanel {
                 .addGap(19, 19, 19)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabelStokProduk)
+                .addComponent(lblOrderItem)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -219,19 +234,27 @@ public class DashboardAdmin extends javax.swing.JPanel {
             new String [] {
                 "Product ID", "Product Name", "Price", "Stok", "Updated At"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jTableRiwatStok.setFocusable(false);
         jTableRiwatStok.setRowHeight(40);
         jScrollPane1.setViewportView(jTableRiwatStok);
 
         jLabelRiwayat.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabelRiwayat.setText("Riwayat Produk");
+        jLabelRiwayat.setText("History Product");
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 23)); // NOI18N
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel3.setText("15");
+        lblTotalUser.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        lblTotalUser.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblTotalUser.setText("15");
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel6.setText("Total User");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -242,8 +265,8 @@ public class DashboardAdmin extends javax.swing.JPanel {
                 .addGap(40, 40, 40)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(66, Short.MAX_VALUE))
+                    .addComponent(lblTotalUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(103, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -251,7 +274,7 @@ public class DashboardAdmin extends javax.swing.JPanel {
                 .addGap(21, 21, 21)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel3)
+                .addComponent(lblTotalUser)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -263,22 +286,17 @@ public class DashboardAdmin extends javax.swing.JPanel {
                 .addGap(50, 50, 50)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabelRiwayat)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabelRiwayat)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(pnlTotalPesan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(pnlTotalproduk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(pnlStokProduk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(18, 18, 18)
-                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 341, Short.MAX_VALUE)))
-                .addGap(50, 50, 50))
+                        .addComponent(pnlTotalPesan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(pnlTotalproduk, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(pnlStokProduk, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(59, 59, 59))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -287,14 +305,14 @@ public class DashboardAdmin extends javax.swing.JPanel {
                 .addComponent(jLabel1)
                 .addGap(26, 26, 26)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnlTotalPesan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnlTotalproduk, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnlStokProduk, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(pnlTotalPesan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlStokProduk, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(24, 24, 24)
                 .addComponent(jLabelRiwayat)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 367, Short.MAX_VALUE)
                 .addGap(34, 34, 34))
         );
 
@@ -316,19 +334,19 @@ public class DashboardAdmin extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabelRiwayat;
-    private javax.swing.JLabel jLabelStokProduk;
-    private javax.swing.JLabel jLabelTotalPesanan;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableRiwatStok;
-    private javax.swing.JLabel jTotalProduk;
+    private javax.swing.JLabel lblOrderItem;
+    private javax.swing.JLabel lblTotalPesanan;
+    private javax.swing.JLabel lblTotalProduk;
+    private javax.swing.JLabel lblTotalUser;
     private javax.swing.JPanel pnlStokProduk;
     private javax.swing.JPanel pnlTotalPesan;
     private javax.swing.JPanel pnlTotalproduk;

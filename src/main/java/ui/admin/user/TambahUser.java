@@ -172,14 +172,16 @@ public class TambahUser extends javax.swing.JPanel {
 
         try {
             usercontroller.addUser(username, password, fullname, email, phone, role.toLowerCase(), true);
-            
+
             JOptionPane.showMessageDialog(this, "Input Success!",
                     "Sukses", JOptionPane.INFORMATION_MESSAGE);
+            
+            clear();
 
             JPanel pnlUtama = (JPanel) SwingUtilities.getAncestorOfClass(JPanel.class, this);
             KF.UntukPanel(pnlUtama, KF.fUserAdmin);
             KF.fUserAdmin.loadTable();
-            
+
         } catch (Exception ex) {
             ex.printStackTrace();
             System.getLogger(TambahCategory.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -199,6 +201,15 @@ public class TambahUser extends javax.swing.JPanel {
             javax.swing.JOptionPane.showMessageDialog(null,
                     "Gagal memuat kategori: " + e.getMessage());
         }
+    }
+
+    public void clear() {
+        txtFullname.setText("");
+        txtEmail.setText("");
+        txtPassword.setText("");
+        txtPhone.setText("");
+        txtUsername.setText("");
+        cmbRole.removeAllItems();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

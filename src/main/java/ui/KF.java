@@ -20,6 +20,9 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
 import models.User;
 import ui.admin.CategoryAdmin;
 import ui.admin.DashboardAdmin;
+import ui.admin.OrderAdmin;
+import ui.admin.OrderItemDetail;
+import ui.admin.PaymentAdmin;
 import ui.admin.ProductAdmin;
 import ui.admin.UserAdmin;
 import ui.admin.category.EditCategory;
@@ -28,9 +31,14 @@ import ui.admin.product.EditProduct;
 import ui.admin.product.TambahProduct;
 import ui.admin.user.EditUser;
 import ui.admin.user.TambahUser;
+import ui.cashier.CashierDashboard;
+import ui.customer.ConfirmOrder;
 import ui.customer.DashboardCustomer;
+import ui.customer.DetailOrder;
 import ui.customer.DetailProductCustomer;
 import ui.customer.KeranjangCustomer;
+import ui.customer.OrderMenu;
+import ui.layout.CashierLayout;
 import ui.layout.CustomerLayout;
 
 /**
@@ -50,6 +58,10 @@ public class KF {
     public static ProductAdmin fproductAdmin = new ProductAdmin();
     public static CategoryAdmin fCategoryAdmin = new CategoryAdmin();
     public static UserAdmin fUserAdmin = new UserAdmin();
+    public static OrderAdmin fOrderAdmin = new OrderAdmin();
+    public static OrderItemDetail forderitemadmin = new OrderItemDetail();
+    public static PaymentAdmin fpaymentadmin = new PaymentAdmin();
+
 
     //category admin
     public static TambahCategory fAddCategory = new TambahCategory();
@@ -66,6 +78,13 @@ public class KF {
     public static DashboardCustomer fdashCustomer = new DashboardCustomer();
     public static DetailProductCustomer fDetailProductCustomer = new DetailProductCustomer();
     public static KeranjangCustomer fkeranjang = new KeranjangCustomer();
+    public static ConfirmOrder forderpayment = new ConfirmOrder();
+    public static OrderMenu fordermenu = new OrderMenu();
+    public static DetailOrder fdetailorder = new DetailOrder();
+    
+    //cashier
+    public static CashierLayout fcashierlayout = new CashierLayout();
+    public static CashierDashboard fcashierDash = new CashierDashboard();
 
     public static void UntukInternalFrame(JPanel panelapa, JInternalFrame frameapa) {
         try {
@@ -88,20 +107,4 @@ public class KF {
         panelTarget.revalidate();
         panelTarget.repaint();
     }
-
-//    public static void UntukJdialog(JDialog dialogapa, JFrame frameapa) {
-//        dialogapa.setUndecorated(true);
-//        dialogapa.getRootPane().setBackground(new Color(0, 0, 0, 200));
-//        dialogapa.setBackground(new Color(0, 0, 0, 180));
-//        dialogapa.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-//        dialogapa.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-//
-//        int lokasix, lokasiy;
-//
-//        lokasix = frameapa.getLocationOnScreen().x + 7;
-//        lokasiy = frameapa.getLocationOnScreen().y;
-//        dialogapa.setLocation(new Point(lokasix, lokasiy));
-//        dialogapa.setSize(frameapa.getWidth() - 14, frameapa.getHeight() - 8);
-//        dialogapa.setVisible(true);
-//    }
 }

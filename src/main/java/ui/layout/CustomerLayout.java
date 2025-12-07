@@ -24,21 +24,6 @@ public class CustomerLayout extends javax.swing.JFrame {
         initComponents();
     }
 
-    public void showDetailProduct(models.Product product) {
-        try {
-            ui.customer.DetailProductCustomer detailPanel = new ui.customer.DetailProductCustomer(product);
-
-            KF.UntukPanel(pnlUtamaCustomer, detailPanel);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Gagal membuka detail produk: " + e.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
-            );
-        }
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -52,6 +37,8 @@ public class CustomerLayout extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         lblUsername = new javax.swing.JLabel();
         btnHome = new javax.swing.JLabel();
+        btnOrder = new javax.swing.JLabel();
+        btnLogout = new javax.swing.JLabel();
         btnCart = new javax.swing.JLabel();
         pnlUtamaCustomer = new javax.swing.JPanel();
 
@@ -66,17 +53,47 @@ public class CustomerLayout extends javax.swing.JFrame {
         lblUsername.setFont(new java.awt.Font("Segoe UI", 1, 17)); // NOI18N
         lblUsername.setForeground(new java.awt.Color(255, 255, 255));
         lblUsername.setText("-");
+        lblUsername.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblUsername.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblUsernameMouseClicked(evt);
+            }
+        });
 
-        btnHome.setFont(new java.awt.Font("Segoe UI", 0, 17)); // NOI18N
+        btnHome.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         btnHome.setForeground(new java.awt.Color(255, 255, 255));
         btnHome.setText("Home");
+        btnHome.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnHome.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnHomeMouseClicked(evt);
             }
         });
 
-        btnCart.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/icon_cart.png"))); // NOI18N
+        btnOrder.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btnOrder.setForeground(new java.awt.Color(255, 255, 255));
+        btnOrder.setText("Order");
+        btnOrder.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnOrder.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnOrderMouseClicked(evt);
+            }
+        });
+
+        btnLogout.setFont(new java.awt.Font("Segoe UI", 0, 17)); // NOI18N
+        btnLogout.setForeground(new java.awt.Color(255, 255, 255));
+        btnLogout.setText("Logout");
+        btnLogout.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnLogout.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnLogoutMouseClicked(evt);
+            }
+        });
+
+        btnCart.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btnCart.setForeground(new java.awt.Color(255, 255, 255));
+        btnCart.setText("Cart");
+        btnCart.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnCart.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnCartMouseClicked(evt);
@@ -90,19 +107,25 @@ public class CustomerLayout extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(lblUsername)
-                .addGap(56, 56, 56)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 923, Short.MAX_VALUE)
                 .addComponent(btnHome)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 925, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnCart)
-                .addGap(27, 27, 27))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnOrder)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnLogout)
+                .addGap(21, 21, 21))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnCart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+            .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 64, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnCart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblUsername, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 64, Short.MAX_VALUE)
+                    .addComponent(btnLogout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnHome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -115,18 +138,15 @@ public class CustomerLayout extends javax.swing.JFrame {
         );
         pnlUtamaCustomerLayout.setVerticalGroup(
             pnlUtamaCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 711, Short.MAX_VALUE)
+            .addGap(0, 730, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(pnlUtamaCustomer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 0, 0))
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(pnlUtamaCustomer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -152,12 +172,41 @@ public class CustomerLayout extends javax.swing.JFrame {
 
     private void btnHomeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHomeMouseClicked
         KF.UntukPanel(pnlUtamaCustomer, KF.fdashCustomer);
+        KF.fdashCustomer.loadProducts(null);
     }//GEN-LAST:event_btnHomeMouseClicked
+
+    private void btnOrderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOrderMouseClicked
+        KF.UntukPanel(pnlUtamaCustomer, KF.fordermenu);
+        KF.fordermenu.setKeranjang();
+    }//GEN-LAST:event_btnOrderMouseClicked
+
+    private void btnLogoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLogoutMouseClicked
+        int confirm = JOptionPane.showConfirmDialog(
+                null,
+                "Yakin ingin Logout?",
+                "Konfirmasi Logout",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+        );
+
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        KF.flogin.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+        KF.flogin.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnLogoutMouseClicked
 
     private void btnCartMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCartMouseClicked
         KF.UntukPanel(pnlUtamaCustomer, KF.fkeranjang);
-        KF.fkeranjang.setUser();
+        KF.fkeranjang.setKeranjang();
     }//GEN-LAST:event_btnCartMouseClicked
+
+    private void lblUsernameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblUsernameMouseClicked
+        KF.UntukPanel(pnlUtamaCustomer, KF.fdashCustomer);
+        KF.fdashCustomer.loadProducts(null);
+    }//GEN-LAST:event_lblUsernameMouseClicked
 
     public void setDataLayout(String username) {
         lblUsername.setText(username);
@@ -189,6 +238,8 @@ public class CustomerLayout extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel btnCart;
     private javax.swing.JLabel btnHome;
+    private javax.swing.JLabel btnLogout;
+    private javax.swing.JLabel btnOrder;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     public javax.swing.JLabel lblUsername;

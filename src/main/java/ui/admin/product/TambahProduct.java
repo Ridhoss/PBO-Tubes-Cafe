@@ -8,10 +8,19 @@ import ui.admin.category.*;
 import app.controller.CategoryController;
 import app.controller.ProductController;
 import app.services.CategoriesDao;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import models.Category;
 import ui.KF;
 
@@ -53,6 +62,9 @@ public class TambahProduct extends javax.swing.JPanel {
         txtPrice = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         txtStock = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        btnImage = new javax.swing.JButton();
+        lblImagePreview = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -90,6 +102,18 @@ public class TambahProduct extends javax.swing.JPanel {
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel7.setText("Stock");
 
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel8.setText("Image Product");
+
+        btnImage.setText("Select Image");
+        btnImage.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnImageMouseClicked(evt);
+            }
+        });
+
+        lblImagePreview.setBackground(new java.awt.Color(0, 0, 0));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -109,13 +133,17 @@ public class TambahProduct extends javax.swing.JPanel {
                             .addComponent(txtStock, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING))
                         .addComponent(jLabel5)))
-                .addGap(90, 90, 90)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel4)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
                     .addComponent(jLabel6)
-                    .addComponent(txtPrice))
-                .addContainerGap(400, Short.MAX_VALUE))
+                    .addComponent(txtPrice)
+                    .addComponent(jLabel8)
+                    .addComponent(btnImage, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(lblImagePreview, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(254, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -123,32 +151,39 @@ public class TambahProduct extends javax.swing.JPanel {
                 .addGap(55, 55, 55)
                 .addComponent(jLabel1)
                 .addGap(51, 51, 51)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(txtNamaProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cmbCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtProductCost, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtNamaProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cmbCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtProductCost, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(lblImagePreview, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                                    .addComponent(jScrollPane1))
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, 18)
                         .addComponent(jLabel7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(txtStock, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel6)
+                        .addComponent(jLabel8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnImage, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(52, 52, 52)
                 .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(261, Short.MAX_VALUE))
@@ -169,6 +204,8 @@ public class TambahProduct extends javax.swing.JPanel {
     CategoryController categorycontroller = CategoryController.getInstance();
     ProductController productcontroller = ProductController.getInstance();
 
+    private File selectedImageFile = null;
+
     private void btnSaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveMouseClicked
         String productName = txtNamaProduct.getText();
         String desc = txtDesc.getText();
@@ -180,21 +217,74 @@ public class TambahProduct extends javax.swing.JPanel {
         try {
             Category thisCategory = categorycontroller.findCategoryByName(category);
 
-            productcontroller.addProduct(thisCategory.getCategory_id(), productName, desc, price, cost, stock, true, null);
+            String imagePath = null;
+            if (selectedImageFile != null) {
+                File dir = new File("productimages");
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+
+                String ext = selectedImageFile.getName()
+                        .substring(selectedImageFile.getName().lastIndexOf("."));
+                String safeName = txtNamaProduct.getText()
+                        .replaceAll("[^a-zA-Z0-9_-]", "_");
+                String newFileName = safeName + "_" + System.currentTimeMillis() + ext;
+
+                File dest = new File(dir, newFileName);
+
+                Files.copy(selectedImageFile.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+                imagePath = dest.getPath();
+            }
+
+            productcontroller.addProduct(thisCategory.getCategory_id(), productName, desc, price, cost, stock, true, imagePath);
 
             JOptionPane.showMessageDialog(this, "Input Success!",
                     "Sukses", JOptionPane.INFORMATION_MESSAGE);
+            
+            clear();
 
             JPanel pnlUtama = (JPanel) SwingUtilities.getAncestorOfClass(JPanel.class, this);
             KF.UntukPanel(pnlUtama, KF.fproductAdmin);
             KF.fproductAdmin.loadTable();
-            
+
         } catch (Exception ex) {
             ex.printStackTrace();
             System.getLogger(TambahCategory.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
 
     }//GEN-LAST:event_btnSaveMouseClicked
+
+    private void btnImageMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnImageMouseClicked
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Pilih Gambar");
+
+        chooser.setFileFilter(new FileNameExtensionFilter(
+                "Gambar (JPG, PNG)", "jpg", "jpeg", "png"
+        ));
+
+        int result = chooser.showOpenDialog(this);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File file = chooser.getSelectedFile();
+            selectedImageFile = file;
+
+            try {
+                BufferedImage img = ImageIO.read(file);
+
+                Image scaled = img.getScaledInstance(
+                        lblImagePreview.getWidth(),
+                        lblImagePreview.getHeight(),
+                        Image.SCALE_SMOOTH
+                );
+
+                lblImagePreview.setIcon(new ImageIcon(scaled));
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Tidak dapat memuat gambar");
+            }
+        }
+    }//GEN-LAST:event_btnImageMouseClicked
 
     public void InputDataCmb() {
         try {
@@ -212,7 +302,18 @@ public class TambahProduct extends javax.swing.JPanel {
         }
     }
 
+    public void clear() {
+        txtNamaProduct.setText("");
+        txtDesc.setText("");
+        txtPrice.setText("");
+        txtProductCost.setText("");
+        txtStock.setText("");
+        cmbCategory.removeAllItems();
+        selectedImageFile = null;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnImage;
     private javax.swing.JButton btnSave;
     private javax.swing.JComboBox<String> cmbCategory;
     private javax.swing.JLabel jLabel1;
@@ -222,8 +323,10 @@ public class TambahProduct extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblImagePreview;
     private javax.swing.JTextArea txtDesc;
     private javax.swing.JTextField txtNamaProduct;
     private javax.swing.JTextField txtPrice;

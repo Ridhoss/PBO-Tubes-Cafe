@@ -21,6 +21,8 @@ public class Order {
     private String payment_status;
     private String order_status;
     private String notes;
+    private String order_code;
+    private String table_code;
 
     public Order() {
     }
@@ -109,6 +111,22 @@ public class Order {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getOrderCode() {
+        return order_code;
+    }
+
+    public void setOrderCode(String orderCode) {
+        this.order_code = orderCode;
+    }
+
+    public String getTableCode() {
+        return table_code;
+    }
+
+    public void setTableCode(String tableCode) {
+        this.table_code = tableCode;
     }
 
 }

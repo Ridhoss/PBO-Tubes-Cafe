@@ -26,17 +26,18 @@ public class CategoryController {
         return instance;
     }
 
-    public void addCategory(Integer parentId, String name, String type) throws Exception {
+    public void addCategory(Integer parentId, String name, String type, String image_path) throws Exception {
         Category c = new Category();
 
         c.setParent_id(parentId);
         c.setCategory_name(name);
         c.setCategory_type(type);
+        c.setImage_path(image_path);
 
         categoryDao.insert(c);
     }
 
-    public void updateCategory(Integer categoryId, Integer parentId, String name, String type) throws Exception {
+    public void updateCategory(Integer categoryId, Integer parentId, String name, String type, String image_path) throws Exception {
         Category existing = categoryDao.findById(categoryId);
 
         if (existing == null) {
@@ -46,6 +47,7 @@ public class CategoryController {
         existing.setParent_id(parentId);
         existing.setCategory_name(name);
         existing.setCategory_type(type);
+        existing.setImage_path(image_path);
 
         categoryDao.update(existing);
     }

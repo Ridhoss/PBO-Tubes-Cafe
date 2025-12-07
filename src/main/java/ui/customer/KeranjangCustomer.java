@@ -18,13 +18,19 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Insets;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.List;
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
@@ -62,60 +68,66 @@ public class KeranjangCustomer extends javax.swing.JPanel {
         pnlContainerCart = new javax.swing.JPanel();
         pnlkeranjang1 = new javax.swing.JPanel();
         btnCheckout = new javax.swing.JButton();
-        lblTotal = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        lblTotal = new javax.swing.JLabel();
         JlabelKeranjang1 = new javax.swing.JLabel();
 
-        pnlContainerCart.setBackground(new java.awt.Color(255, 255, 0));
+        pnlContainerCart.setBackground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout pnlContainerCartLayout = new javax.swing.GroupLayout(pnlContainerCart);
         pnlContainerCart.setLayout(pnlContainerCartLayout);
         pnlContainerCartLayout.setHorizontalGroup(
             pnlContainerCartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 990, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         pnlContainerCartLayout.setVerticalGroup(
             pnlContainerCartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 634, Short.MAX_VALUE)
+            .addGap(0, 643, Short.MAX_VALUE)
         );
 
-        pnlkeranjang1.setBackground(new java.awt.Color(255, 255, 255));
+        pnlkeranjang1.setBackground(new java.awt.Color(74, 112, 169));
 
-        btnCheckout.setText("Checkout");
+        btnCheckout.setBackground(new java.awt.Color(239, 236, 227));
+        btnCheckout.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnCheckout.setText("Order");
+        btnCheckout.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnCheckout.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnCheckoutMouseClicked(evt);
             }
         });
 
-        lblTotal.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        lblTotal.setText("0");
-
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Total: Rp.");
+
+        lblTotal.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblTotal.setForeground(new java.awt.Color(255, 255, 255));
+        lblTotal.setText("0");
 
         javax.swing.GroupLayout pnlkeranjang1Layout = new javax.swing.GroupLayout(pnlkeranjang1);
         pnlkeranjang1.setLayout(pnlkeranjang1Layout);
         pnlkeranjang1Layout.setHorizontalGroup(
             pnlkeranjang1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlkeranjang1Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addComponent(btnCheckout)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(26, 26, 26)
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
-                .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(127, 127, 127))
+                .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 513, Short.MAX_VALUE)
+                .addComponent(btnCheckout, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         pnlkeranjang1Layout.setVerticalGroup(
             pnlkeranjang1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlkeranjang1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnlkeranjang1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCheckout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE))
-                .addContainerGap())
+                .addGroup(pnlkeranjang1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pnlkeranjang1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnCheckout, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         JlabelKeranjang1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -127,35 +139,42 @@ public class KeranjangCustomer extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(70, 70, 70)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlContainerCart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnlkeranjang1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(78, 78, 78))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(80, 80, 80)
-                    .addComponent(JlabelKeranjang1)
-                    .addContainerGap(851, Short.MAX_VALUE)))
+                    .addComponent(pnlkeranjang1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlContainerCart, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(JlabelKeranjang1)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(108, 108, 108)
+                .addGap(28, 28, 28)
+                .addComponent(JlabelKeranjang1)
+                .addGap(18, 18, 18)
                 .addComponent(pnlContainerCart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(pnlkeranjang1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(60, 60, 60)
-                    .addComponent(JlabelKeranjang1)
-                    .addContainerGap(748, Short.MAX_VALUE)))
+                .addGap(58, 58, 58))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCheckoutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCheckoutMouseClicked
         try {
+            int confirm = JOptionPane.showConfirmDialog(
+                    this,
+                    "Apakah yakin ingin memesan orderan?",
+                    "Konfirmasi PEsan",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+            if (confirm != JOptionPane.YES_OPTION) {
+                return;
+            }
+
             User thisUser = userController.findByUsername(KF.flayoutCustomer.lblUsername.getText());
             Cart thisCart = cartcontroller.getCartByUser(thisUser.getUser_id());
             if (thisCart == null) {
@@ -169,44 +188,13 @@ public class KeranjangCustomer extends javax.swing.JPanel {
                 return;
             }
 
-            int totalAmount = 0;
-            for (CartItem item : cartItems) {
-                Product p = productController.getProductById(item.getProduct_id());
-                totalAmount += p.getPrice() * item.getQuantity();
-            }
+            JPanel pnlUtama = (JPanel) SwingUtilities.getAncestorOfClass(JPanel.class, this);
+            KF.UntukPanel(pnlUtama, KF.forderpayment);
+            KF.forderpayment.setOrderItem();
 
-            Order order = new Order();
-            orderController.addOrder(thisUser.getUser_id(), totalAmount, 0, totalAmount, "Unpaid", "Waiting", "");
-            
-            Order thisOrder = orderController.findLastOrderByUser(thisUser.getUser_id());
-
-            for (CartItem item : cartItems) {
-                Product p = productController.getProductById(item.getProduct_id());
-
-                int subtotal = p.getPrice() * item.getQuantity();
-
-                orderItemsController.addOrderItem(
-                        thisOrder.getOrder_id(),
-                        p.getProduct_id(),
-                        item.getQuantity(),
-                        p.getPrice(),
-                        subtotal,
-                        ""
-                );
-            }
-
-            for (CartItem item : cartItems) {
-                cartItemsController.deleteCartItem(item.getCart_item_id());
-            }
-
-            javax.swing.JOptionPane.showMessageDialog(this, "Checkout berhasil! Total: Rp " + totalAmount);
-
-            totalPrice = 0;
             loadProducts();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            javax.swing.JOptionPane.showMessageDialog(this, "Terjadi kesalahan saat checkout: " + e.getMessage());
+        } catch (Exception ex) {
+            System.getLogger(KeranjangCustomer.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
     }//GEN-LAST:event_btnCheckoutMouseClicked
 
@@ -241,15 +229,41 @@ public class KeranjangCustomer extends javax.swing.JPanel {
 
         // ===== Image Panel =====
         JPanel imagePanel = new JPanel();
-        imagePanel.setPreferredSize(new Dimension(120, 120));
+        imagePanel.setPreferredSize(new Dimension(200, 120));
         imagePanel.setBackground(new Color(240, 240, 240));
         imagePanel.setLayout(new GridBagLayout());
 
-        JLabel lblImage = new JLabel("No Image"); // bisa diganti ImageIcon nanti
-        lblImage.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblImage.setForeground(new Color(100, 100, 100));
-        imagePanel.add(lblImage);
+        JLabel imageLabel = new JLabel();
+        imageLabel.setHorizontalAlignment(JLabel.CENTER);
 
+        if (p.getImage_path() != null && !p.getImage_path().isEmpty()) {
+            try {
+                File file = new File(p.getImage_path());
+                if (file.exists()) {
+                    BufferedImage img = ImageIO.read(file);
+
+                    // Resize to fit panel
+                    Image scaled = img.getScaledInstance(
+                            200, // width
+                            120, // height
+                            Image.SCALE_SMOOTH
+                    );
+
+                    imageLabel.setIcon(new ImageIcon(scaled));
+                } else {
+                    imageLabel.setText("Image Not Found");
+                }
+            } catch (Exception e) {
+                imageLabel.setText("Error Loading Image");
+            }
+        } else {
+            imageLabel.setText("No Image");
+        }
+
+        imageLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        imageLabel.setForeground(new Color(100, 100, 100));
+
+        imagePanel.add(imageLabel);
         card.add(imagePanel, BorderLayout.WEST);
 
         // ===== Info Panel =====
@@ -286,7 +300,28 @@ public class KeranjangCustomer extends javax.swing.JPanel {
         btnDelete.setForeground(Color.WHITE);
         btnDelete.setPreferredSize(new Dimension(80, 40));
         btnDelete.addActionListener(e -> {
-            // TODO: hapus item dari cart
+            try {
+
+                int confirm = JOptionPane.showConfirmDialog(
+                        this,
+                        "Yakin ingin menghapus item ini dari keranjang?",
+                        "Konfirmasi Hapus",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.WARNING_MESSAGE
+                );
+
+                if (confirm != JOptionPane.YES_OPTION) {
+                    return;
+                }
+
+                cartItemsController.deleteCartItem(i.getCart_item_id());
+                Integer newStock = p.getStock() + quantity;
+                productController.updateStock(p.getProduct_id(), newStock);
+
+                setKeranjang();
+            } catch (Exception ex) {
+                System.getLogger(KeranjangCustomer.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
         });
 
         JPanel btnPanel = new JPanel();
@@ -345,9 +380,11 @@ public class KeranjangCustomer extends javax.swing.JPanel {
     OrderController orderController = OrderController.getInstance();
     OrderItemsController orderItemsController = OrderItemsController.getInstance();
 
-    public void setUser() {
+    public void setKeranjang() {
         setupContainers();
         loadProducts();
+
+        totalPrice = 0;
     }
 
 

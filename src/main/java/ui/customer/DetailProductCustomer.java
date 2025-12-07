@@ -13,6 +13,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
+import java.io.File;
+import java.net.URL;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -43,60 +45,6 @@ public class DetailProductCustomer extends javax.swing.JPanel {
         initComponents();
     }
 
-    public DetailProductCustomer(Product product) {
-        this.product = product;
-        initComponents();
-        initDetail();
-    }
-
-    private void initDetail() {
-        setLayout(new BorderLayout());
-        setBackground(Color.WHITE);
-
-        // GAMBAR
-        JLabel img = new JLabel("No Image", SwingConstants.CENTER);
-        img.setPreferredSize(new Dimension(300, 300));
-
-        try {
-            if (product.getImage_path() != null) {
-                ImageIcon icon = new ImageIcon(getClass().getResource("/" + product.getImage_path()));
-                Image scaled = icon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
-                img.setIcon(new ImageIcon(scaled));
-                img.setText("");
-            }
-        } catch (Exception e) {
-            System.out.println("Gagal ambil gambar");
-        }
-
-        JLabel lblName = new JLabel(product.getProduct_name());
-        lblName.setFont(new Font("Segoe UI", Font.BOLD, 24));
-
-        JTextArea txtDesc = new JTextArea(product.getDescription());
-        txtDesc.setLineWrap(true);
-        txtDesc.setWrapStyleWord(true);
-        txtDesc.setEditable(false);
-
-        JLabel lblPrice = new JLabel("Rp " + String.format("%,d", product.getPrice()));
-        lblPrice.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        lblPrice.setForeground(Color.decode("#2C7A7B"));
-
-        JButton btnAdd = new JButton("Add To Cart");
-
-        JPanel infoPanel = new JPanel();
-        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
-        infoPanel.setBackground(Color.WHITE);
-        infoPanel.add(lblName);
-        infoPanel.add(Box.createVerticalStrut(10));
-        infoPanel.add(lblPrice);
-        infoPanel.add(Box.createVerticalStrut(20));
-        infoPanel.add(txtDesc);
-        infoPanel.add(Box.createVerticalStrut(20));
-        infoPanel.add(btnAdd);
-
-        add(img, BorderLayout.WEST);
-        add(infoPanel, BorderLayout.CENTER);
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -109,7 +57,7 @@ public class DetailProductCustomer extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
+        lblImage = new javax.swing.JLabel();
         lblProductName = new javax.swing.JLabel();
         lblTitleDesc = new javax.swing.JLabel();
         btnMinus = new javax.swing.JButton();
@@ -123,27 +71,23 @@ public class DetailProductCustomer extends javax.swing.JPanel {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(74, 112, 169));
         jLabel1.setText("Detail Product");
 
         jPanel2.setPreferredSize(new java.awt.Dimension(450, 300));
 
-        jLabel2.setText("No Image");
+        lblImage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblImage.setText("No Image");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(203, Short.MAX_VALUE)
-                .addComponent(jLabel2)
-                .addGap(195, 195, 195))
+            .addComponent(lblImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(139, 139, 139)
-                .addComponent(jLabel2)
-                .addContainerGap(145, Short.MAX_VALUE))
+            .addComponent(lblImage, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
         );
 
         lblProductName.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
@@ -152,14 +96,20 @@ public class DetailProductCustomer extends javax.swing.JPanel {
         lblTitleDesc.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblTitleDesc.setText("Description:");
 
+        btnMinus.setBackground(new java.awt.Color(239, 236, 227));
         btnMinus.setText("-");
+        btnMinus.setBorderPainted(false);
+        btnMinus.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnMinus.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnMinusMouseClicked(evt);
             }
         });
 
+        btnAdd.setBackground(new java.awt.Color(239, 236, 227));
         btnAdd.setText("+");
+        btnAdd.setBorderPainted(false);
+        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAdd.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnAddMouseClicked(evt);
@@ -169,7 +119,11 @@ public class DetailProductCustomer extends javax.swing.JPanel {
         lblQty.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblQty.setText("0");
 
+        btnAddCart.setBackground(new java.awt.Color(74, 112, 169));
+        btnAddCart.setForeground(new java.awt.Color(255, 255, 255));
         btnAddCart.setText("Add to Cart");
+        btnAddCart.setBorderPainted(false);
+        btnAddCart.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAddCart.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnAddCartMouseClicked(evt);
@@ -201,7 +155,7 @@ public class DetailProductCustomer extends javax.swing.JPanel {
                     .addComponent(jLabel1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(btnAddCart, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnAddCart, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
                             .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(66, 66, 66)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -289,15 +243,21 @@ public class DetailProductCustomer extends javax.swing.JPanel {
             }
 
             Product thisProduct = productcontroler.getProductByName(lblProductName.getText());
+            Integer newqty = thisProduct.getStock() - Integer.valueOf(lblQty.getText());
+            thisProduct.setStock(newqty);
+            productcontroler.updateStock(thisProduct.getProduct_id(), newqty);
             
             caritemcontroller.insertCartItem(thisCart.getCart_id(), thisProduct.getProduct_id(), Integer.valueOf(lblQty.getText()));
 
             JOptionPane.showMessageDialog(this, "Input Success!",
                     "Sukses", JOptionPane.INFORMATION_MESSAGE);
             
+            loadData(thisProduct);
+            
             JPanel pnlUtama = (JPanel) SwingUtilities.getAncestorOfClass(JPanel.class, this);
-            KF.UntukPanel(pnlUtama, KF.fdashCustomer);
-
+            KF.UntukPanel(pnlUtama, KF.fkeranjang);
+            KF.fkeranjang.setKeranjang();
+            
         } catch (Exception ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Gagal menambahkan ke cart: " + ex.getMessage(),
@@ -312,12 +272,45 @@ public class DetailProductCustomer extends javax.swing.JPanel {
         lblQty.setText(this.qty.toString());
     }
 
+    private void loadImage(String imagePath) {
+        try {
+            ImageIcon icon = null;
+
+            URL resource = getClass().getResource("/" + imagePath);
+            if (resource != null) {
+                icon = new ImageIcon(resource);
+            } else {
+                File file = new File(imagePath);
+                if (file.exists()) {
+                    icon = new ImageIcon(file.getAbsolutePath());
+                }
+            }
+
+            if (icon != null) {
+                Image scaled = icon.getImage().getScaledInstance(450, 300, Image.SCALE_SMOOTH);
+                lblImage.setIcon(new ImageIcon(scaled));
+                lblImage.setText("");
+            } else {
+                lblImage.setText("No Image");
+                lblImage.setIcon(null);
+            }
+
+        } catch (Exception e) {
+            lblImage.setText("No Image");
+            lblImage.setIcon(null);
+            System.out.println("Gagal load gambar: " + e.getMessage());
+        }
+    }
+
     public void loadData(Product p) {
         lblProductName.setText(p.getProduct_name());
         lblDesc.setText(p.getDescription());
         lblQty.setText(this.qty.toString());
         lblStock.setText(p.getStock().toString());
         this.qty = 1;
+        if (p.getImage_path() != null) {
+            loadImage(p.getImage_path());
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -325,11 +318,11 @@ public class DetailProductCustomer extends javax.swing.JPanel {
     private javax.swing.JButton btnAddCart;
     private javax.swing.JButton btnMinus;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel lblDesc;
     private javax.swing.JLabel lblDesc1;
+    private javax.swing.JLabel lblImage;
     private javax.swing.JLabel lblProductName;
     private javax.swing.JLabel lblQty;
     private javax.swing.JLabel lblStock;

@@ -14,8 +14,12 @@ import models.Category;
 import models.Product;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.List;
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import ui.KF;
 import ui.admin.DashboardAdmin;
 import util.WrapLayout;
@@ -40,30 +44,59 @@ public class DashboardCustomer extends javax.swing.JPanel {
     }
 
     private void setupContainers() {
-        // Kategori
         JPanel catContainer = new JPanel(new WrapLayout(FlowLayout.LEFT, 15, 10));
+        catContainer.setBackground(Color.WHITE);
+
+        JScrollPane catScroll = new JScrollPane(catContainer);
+        catScroll.setBorder(null);
+        catScroll.getViewport().setBackground(Color.WHITE);
+        catScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
         jPanelcategory.putClientProperty("container", catContainer);
         jPanelcategory.setLayout(new BorderLayout());
-        jPanelcategory.add(new JScrollPane(catContainer));
+        jPanelcategory.setBackground(Color.WHITE);
+        jPanelcategory.add(catScroll, BorderLayout.CENTER);
 
-        // Produk
         JPanel prodContainer = new JPanel(new WrapLayout(FlowLayout.LEFT, 20, 20));
+        prodContainer.setBackground(Color.WHITE);
+
+        JScrollPane prodScroll = new JScrollPane(prodContainer);
+        prodScroll.setBorder(null);
+        prodScroll.getViewport().setBackground(Color.WHITE);
+        prodScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
         jPanelprod.putClientProperty("container", prodContainer);
         jPanelprod.setLayout(new BorderLayout());
-        jPanelprod.add(new JScrollPane(prodContainer));
+        jPanelprod.setBackground(Color.WHITE);
+        jPanelprod.add(prodScroll, BorderLayout.CENTER);
     }
 
-    private JPanel createSimpleCategoryBox(String title, Runnable onClick) {
+    private JPanel createCategoryBoxWithImage(Category category, Runnable onClick) {
         JPanel panel = new JPanel();
         panel.setPreferredSize(new Dimension(110, 70));
         panel.setBackground(Color.WHITE);
         panel.setBorder(BorderFactory.createLineBorder(new Color(180, 180, 180)));
-        panel.setLayout(new GridBagLayout());
+        panel.setLayout(new BorderLayout());
 
-        JLabel label = new JLabel(title);
-        label.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        JLabel iconLabel = new JLabel();
+        iconLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-        panel.add(label);
+        if (category.getImage_path() != null) {
+            ImageIcon icon = new ImageIcon(category.getImage_path());
+            Image img = icon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+            iconLabel.setIcon(new ImageIcon(img));
+        } else {
+            iconLabel.setText("No Image");
+            iconLabel.setFont(new Font("Segoe UI", Font.PLAIN, 10));
+            iconLabel.setForeground(Color.GRAY);
+        }
+
+        JLabel label = new JLabel(category.getCategory_name(), SwingConstants.CENTER);
+        label.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        label.setBorder(new EmptyBorder(0, 0, 8, 0));
+
+        panel.add(iconLabel, BorderLayout.CENTER);
+        panel.add(label, BorderLayout.SOUTH);
 
         panel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
@@ -87,19 +120,21 @@ public class DashboardCustomer extends javax.swing.JPanel {
         return panel;
     }
 
-    private void loadCategories() {
+    public void loadCategories() {
         try {
             JPanel container = (JPanel) jPanelcategory.getClientProperty("container");
             container.removeAll();
 
-            container.add(createSimpleCategoryBox("All", () -> loadProducts(null)));
+            Category all = new Category();
+            all.setCategory_name("All");
+            all.setImage_path("categoryimages/icon_all.png");
+
+            container.add(createCategoryBoxWithImage(all, () -> loadProducts(null)));
 
             List<Category> categories = categoryController.getAllCategories();
             for (Category c : categories) {
-                container.add(createSimpleCategoryBox(
-                        c.getCategory_name(),
-                        () -> loadProducts(c)
-                ));
+
+                container.add(createCategoryBoxWithImage(c, () -> loadProducts(c)));
             }
 
             container.revalidate();
@@ -122,11 +157,37 @@ public class DashboardCustomer extends javax.swing.JPanel {
         imagePanel.setBackground(new Color(240, 240, 240));
         imagePanel.setLayout(new GridBagLayout());
 
-        JLabel noImg = new JLabel("No Image");
-        noImg.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        noImg.setForeground(new Color(100, 100, 100));
+        JLabel imageLabel = new JLabel();
+        imageLabel.setHorizontalAlignment(JLabel.CENTER);
 
-        imagePanel.add(noImg);
+        if (p.getImage_path() != null && !p.getImage_path().isEmpty()) {
+            try {
+                File file = new File(p.getImage_path());
+                if (file.exists()) {
+                    BufferedImage img = ImageIO.read(file);
+
+                    // Resize to fit panel
+                    Image scaled = img.getScaledInstance(
+                            160, // width
+                            110, // height
+                            Image.SCALE_SMOOTH
+                    );
+
+                    imageLabel.setIcon(new ImageIcon(scaled));
+                } else {
+                    imageLabel.setText("Image Not Found");
+                }
+            } catch (Exception e) {
+                imageLabel.setText("Error Loading Image");
+            }
+        } else {
+            imageLabel.setText("No Image");
+        }
+
+        imageLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        imageLabel.setForeground(new Color(100, 100, 100));
+
+        imagePanel.add(imageLabel);
         card.add(imagePanel, BorderLayout.NORTH);
 
         JPanel infoPanel = new JPanel();
@@ -151,8 +212,10 @@ public class DashboardCustomer extends javax.swing.JPanel {
 
         JButton btn = new JButton("View");
         btn.setFocusPainted(false);
-        btn.setBackground(new Color(240, 240, 240));
+        btn.setBackground(new Color(74,112,169));
         btn.setPreferredSize(new Dimension(120, 40));
+        btn.setForeground(Color.WHITE);
+        btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         btn.addActionListener(e -> {
             JPanel pnlUtama = (JPanel) SwingUtilities.getAncestorOfClass(JPanel.class, this);
@@ -169,7 +232,7 @@ public class DashboardCustomer extends javax.swing.JPanel {
         return card;
     }
 
-    private void loadProducts(Category category) {
+    public void loadProducts(Category category) {
         try {
             JPanel container = (JPanel) jPanelprod.getClientProperty("container");
             container.removeAll();
@@ -202,11 +265,6 @@ public class DashboardCustomer extends javax.swing.JPanel {
         }
     }
 
-    private void addToCart(Product p) {
-        JOptionPane.showMessageDialog(this,
-                "Produk ditambahkan: " + p.getProduct_name());
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -221,7 +279,7 @@ public class DashboardCustomer extends javax.swing.JPanel {
         jPanelcategory = new javax.swing.JPanel();
         jPanelprod = new javax.swing.JPanel();
 
-        setBackground(new java.awt.Color(245, 245, 245));
+        setBackground(new java.awt.Color(255, 255, 255));
 
         jLabelCategory.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabelCategory.setForeground(new java.awt.Color(74, 112, 169));

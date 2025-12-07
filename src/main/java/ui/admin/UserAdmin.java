@@ -63,7 +63,15 @@ public class UserAdmin extends javax.swing.JPanel {
             new String [] {
                 "No", "Username", "Full Name", "Email", "Phone", "Role", "Update", "Delete"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         tblUser.setRowHeight(40);
         tblUser.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {

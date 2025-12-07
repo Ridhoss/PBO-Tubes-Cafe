@@ -6,10 +6,19 @@ package ui.admin.category;
 
 import app.controller.CategoryController;
 import app.services.CategoriesDao;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import models.Category;
 import ui.KF;
 
@@ -43,6 +52,9 @@ public class EditCategory extends javax.swing.JPanel {
         cmbHeadCategory = new javax.swing.JComboBox<>();
         btnSave = new javax.swing.JButton();
         lblOldCategory = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        btnImage1 = new javax.swing.JButton();
+        lblImagePreview = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -67,6 +79,18 @@ public class EditCategory extends javax.swing.JPanel {
         lblOldCategory.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         lblOldCategory.setText("-");
 
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel9.setText("Image Category");
+
+        btnImage1.setText("Select Image");
+        btnImage1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnImage1MouseClicked(evt);
+            }
+        });
+
+        lblImagePreview.setBackground(new java.awt.Color(0, 0, 0));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -74,6 +98,7 @@ public class EditCategory extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(43, 43, 43)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel9)
                     .addComponent(cmbHeadCategory, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel3)
                     .addComponent(txtCategory)
@@ -82,8 +107,11 @@ public class EditCategory extends javax.swing.JPanel {
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(lblOldCategory))
-                    .addComponent(btnSave, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE))
-                .addContainerGap(790, Short.MAX_VALUE))
+                    .addComponent(btnSave, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
+                    .addComponent(btnImage1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(lblImagePreview, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(722, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -95,14 +123,20 @@ public class EditCategory extends javax.swing.JPanel {
                 .addGap(60, 60, 60)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblImagePreview, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(15, 15, 15)
                 .addComponent(cmbHeadCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnImage1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(484, Short.MAX_VALUE))
+                .addContainerGap(386, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -137,7 +171,30 @@ public class EditCategory extends javax.swing.JPanel {
                 parent = categorycontroller.findCategoryByName(headCategory);
             }
 
-            categorycontroller.updateCategory(thisCategory.getCategory_id(), parent != null ? parent.getCategory_id() : null, categoryName, parent != null ? parent.getCategory_name().toLowerCase() : categoryName.toLowerCase());
+            String finalImagePath = null;
+
+            if (selectedImageFile != null) {
+                File dir = new File("productimages");
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+
+                String ext = selectedImageFile.getName()
+                        .substring(selectedImageFile.getName().lastIndexOf("."));
+                String safeName = txtCategory.getText()
+                        .replaceAll("[^a-zA-Z0-9_-]", "_");
+                String newFileName = safeName + "_" + System.currentTimeMillis() + ext;
+
+                File dest = new File(dir, newFileName);
+
+                Files.copy(selectedImageFile.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+                finalImagePath = dest.getPath();
+            } else {
+                finalImagePath = thisCategory.getImage_path();
+            }
+
+            categorycontroller.updateCategory(thisCategory.getCategory_id(), parent != null ? parent.getCategory_id() : null, categoryName, parent != null ? parent.getCategory_name().toLowerCase() : categoryName.toLowerCase(), finalImagePath);
 
             JOptionPane.showMessageDialog(this, "Edit Success!",
                     "Sukses", JOptionPane.INFORMATION_MESSAGE);
@@ -151,6 +208,39 @@ public class EditCategory extends javax.swing.JPanel {
             System.getLogger(EditCategory.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
     }//GEN-LAST:event_btnSaveMouseClicked
+
+    private File selectedImageFile = null;
+
+    private void btnImage1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnImage1MouseClicked
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Pilih Gambar");
+
+        chooser.setFileFilter(new FileNameExtensionFilter(
+                "Gambar (JPG, PNG)", "jpg", "jpeg", "png"
+        ));
+
+        int result = chooser.showOpenDialog(this);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File file = chooser.getSelectedFile();
+            selectedImageFile = file;
+
+            try {
+                BufferedImage img = ImageIO.read(file);
+
+                Image scaled = img.getScaledInstance(
+                        lblImagePreview.getWidth(),
+                        lblImagePreview.getHeight(),
+                        Image.SCALE_SMOOTH
+                );
+
+                lblImagePreview.setIcon(new ImageIcon(scaled));
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Tidak dapat memuat gambar");
+            }
+        }
+    }//GEN-LAST:event_btnImage1MouseClicked
 
     public void InputDataCmb() {
         try {
@@ -182,16 +272,48 @@ public class EditCategory extends javax.swing.JPanel {
                 e.printStackTrace();
             }
         }
+
+        try {
+            if (c.getImage_path() != null && !c.getImage_path().isEmpty()) {
+
+                if (lblImagePreview.getWidth() == 0 || lblImagePreview.getHeight() == 0) {
+                    SwingUtilities.invokeLater(() -> setEditData(c));
+                    return;
+                }
+
+                ImageIcon icon = new ImageIcon(c.getImage_path());
+                Image img = icon.getImage().getScaledInstance(
+                        lblImagePreview.getWidth(),
+                        lblImagePreview.getHeight(),
+                        Image.SCALE_SMOOTH
+                );
+
+                lblImagePreview.setText(null);
+                lblImagePreview.setIcon(new ImageIcon(img));
+            } else {
+                lblImagePreview.setIcon(null);
+                lblImagePreview.setText("No Image");
+            }
+        } catch (Exception e) {
+            lblImagePreview.setIcon(null);
+            lblImagePreview.setText("Image Load Failed");
+            e.printStackTrace();
+        }
+
+        selectedImageFile = null;
     }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnImage1;
     private javax.swing.JButton btnSave;
     private javax.swing.JComboBox<String> cmbHeadCategory;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lblImagePreview;
     private javax.swing.JLabel lblOldCategory;
     private javax.swing.JTextField txtCategory;
     // End of variables declaration//GEN-END:variables
