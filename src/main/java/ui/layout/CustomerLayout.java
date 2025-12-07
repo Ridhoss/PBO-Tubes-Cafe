@@ -53,6 +53,12 @@ public class CustomerLayout extends javax.swing.JFrame {
         lblUsername.setFont(new java.awt.Font("Segoe UI", 1, 17)); // NOI18N
         lblUsername.setForeground(new java.awt.Color(255, 255, 255));
         lblUsername.setText("-");
+        lblUsername.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblUsername.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblUsernameMouseClicked(evt);
+            }
+        });
 
         btnHome.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         btnHome.setForeground(new java.awt.Color(255, 255, 255));
@@ -196,6 +202,11 @@ public class CustomerLayout extends javax.swing.JFrame {
         KF.UntukPanel(pnlUtamaCustomer, KF.fkeranjang);
         KF.fkeranjang.setKeranjang();
     }//GEN-LAST:event_btnCartMouseClicked
+
+    private void lblUsernameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblUsernameMouseClicked
+        KF.UntukPanel(pnlUtamaCustomer, KF.fdashCustomer);
+        KF.fdashCustomer.loadProducts(null);
+    }//GEN-LAST:event_lblUsernameMouseClicked
 
     public void setDataLayout(String username) {
         lblUsername.setText(username);

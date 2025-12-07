@@ -210,16 +210,22 @@ public class Login extends javax.swing.JFrame {
                             KF.flayoutCustomer.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
                             KF.flayoutCustomer.setVisible(true);
                             KF.flayoutCustomer.setDataLayout(username);
+                            KF.fdashCustomer.loadProducts(null);
+                            KF.fdashCustomer.loadCategories();
+
                             break;
                         case "cashier":
                             KF.UntukPanel(KF.fcashierlayout.pnlUtamaCashier, KF.fcashierDash);
                             KF.fcashierlayout.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
                             KF.fcashierlayout.setVisible(true);
+
                             break;
                         case "admin":
                             KF.UntukPanel(KF.flayoutAdmin.pnlUtamaAdmin, KF.fdashAdmin);
                             KF.flayoutAdmin.setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
                             KF.flayoutAdmin.setVisible(true);
+                            KF.fdashAdmin.LoadData();
+
                             break;
                         default:
                             JOptionPane.showMessageDialog(this, "Role Tidak Ada!",

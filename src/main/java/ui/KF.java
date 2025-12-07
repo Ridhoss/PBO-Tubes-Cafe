@@ -22,6 +22,7 @@ import ui.admin.CategoryAdmin;
 import ui.admin.DashboardAdmin;
 import ui.admin.OrderAdmin;
 import ui.admin.OrderItemDetail;
+import ui.admin.PaymentAdmin;
 import ui.admin.ProductAdmin;
 import ui.admin.UserAdmin;
 import ui.admin.category.EditCategory;
@@ -59,6 +60,7 @@ public class KF {
     public static UserAdmin fUserAdmin = new UserAdmin();
     public static OrderAdmin fOrderAdmin = new OrderAdmin();
     public static OrderItemDetail forderitemadmin = new OrderItemDetail();
+    public static PaymentAdmin fpaymentadmin = new PaymentAdmin();
 
 
     //category admin

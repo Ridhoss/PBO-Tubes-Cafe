@@ -239,7 +239,7 @@ public class EditProduct extends javax.swing.JPanel {
                 String safeName = txtNamaProduct.getText()
                         .replaceAll("[^a-zA-Z0-9_-]", "_");
                 String newFileName = safeName + "_" + System.currentTimeMillis() + ext;
-                
+
                 File dest = new File(dir, newFileName);
 
                 Files.copy(selectedImageFile.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -322,30 +322,32 @@ public class EditProduct extends javax.swing.JPanel {
         txtStock.setText(p.getStock().toString());
         lblProduct.setText(p.getProduct_name());
 
-        if (p.getCategory_id() == null) {
-            cmbCategory.setSelectedItem("No Category");
-        } else {
-            try {
-                cmbCategory.setSelectedItem(c.getCategory_name());
-            } catch (Exception e) {
-                e.printStackTrace();
+        try {
+            if (p.getImage_path() != null && !p.getImage_path().isEmpty()) {
+
+                if (lblImagePreview.getWidth() == 0 || lblImagePreview.getHeight() == 0) {
+                    SwingUtilities.invokeLater(() -> setEditData(c, p));
+                    return;
+                }
+
+                ImageIcon icon = new ImageIcon(p.getImage_path());
+                Image img = icon.getImage().getScaledInstance(
+                        lblImagePreview.getWidth(),
+                        lblImagePreview.getHeight(),
+                        Image.SCALE_SMOOTH
+                );
+
+                lblImagePreview.setText(null);
+                lblImagePreview.setIcon(new ImageIcon(img));
+            } else {
+                lblImagePreview.setIcon(null);
+                lblImagePreview.setText("No Image");
             }
-        }
-
-        if (p.getImage_path() != null && !p.getImage_path().isEmpty()) {
-            ImageIcon icon = new ImageIcon(p.getImage_path());
-            Image img = icon.getImage().getScaledInstance(
-                    lblImagePreview.getWidth(),
-                    lblImagePreview.getHeight(),
-                    Image.SCALE_SMOOTH
-            );
-            lblImagePreview.setText(null);
-            lblImagePreview.setIcon(new ImageIcon(img));
-        } else {
+        } catch (Exception e) {
             lblImagePreview.setIcon(null);
-            lblImagePreview.setText("No Image");
+            lblImagePreview.setText("Image Load Failed");
+            e.printStackTrace();
         }
-
         selectedImageFile = null;
     }
 

@@ -229,7 +229,7 @@ public class TambahProduct extends javax.swing.JPanel {
                 String safeName = txtNamaProduct.getText()
                         .replaceAll("[^a-zA-Z0-9_-]", "_");
                 String newFileName = safeName + "_" + System.currentTimeMillis() + ext;
-                
+
                 File dest = new File(dir, newFileName);
 
                 Files.copy(selectedImageFile.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -241,6 +241,8 @@ public class TambahProduct extends javax.swing.JPanel {
 
             JOptionPane.showMessageDialog(this, "Input Success!",
                     "Sukses", JOptionPane.INFORMATION_MESSAGE);
+            
+            clear();
 
             JPanel pnlUtama = (JPanel) SwingUtilities.getAncestorOfClass(JPanel.class, this);
             KF.UntukPanel(pnlUtama, KF.fproductAdmin);
@@ -298,6 +300,16 @@ public class TambahProduct extends javax.swing.JPanel {
             javax.swing.JOptionPane.showMessageDialog(null,
                     "Gagal memuat kategori: " + e.getMessage());
         }
+    }
+
+    public void clear() {
+        txtNamaProduct.setText("");
+        txtDesc.setText("");
+        txtPrice.setText("");
+        txtProductCost.setText("");
+        txtStock.setText("");
+        cmbCategory.removeAllItems();
+        selectedImageFile = null;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

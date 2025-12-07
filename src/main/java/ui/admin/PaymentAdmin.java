@@ -5,27 +5,28 @@
 package ui.admin;
 
 import app.controller.OrderController;
+import app.controller.PaymentController;
 import app.controller.UserController;
 import java.util.List;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
 import models.Order;
+import models.Payment;
 import models.User;
-import models.OrderItems;
 import ui.KF;
 
 /**
  *
- * @author Dell
+ * @author RIDHO
  */
-public class OrderAdmin extends javax.swing.JPanel {
+public class PaymentAdmin extends javax.swing.JPanel {
 
     /**
-     * Creates new form OrderAdmin
+     * Creates new form PaymentAdmin
      */
-    public OrderAdmin() {
+    public PaymentAdmin() {
         initComponents();
     }
 
@@ -41,44 +42,42 @@ public class OrderAdmin extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblOrder = new javax.swing.JTable();
+        tblPayment = new javax.swing.JTable();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel1.setText("DATA ODER CUSTOMER");
+        jLabel1.setText("DATA PAYMENT");
 
-        tblOrder.setModel(new javax.swing.table.DefaultTableModel(
+        tblPayment.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "No", "Order ID", "Order Code", "Order Date", "Customer", "Payment Status", "Order Status", "Table Code", "Total Payment", "Action", "Action"
+                "No", "Payment ID", "Order Code", "Customer", "Payment Method", "Amount Paid", "Change Amount", "Info Payment", "Time", "Action"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        tblOrder.setRowHeight(40);
-        tblOrder.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblPayment.setRowHeight(40);
+        tblPayment.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblOrderMouseClicked(evt);
+                tblPaymentMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(tblOrder);
-        if (tblOrder.getColumnModel().getColumnCount() > 0) {
-            tblOrder.getColumnModel().getColumn(0).setMaxWidth(50);
-            tblOrder.getColumnModel().getColumn(7).setMaxWidth(100);
-            tblOrder.getColumnModel().getColumn(9).setMaxWidth(200);
-            tblOrder.getColumnModel().getColumn(10).setMaxWidth(100);
+        jScrollPane1.setViewportView(tblPayment);
+        if (tblPayment.getColumnModel().getColumnCount() > 0) {
+            tblPayment.getColumnModel().getColumn(0).setMaxWidth(50);
+            tblPayment.getColumnModel().getColumn(9).setMaxWidth(200);
         }
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -89,7 +88,7 @@ public class OrderAdmin extends javax.swing.JPanel {
                 .addGap(14, 14, 14)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1173, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1192, Short.MAX_VALUE))
                 .addGap(23, 23, 23))
         );
         jPanel1Layout.setVerticalGroup(
@@ -98,7 +97,7 @@ public class OrderAdmin extends javax.swing.JPanel {
                 .addGap(37, 37, 37)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 581, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 716, Short.MAX_VALUE)
                 .addGap(32, 32, 32))
         );
 
@@ -114,19 +113,19 @@ public class OrderAdmin extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tblOrderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblOrderMouseClicked
-        int row = tblOrder.getSelectedRow();
-        int col = tblOrder.getSelectedColumn();
+    private void tblPaymentMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPaymentMouseClicked
+        int row = tblPayment.getSelectedRow();
+        int col = tblPayment.getSelectedColumn();
 
-        if (col == 10) {
+        if (col == 9) {
 
-            DefaultTableModel model = (DefaultTableModel) tblOrder.getModel();
+            DefaultTableModel model = (DefaultTableModel) tblPayment.getModel();
 
-            Integer orderId = Integer.parseInt(model.getValueAt(row, 1).toString());
+            Integer paymentId = Integer.parseInt(model.getValueAt(row, 1).toString());
 
             int confirm = JOptionPane.showConfirmDialog(
                     null,
-                    "Yakin ingin menghapus order ini?",
+                    "Yakin ingin menghapus payment ini?",
                     "Konfirmasi Hapus",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.WARNING_MESSAGE
@@ -137,57 +136,45 @@ public class OrderAdmin extends javax.swing.JPanel {
             }
 
             try {
-                orderController.deleteOrder(orderId);
+                paycont.deletePayment(paymentId);
 
-                JOptionPane.showMessageDialog(null, "Order berhasil dihapus!");
+                JOptionPane.showMessageDialog(null, "Payment berhasil dihapus!");
                 loadTable();
 
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Gagal hapus order: " + ex.getMessage());
-            }
-        } else if (col == 9) {
-            try {
-                DefaultTableModel model = (DefaultTableModel) tblOrder.getModel();
-                Integer orderId = Integer.parseInt(model.getValueAt(row, 1).toString());
-                
-                Order thisOrder = orderController.findOrderById(orderId);
-                
-                JPanel pnlUtama = (JPanel) SwingUtilities.getAncestorOfClass(JPanel.class, this);
-                KF.UntukPanel(pnlUtama, KF.forderitemadmin);
-                KF.forderitemadmin.loadTable(thisOrder);
-            } catch (Exception ex) {
-                System.getLogger(OrderAdmin.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                JOptionPane.showMessageDialog(null, "Gagal hapus payment: " + ex.getMessage());
             }
         }
-    }//GEN-LAST:event_tblOrderMouseClicked
+    }//GEN-LAST:event_tblPaymentMouseClicked
 
     OrderController orderController = OrderController.getInstance();
     UserController userController = UserController.getInstance();
+    PaymentController paycont = PaymentController.getInstance();
 
     public void loadTable() {
         try {
-            List<Order> orders = orderController.getAllOrders();
+            List<Payment> payment = paycont.getAllPayments();
 
-            DefaultTableModel model = (DefaultTableModel) tblOrder.getModel();
+            DefaultTableModel model = (DefaultTableModel) tblPayment.getModel();
             model.setRowCount(0);
 
             int no = 1;
 
-            for (Order o : orders) {
+            for (Payment p : payment) {
 
-                User thisUser = userController.findById(o.getUser_id());
+                Order thisOrder = orderController.findOrderById(p.getOrder_id());
+                User thisUser = userController.findById(thisOrder.getUser_id());
 
                 model.addRow(new Object[]{
                     no++,
-                    o.getOrder_id(),
-                    o.getOrderCode(),
-                    o.getOrder_date(),
+                    p.getPayment_id(),
+                    thisOrder.getOrderCode(),
                     thisUser.getUsername(),
-                    o.getPayment_status(),
-                    o.getOrder_status(),
-                    o.getTableCode(),
-                    o.getFinal_amount(),
-                    "Detail",
+                    p.getPayment_method(),
+                    p.getAmount_paid(),
+                    p.getChange_amount(),
+                    p.getInfoPayment(),
+                    p.getPayment_time(),
                     "Delete"
                 });
             }
@@ -197,11 +184,10 @@ public class OrderAdmin extends javax.swing.JPanel {
         }
     }
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tblOrder;
+    private javax.swing.JTable tblPayment;
     // End of variables declaration//GEN-END:variables
 }

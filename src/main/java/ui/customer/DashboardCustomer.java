@@ -120,7 +120,7 @@ public class DashboardCustomer extends javax.swing.JPanel {
         return panel;
     }
 
-    private void loadCategories() {
+    public void loadCategories() {
         try {
             JPanel container = (JPanel) jPanelcategory.getClientProperty("container");
             container.removeAll();
