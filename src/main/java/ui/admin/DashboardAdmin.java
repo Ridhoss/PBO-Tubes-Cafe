@@ -219,7 +219,15 @@ public class DashboardAdmin extends javax.swing.JPanel {
             new String [] {
                 "Product ID", "Product Name", "Price", "Stok", "Updated At"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jTableRiwatStok.setFocusable(false);
         jTableRiwatStok.setRowHeight(40);
         jScrollPane1.setViewportView(jTableRiwatStok);

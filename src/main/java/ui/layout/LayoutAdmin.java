@@ -123,6 +123,11 @@ public class LayoutAdmin extends javax.swing.JFrame {
         btnOrders.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         btnOrders.setForeground(new java.awt.Color(255, 255, 255));
         btnOrders.setText("Orders");
+        btnOrders.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnOrdersMouseClicked(evt);
+            }
+        });
 
         btnUser.setBackground(new java.awt.Color(255, 255, 255));
         btnUser.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -251,6 +256,11 @@ public class LayoutAdmin extends javax.swing.JFrame {
         KF.flogin.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnLogoutMouseClicked
+
+    private void btnOrdersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOrdersMouseClicked
+        KF.UntukPanel(pnlUtamaAdmin, KF.fOrderAdmin);
+        KF.fOrderAdmin.loadTable();
+    }//GEN-LAST:event_btnOrdersMouseClicked
 
     /**
      * @param args the command line arguments

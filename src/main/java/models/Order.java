@@ -120,11 +120,11 @@ public class Order {
     public void setOrderCode(String orderCode) {
         this.order_code = orderCode;
     }
-    
+
     public String getTableCode() {
         return table_code;
     }
-    
+
     public void setTableCode(String tableCode) {
         this.table_code = tableCode;
     }

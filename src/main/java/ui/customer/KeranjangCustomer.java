@@ -12,7 +12,6 @@ import app.controller.ProductController;
 import app.controller.UserController;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -300,7 +299,6 @@ public class KeranjangCustomer extends javax.swing.JPanel {
         btnDelete.setBackground(new Color(240, 80, 80));
         btnDelete.setForeground(Color.WHITE);
         btnDelete.setPreferredSize(new Dimension(80, 40));
-        btnDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnDelete.addActionListener(e -> {
             try {
 

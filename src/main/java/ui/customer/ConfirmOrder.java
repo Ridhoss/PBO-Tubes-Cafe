@@ -76,8 +76,8 @@ public class ConfirmOrder extends javax.swing.JPanel {
         lblPaymentInfo = new javax.swing.JLabel();
         cmbPaymentInfo = new javax.swing.JComboBox<>();
         btnOrder = new javax.swing.JButton();
-        lblPaymentInfo1 = new javax.swing.JLabel();
         cmbTableInfo = new javax.swing.JComboBox<>();
+        lblPaymentInfo1 = new javax.swing.JLabel();
 
         JlabelKeranjang1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         JlabelKeranjang1.setForeground(new java.awt.Color(74, 112, 169));
@@ -135,10 +135,10 @@ public class ConfirmOrder extends javax.swing.JPanel {
             }
         });
 
+        cmbTableInfo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         lblPaymentInfo1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         lblPaymentInfo1.setText("Table Info:");
-
-        cmbTableInfo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout pnlDetailOrderLayout = new javax.swing.GroupLayout(pnlDetailOrder);
         pnlDetailOrder.setLayout(pnlDetailOrderLayout);
@@ -244,7 +244,7 @@ public class ConfirmOrder extends javax.swing.JPanel {
                 return;
             }
 
-            if (cmbPaymentInfo.getSelectedItem() == null || cmbPaymentMethod.getSelectedItem() == null || cmbTableInfo.getSelectedItem() == null) {
+            if (cmbPaymentInfo.getSelectedItem() == null || cmbPaymentMethod.getSelectedItem() == null) {
                 return;
             }
 
@@ -266,10 +266,11 @@ public class ConfirmOrder extends javax.swing.JPanel {
                 Product p = productController.getProductById(item.getProduct_id());
                 totalAmount += p.getPrice() * item.getQuantity();
             }
-            
+
             String table = cmbTableInfo.getSelectedItem().toString();
 
             orderController.addOrder(thisUser.getUser_id(), totalAmount, 0, totalAmount, "Paid", "Waiting", "", table);
+
             Order thisOrder = orderController.findLastOrderByUser(thisUser.getUser_id());
 
             for (CartItem item : cartItems) {

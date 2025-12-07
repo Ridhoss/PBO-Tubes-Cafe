@@ -20,6 +20,7 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
 import models.User;
 import ui.admin.CategoryAdmin;
 import ui.admin.DashboardAdmin;
+import ui.admin.OrderAdmin;
 import ui.admin.ProductAdmin;
 import ui.admin.UserAdmin;
 import ui.admin.category.EditCategory;
@@ -55,6 +56,8 @@ public class KF {
     public static ProductAdmin fproductAdmin = new ProductAdmin();
     public static CategoryAdmin fCategoryAdmin = new CategoryAdmin();
     public static UserAdmin fUserAdmin = new UserAdmin();
+    public static OrderAdmin fOrderAdmin = new OrderAdmin();
+
 
     //category admin
     public static TambahCategory fAddCategory = new TambahCategory();

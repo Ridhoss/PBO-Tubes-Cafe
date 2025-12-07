@@ -63,10 +63,10 @@ public class OrderDao extends GenericDaoImpl<Integer, Order> {
         o.setOrder_date(rs.getTimestamp("order_date") != null
                 ? rs.getTimestamp("order_date").toLocalDateTime()
                 : null);
-       
+
         o.setOrderCode(rs.getString("order_code"));
         o.setTableCode(rs.getString("table_code"));
-
+        
         return o;
     }
 }
